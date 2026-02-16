@@ -1,0 +1,119 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Open Sans", sans-serif;
+}
+
+.smooth-wrapper {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.smooth-content {
+  overflow: visible;
+}
+
+.intro {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro__heading {
+  font-size: clamp(2rem, 8vw, 6rem);
+  font-weight: 900;
+  text-align: center;
+}
+
+.hero-reveal {
+  position: relative;
+  min-height: 100vh;
+  background: black;
+  overflow: hidden;
+}
+
+.hero-reveal__header {
+  height: 100vh;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(3rem, 12vw, 14rem);
+  font-weight: 900;
+  z-index: 2;
+}
+
+.hero-reveal_split {
+  position: relative;
+  width: 100%;
+}
+
+.hero-reveal_split_item {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-reveal_split_item:first-child {
+  clip-path: inset(0 0 50% 0);
+}
+
+.hero-reveal_split_item:last-child {
+  clip-path: inset(50% 0 0 0);
+}
+
+.c-wide-text {
+  letter-spacing: 0.1em;
+}
+
+.hero-reveal__content {
+  position: relative;
+  height: 100vh;
+}
+
+.hero-reveal__content-inner {
+  position: relative;
+  height: 100%;
+}
+
+.hero-reveal__parallax img {
+  position: absolute;
+}
+
+.hero-reveal__parallax-alice {
+  top: -400px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.hero-reveal__parallax-clock {
+  top: -300px;
+  left: 10%;
+}
+
+.hero-reveal__parallax-book {
+  top: -350px;
+  left: 0;
+}
+
+.hero-reveal__parallax-kattle {
+  top: -250px;
+  right: 0;
+  filter: blur(2px);
+}
+
+.hero-reveal__parallax-card {
+  top: -400px;
+  right: 10%;
+  filter: blur(2px);
+}
+
+.spacer {
+  height: 100vh;
+}
