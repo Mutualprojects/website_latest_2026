@@ -13,6 +13,7 @@ import AwardsSection from "@/components/AwardsSection";
 ========================================= */
 const BRAND = "#07518a";
 import HERO_IMAGE from "../../src/md-corporate-head-shot-removebg-preview.png";
+import Achivements from "./components/Achivements";
 
 /* =========================================
    Types & Data
@@ -274,6 +275,7 @@ export default function Page() {
             Leading Brihaspathi Technologies with a blend of technical excellence and strategic vision—driving innovation in AI, IoT, and digital governance across India and beyond.
           </p>
         </motion.section>
+        <Achivements/>
         <LeadershipSection />
         <motion.div {...sectionReveal}>
           <ForumsMembershipSection />

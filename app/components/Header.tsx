@@ -301,7 +301,7 @@
 
 //   /* === STRAPI API DATA === */
 //   const { data: apiData } = useSWR<StrapiResponse>(
-//     "http://172.30.0.200:1334/api/items?populate[0]=image&populate[1]=category",
+//     "/cms-api/api/items?populate[0]=image&populate[1]=category",
 //     fetcher
 //   );
 
@@ -680,7 +680,7 @@
 //   const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
 
 //   const { data: apiData } = useSWR<StrapiResponse>(
-//     "http://172.30.0.200:1334/api/items?populate[0]=image&populate[1]=category",
+//     "/cms-api/api/items?populate[0]=image&populate[1]=category",
 //     fetcher
 //   );
 

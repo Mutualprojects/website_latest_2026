@@ -27,7 +27,7 @@ import dayjs from "dayjs";
 const { TextArea } = Input;
 const { Option } = Select;
 
-const API = "http://172.30.0.200:1334/api";
+const API = "/cms-api/api";
 const UPLOAD_API = `${API}/upload`;
 
 const getHeaders = () => {
@@ -45,7 +45,7 @@ const resolveImageUrl = (file: any) => {
         file?.url;
     return url?.startsWith("http")
         ? url
-        : `http://172.30.0.200:1334${url}`;
+        : `/cms-api${url}`;
 };
 
 const mapSingleImage = (file: any) =>

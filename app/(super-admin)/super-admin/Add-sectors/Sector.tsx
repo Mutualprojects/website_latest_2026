@@ -14,7 +14,7 @@ import {
 } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-const API_BASE = "http://172.30.0.200:1334/api";
+const API_BASE = "/cms-api/api";
 
 const getAuthHeaders = () => {
     if (typeof window === "undefined") return {};

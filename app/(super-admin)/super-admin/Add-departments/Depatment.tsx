@@ -17,7 +17,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 
 const { Option } = Select;
 
-const API = "http://172.30.0.200:1334/api";
+const API = "/cms-api/api";
 
 // Get token stored in localStorage
 const getHeaders = () => {

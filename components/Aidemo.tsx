@@ -21,7 +21,7 @@ export function SplineSceneBasic() {
       />
 
       {/* ── overlay — strong enough for text readability ── */}
-      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-white/95 via-white/90 to-white/95" />
+      <div className="absolute inset-0 z-[1] bg-gradient-to-b from-white/75 via-white/75 to-white/75" />
 
       {/* ── content ── */}
       <div className="relative z-10 w-full h-full">

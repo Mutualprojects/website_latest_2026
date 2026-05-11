@@ -14,7 +14,7 @@ import {
   FaSyncAlt,
 } from "react-icons/fa";
 
-const API = "http://172.30.0.200:1334/api";
+const API = "/cms-api/api";
 
 /* -------------------------------------------------
    AUTH HEADERS (TS FIXED)

@@ -29,20 +29,17 @@ interface OfficeAddress {
   isHeadOffice?: boolean;
 }
 
-const getMapUrl = (address: string) =>
-  `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
-
 /** Head office (single) */
 const HEAD_OFFICE: OfficeAddress = {
   city: "Hyderabad",
-  address: "5th Floor, 7-1-621/259, Sahithi Arcade, Beside S R Nagar Police Station, S R Nagar, Hyderabad, Telangana 500038",
+  address: "#501, #508-510, Shangrila Plaza, Park View Enclave, Banjara Hills, Hyderabad, Telangana 500034",
   isHeadOffice: true,
 };
 
 /** Branch offices for contact page */
 const BRANCH_OFFICES: OfficeAddress[] = [
   { city: "Delhi", address: "201 A Block, Naurang House, Connaught Lane, K G Marg, New Delhi, Delhi 110001" },
-  { city: "Bengaluru", address: "1st Floor, A52, RPR Complex, Kamadenu Nagar, Bengaluru, Karnataka 560016" },
+  { city: "Bengaluru", address: "4th floor,Sattva Galleria,New airport road.Sy.No: 19/2 & 20/1, Byatarayanapura Village, Yelahanka Hobli, Bangalore - 560092." },
   { city: "Lucknow", address: "H No. 554-GA/277, Alambagh Road, Guru Nanak Nagar, Lucknow, Uttar Pradesh 226005" },
   { city: "Chennai", address: "2nd Floor, New Door No. 32, Old Door No. 117, Plot No. C 10, Ravilla Towers, W Block, 3rd Avenue, Anna Nagar, Chennai, Tamil Nadu 600040" },
   { city: "Navi Mumbai", address: "13th Floor, Plot No. 12, Sector 10, CBD Belapur, Navi Mumbai, Thane, Maharashtra 400614" },
@@ -53,6 +50,7 @@ const BRANCH_OFFICES: OfficeAddress[] = [
   { city: "Bhopal", address: "LIG-G-01, Bawadia Kala, Fortune Glory Ext 2, Rohit Nagar, Bhopal, Madhya Pradesh 462026" },
   { city: "Kurnool", address: "45/204-A1-3, Near KNR High School, Venkata Ramana Colony Road, Ashok Nagar, Kurnool, Andhra Pradesh 518005" },
   { city: "Chandigarh", address: "WorkYard Coworking Spaces, Phase-2, Plot No. 337, Industrial & Business Park, Chandigarh 160002" },
+  { city: "Vijayawada", address: "1St Floor, Dno-12-468/1/4, Beside Viceroy Heights, KSR Park Road Ward-2 Tadepalli, Guntur District -522501" },
 ];
 
 /** All offices for nationwide presence (head + branches) */
@@ -630,13 +628,12 @@ const ContactFormBrand: React.FC = () => {
                       </div>
 
                       <div
-                        className={`p-4 rounded-lg border-2 transition-all duration-300 ${
-                          captchaError
+                        className={`p-4 rounded-lg border-2 transition-all duration-300 ${captchaError
                             ? "border-red-300 bg-red-50"
                             : turnstileToken
-                            ? "border-green-300 bg-green-50"
-                            : "border-gray-200 bg-white"
-                        }`}
+                              ? "border-green-300 bg-green-50"
+                              : "border-gray-200 bg-white"
+                          }`}
                       >
                         {/* Turnstile Loading State */}
                         {turnstileLoading && !turnstileToken && (
@@ -668,13 +665,12 @@ const ContactFormBrand: React.FC = () => {
 
                         {/* Status Message */}
                         <div
-                          className={`mt-4 text-center text-sm px-4 py-2 rounded-lg ${
-                            turnstileToken
+                          className={`mt-4 text-center text-sm px-4 py-2 rounded-lg ${turnstileToken
                               ? "text-green-700 bg-green-100"
                               : captchaError
-                              ? "text-red-700 bg-red-100"
-                              : "text-gray-600 bg-gray-100"
-                          }`}
+                                ? "text-red-700 bg-red-100"
+                                : "text-gray-600 bg-gray-100"
+                            }`}
                         >
                           {turnstileToken ? (
                             <div className="flex items-center justify-center gap-2">
@@ -711,13 +707,12 @@ const ContactFormBrand: React.FC = () => {
                       <motion.button
                         type="submit"
                         disabled={loading || !turnstileToken}
-                        className={`w-full py-4 rounded-xl font-semibold text-lg shadow-lg transition-all duration-300 flex items-center justify-center gap-3 ${
-                          loading
+                        className={`w-full py-4 rounded-xl font-semibold text-lg shadow-lg transition-all duration-300 flex items-center justify-center gap-3 ${loading
                             ? "opacity-80 cursor-not-allowed"
                             : !turnstileToken
-                            ? "opacity-60 cursor-not-allowed"
-                            : "hover:shadow-xl"
-                        }`}
+                              ? "opacity-60 cursor-not-allowed"
+                              : "hover:shadow-xl"
+                          }`}
                         style={{
                           background: turnstileToken && !loading
                             ? "#1e3a5f"
@@ -727,9 +722,9 @@ const ContactFormBrand: React.FC = () => {
                         whileHover={
                           turnstileToken && !loading
                             ? {
-                                scale: 1.02,
-                                boxShadow: "0 10px 25px rgba(7, 81, 138, 0.3)",
-                              }
+                              scale: 1.02,
+                              boxShadow: "0 10px 25px rgba(7, 81, 138, 0.3)",
+                            }
                             : {}
                         }
                         whileTap={turnstileToken && !loading ? { scale: 0.98 } : {}}
@@ -775,57 +770,7 @@ const ContactFormBrand: React.FC = () => {
             </div>
 
             {/* Our Nationwide Presence */}
-            <motion.section
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="mt-16 pt-12 border-t border-gray-200"
-            >
-              <div className="flex flex-col items-center mb-10">
-                <div className="flex items-center gap-4 w-full max-w-md mb-4">
-                  <div className="flex-1 h-px bg-gray-300" style={{ background: `linear-gradient(90deg, transparent, ${BRAND})` }} />
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 whitespace-nowrap">
-                    Our Nationwide Presence
-                  </h2>
-                  <div className="flex-1 h-px bg-gray-300" style={{ background: `linear-gradient(90deg, ${BRAND}, transparent)` }} />
-                </div>
-                <p className="text-gray-600 text-center max-w-xl">
-                  Reach out to us today and start your journey with Brihaspathi Technologies.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {ALL_OFFICES.map((office, idx) => (
-                  <motion.div
-                    key={idx}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.05 * idx }}
-                    className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm hover:shadow-md transition-shadow"
-                  >
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4" style={{ backgroundColor: `${BRAND}15` }}>
-                      <MapPin size={22} style={{ color: BRAND }} />
-                    </div>
-                    <h3 className="font-bold text-gray-900 uppercase tracking-wide text-sm mb-2">
-                      {office.city}
-                      {office.isHeadOffice && (
-                        <span className="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800">H.O</span>
-                      )}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">{office.address}</p>
-                    <a
-                      href={getMapUrl(office.address)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm font-medium hover:underline"
-                      style={{ color: BRAND }}
-                    >
-                      <MapPin size={14} />
-                      View on Map
-                    </a>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.section>
+
           </motion.div>
         ) : (
           /* ================ THANK YOU PAGE ================ */

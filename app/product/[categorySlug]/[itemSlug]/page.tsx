@@ -6,7 +6,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 
-const API_BASE = "http://172.30.0.200:1334/api";
+const API_BASE = "/cms-api/api";
 
 export default function ItemDetailPage() {
   const { itemSlug } = useParams();
@@ -35,7 +35,7 @@ export default function ItemDetailPage() {
 
       {img && (
         <img
-          src={`http://172.30.0.200:1334${img}`}
+          src={`/cms-api${img}`}
           width="350"
           style={{ marginTop: 10, borderRadius: 6 }}
           alt={item.title}

@@ -6,7 +6,7 @@ import { useParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
 
-const API_BASE = "http://172.30.0.200:1334/api";
+const API_BASE = "/cms-api/api";
 
 export default function CategoryPage() {
   const { categorySlug } = useParams();
@@ -54,7 +54,7 @@ export default function CategoryPage() {
             >
               {img && (
                 <img
-                  src={`http://172.30.0.200:1334${img}`}
+                  src={`/cms-api${img}`}
                   width={100}
                   style={{ borderRadius: 6 }}
                   alt={item.title}

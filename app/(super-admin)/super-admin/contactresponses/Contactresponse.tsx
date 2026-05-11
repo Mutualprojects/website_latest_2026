@@ -11,7 +11,7 @@ import {
     AlertTriangle,
 } from "lucide-react";
 
-const API = "http://172.30.0.200:1334/api";
+const API = "/cms-api/api";
 
 // ✅ FIXED: Type-safe Auth Headers
 const getAuthHeaders = (): HeadersInit => {

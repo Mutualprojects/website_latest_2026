@@ -21,9 +21,9 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 
-const API = "http://172.30.0.200:1334/api";
+const API = "/cms-api/api";
 const UPLOAD_API = `${API}/upload`;
-const STRAPI_URL = "http://172.30.0.200:1334";
+const STRAPI_URL = "/cms-api";
 
 // 🔐 Auth Headers
 const getAuthHeaders = () => {

@@ -2,18 +2,33 @@
 const nextConfig = {
   reactStrictMode: true,
 
+  async rewrites() {
+    return [
+      {
+        source: "/strapi/:path*",
+        destination: "http://183.82.117.36:2334/:path*",
+      },
+    ];
+  },
+
   images: {
     remotePatterns: [
       {
-        protocol: "http",
-        hostname: "172.30.0.200",
-        port: "1334",
-        pathname: "/uploads/**",
+        protocol: "https",
+        hostname: "static.ambitionbox.com",
+      },
+      {
+        protocol: "https",
+        hostname: "akam.cdn.jdmagicbox.com",
+      },
+      {
+        protocol: "https",
+        hostname: "www.glassdoor.com",
       },
       {
         protocol: "http",
-        hostname: "localhost",
-        port: "1334",
+        hostname: "183.82.117.36",
+        port: "2334",
         pathname: "/uploads/**",
       },
       {
@@ -28,9 +43,12 @@ const nextConfig = {
       },
     ],
   },
-   compiler: {
+
+  compiler: {
     styledComponents: true,
   },
+
+  transpilePackages: ["framer-motion", "motion", "@tanstack/react-query"],
 
   experimental: {
     optimizePackageImports: ["lucide-react"],

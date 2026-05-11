@@ -49,6 +49,17 @@ const testimonials: Testimonial[] = [
     linkedinUrl: "https://www.linkedin.com/in/hyma-p-464b65145/",
   },
   {
+    name: "K. Venkatesham",
+    title: "Director – Operations",
+    description:
+      "Dr. K. Venkatesham is a distinguished former IPS officer (Maharashtra Cadre, 1988 batch) with over three decades of leadership in public service, strategic operations, and technology-driven governance. He has held key positions including Commissioner of Police (Pune & Nagpur) and Additional Director General – Special Operations, driving major initiatives in law enforcement, cybercrime, and citizen-centric services.In his current role at Brihaspathi Technologies Limited, he leads operational strategy and execution, leveraging his expertise in large-scale program management and technology integration. He has been closely associated with multi-state initiatives such as the 108 Ambulance Network and other government programs, consistently delivering efficiency, scalability, and measurable impact.A recipient of the President’s Police Medal for Distinguished Service, Dr. Venkatesham is widely respected for his leadership, integrity, and commitment to excellence.",
+    imageUrl: "/teams/K.Venkatesham.jpeg",
+    githubUrl: "#",
+    twitterUrl: "#",
+    youtubeUrl: "#",
+    linkedinUrl: "https://www.linkedin.com/in/k-venkatesham-dr-6b5530232?utm_source=share_via&utm_content=profile&utm_medium=member_android",
+  },
+  {
     name: "Murali Krishna Arasala",
     title: "Executive Director",
     description:
@@ -59,6 +70,52 @@ const testimonials: Testimonial[] = [
     youtubeUrl: "#",
     linkedinUrl: "https://www.linkedin.com/in/murali-krishna-b66564365/",
   },
+  {
+    name: "Mantha Pratima",
+    title: "Non-Executive Director",
+    description:
+      "A seasoned professional with 18+ years of experience in administration and education management. She has led institutional operations and governance across multiple organizations. Currently holding leadership roles in real estate, technology, and education sectors, she focuses on operational excellence, strategic planning, and sustainable organizational growth",
+    imageUrl: "/mantha-prtima.jpg",
+    githubUrl: "#",
+    twitterUrl: "#",
+    youtubeUrl: "#",
+    linkedinUrl: "https://www.linkedin.com/in/murali-krishna-b66564365/",
+  }, {
+    name: "Shailendra Tummalapalli",
+    title: "Non-Executive Director",
+    description:
+      "Since 2009, Murali Krishna has leveraged his MCA to excel as Chief Administration Officer, orchestrating daily operations and cross-department coordination. He oversees facilities, resources, and compliance, and leads tendering, documentation, and bid management across e-procurement platforms. Meticulous with Tender/RFP/EOI norms and tools like Tender Tiger, he drives reliable, efficient execution.",
+    imageUrl: "/shailendra.jpg",
+    githubUrl: "#",
+    twitterUrl: "#",
+    youtubeUrl: "#",
+    linkedinUrl: "https://www.linkedin.com/in/murali-krishna-b66564365/",
+  }, {
+    name: "Priya Rao",
+    title: "Independent-Director",
+    description:
+      "An accomplished executive with 21+ years of experience in operations, governance, and property management. She leads strategic portfolio optimization and serves as an Independent Director across multiple organizations. Certified by IICA and holding a PGDM from NMIMS, she excels in driving operational efficiency, leadership excellence, and sustainable business growth.",
+    imageUrl: "/priya-rao.jpg",
+    githubUrl: "#",
+    twitterUrl: "#",
+    youtubeUrl: "#",
+    linkedinUrl: "https://www.linkedin.com/in/murali-krishna-b66564365/",
+  },
+
+
+  {
+    name: "Devendra Singh",
+    title: "Independent-Director",
+    description:
+      "Devendrasingh Rajput is a veteran healthcare leader and Certified Independent Director with over 25 years of global experience. Formerly a CXO at Indira IVF and Apollo Health, he specializes in managing ₹1000Cr+ P&Ls, M&A, and digital transformation. He excels at driving corporate governance and long-term shareholder value.",
+    imageUrl: "/Devendra.jpg",
+    githubUrl: "#",
+    twitterUrl: "#",
+    youtubeUrl: "#",
+    linkedinUrl: "http://www.linkedin.com/in/devendrasingh-rajput-b453a414",
+  },
+
+
 ];
 
 
@@ -195,15 +252,15 @@ export function TestimonialCarousel({ className }: TestimonialCarouselProps) {
               <h2 className='text-xl font-bold text-gray-900 dark:text-white mb-2'>
                 {currentTestimonial.name}
               </h2>
-              
+
               <p className='text-sm font-medium text-gray-600 dark:text-gray-300 mb-4'>
                 {currentTestimonial.title}
               </p>
-              
+
               <p className='text-black dark:text-white text-sm leading-relaxed mb-6'>
                 {currentTestimonial.description}
               </p>
-              
+
               <div className='flex justify-center space-x-4'>
                 {socialIcons.map(({ icon: IconComponent, url, label }) => (
                   <Link

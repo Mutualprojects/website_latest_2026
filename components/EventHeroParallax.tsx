@@ -9,7 +9,7 @@ import {
   MotionValue,
 } from "framer-motion";
 import Link from "next/link";
-import EventsShowcase from "./Profesional";
+import EventsShowcase from "./Professional";
 
 /* ================= TYPES ================= */
 
@@ -281,7 +281,7 @@ export const EventParallax: React.FC<EventParallaxProps> = ({
   return (
     <section
       ref={ref}
-      className="
+      className={`
           relative min-h-screen
           
     overflow-hidden
@@ -289,8 +289,7 @@ export const EventParallax: React.FC<EventParallaxProps> = ({
     antialiased
     [perspective:1000px]
     [transform-style:preserve-3d]
-
-      "
+      `}
     >
       <EventHeader />
 

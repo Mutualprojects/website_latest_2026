@@ -10,7 +10,7 @@ export default async function EventDetails({
   
   const encodedSlug = encodeURIComponent(slug);
   const API_URL =
-    "http://172.30.0.200:1334/api/events?" +
+    "/cms-api/api/events?" +
     `filters[slug][$eq]=${encodedSlug}&populate=*`;
 
   let res;
@@ -72,7 +72,7 @@ export default async function EventDetails({
       img?.formats?.medium?.url ||
       img?.formats?.small?.url ||
       img?.url;
-    return url?.startsWith("http") ? url : `http://172.30.0.200:1334${url}`;
+    return url?.startsWith("http") ? url : `/cms-api${url}`;
   };
 
   // Extract event data safely

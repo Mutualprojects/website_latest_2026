@@ -1,7 +1,7 @@
 // lib/fetchMegaMenuData.ts
 import axios from "axios";
 
-const API_URL = "http://172.30.0.200:1334/api/items";
+const API_URL = "/cms-api/api/items";
 
 let cache: Record<string, any[]> = {}; // 👈 Cache memory
 

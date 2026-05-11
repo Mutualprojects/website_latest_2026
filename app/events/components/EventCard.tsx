@@ -58,7 +58,7 @@ export default function EventCard({ event }: Props) {
       img?.formats?.thumbnail?.url ||
       img?.url;
     
-    return url?.startsWith("http") ? url : `http://172.30.0.200:1334${url}`;
+    return url?.startsWith("http") ? url : `/cms-api${url}`;
   };
 
   const currentImage = galleryImages[selectedIndex] || galleryImages[0];

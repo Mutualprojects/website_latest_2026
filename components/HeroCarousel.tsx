@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import IndustriesWeServeSection from "./homeabout/IndustriesSection";
 import Weserve from "./Weserve";
-import { Skiper38 } from "@/app/about/who-we-are/components/Skiper38";
+import { Skiper38 } from "@/app/who-we-are/components/Skiper38";
 
 /* -------------------------------- TYPES -------------------------------- */
 type Slide =

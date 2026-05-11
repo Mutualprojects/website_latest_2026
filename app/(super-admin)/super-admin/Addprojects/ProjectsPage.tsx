@@ -30,9 +30,9 @@ import dayjs from "dayjs";
 // ------------------------------------
 // CONFIG
 // ------------------------------------
-const API = "http://172.30.0.200:1334/api";
+const API = "/cms-api/api";
 const UPLOAD_API = `${API}/upload`;
-const FILE_BASE = "http://172.30.0.200:1334";
+const FILE_BASE = "/cms-api";
 
 const META_ROBOTS_OPTIONS = [
   "index, follow",

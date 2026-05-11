@@ -5,7 +5,7 @@ import EventCard from './components/EventCard';
 // ⭐ Make it async to fetch data
 export default async function Page() {
   // Fetch events from your Strapi API
-  const API_URL = "http://172.30.0.200:1334/api/events?populate=*";
+  const API_URL = "/cms-api/api/events?populate=*";
   
   let events = [];
   

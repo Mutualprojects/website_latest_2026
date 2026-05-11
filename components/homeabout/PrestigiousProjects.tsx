@@ -3,7 +3,7 @@
 import React from "react";
 import Image, { StaticImageData } from "next/image";
 import { motion, Variants } from "framer-motion";
-import { CASE_STUDIES_BY_SECTOR } from "../../app/casestudy/data";
+import { CASE_STUDIES_BY_SECTOR } from "../../app/case-studies/data";
 
 /* ------------------ Types ------------------ */
 

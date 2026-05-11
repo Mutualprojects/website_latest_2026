@@ -35,7 +35,7 @@ interface GridItem extends ImageItem {
 }
 
 /* -------------------------------- CONSTANTS -------------------------------- */
-const HEIGHTS = [220, 260, 300, 340, 380, 420];
+const HEIGHTS = [160, 200, 240, 280, 320, 360];
 
 /* -------------------------------- IMAGE SOURCES -------------------------------- */
 const LATEST_NEWS: string[] = [
@@ -160,7 +160,7 @@ const MasonryGallery: FC = () => {
   useEffect(() => {
     const resize = () => {
       const w = window.innerWidth;
-      setCols(w >= 1600 ? 6 : w >= 1200 ? 5 : w >= 900 ? 4 : w >= 600 ? 3 : 2);
+      setCols(w >= 1600 ? 8 : w >= 1200 ? 6 : w >= 900 ? 5 : w >= 600 ? 4 : 2);
       if (ref.current) setWidth(ref.current.offsetWidth);
     };
     resize();

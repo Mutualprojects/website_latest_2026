@@ -105,17 +105,17 @@ export const EventParallax: React.FC<EventParallaxProps> = ({
 
   return (
   <section
-  ref={ref}
-  className="
-    relative
-    h-[180vh] sm:h-[220vh] md:h-[260vh] lg:h-[300vh]
-    overflow-hidden
-    py-20 sm:py-28 md:py-32
-    antialiased
-    [perspective:1000px]
-    [transform-style:preserve-3d]
-  "
->
+    ref={ref}
+    className={`
+      relative
+      h-[180vh] sm:h-[220vh] md:h-[260vh] lg:h-[300vh]
+      overflow-hidden
+      py-20 sm:py-28 md:py-32
+      antialiased
+      [perspective:1000px]
+      [transform-style:preserve-3d]
+    `}
+  >
   <EventHeader />
 
   <motion.div

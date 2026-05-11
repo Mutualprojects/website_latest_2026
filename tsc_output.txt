@@ -1,0 +1,6 @@
+app/blogs/[slug]/page.tsx(8,10): error TS2305: Module '"@/lib/api"' has no exported member 'getBlogBySlug'.
+app/blogs/[slug]/page.tsx(8,25): error TS2305: Module '"@/lib/api"' has no exported member 'getStrapiMedia'.
+app/blogs/[slug]/page.tsx(8,41): error TS2305: Module '"@/lib/api"' has no exported member 'getBlogs'.
+app/blogs/[slug]/page.tsx(363,13): error TS7006: Parameter 'res' implicitly has an 'any' type.
+app/blogs/components/mainblog.tsx(8,10): error TS2305: Module '"@/lib/api"' has no exported member 'getBlogs'.
+app/blogs/components/mainblog.tsx(8,20): error TS2305: Module '"@/lib/api"' has no exported member 'getStrapiMedia'.

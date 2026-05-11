@@ -29,7 +29,7 @@ import type { UploadFile } from "antd/es/upload/interface";
 /* ========================================================================
    🔧 2. CONSTANTS
    ======================================================================== */
-const BASE_URL = "http://172.30.0.200:1334";
+const BASE_URL = "/cms-api";
 const API = `${BASE_URL}/api`;
 const MEDIA_API = `${API}/upload`;
 

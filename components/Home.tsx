@@ -16,8 +16,9 @@ import { Ourcapabilities } from "@/components/homeabout/our-capabilities";
 import CoreCapabilitiesIntro from "@/components/CoreCapabilitiesIntro";
 import Clientvideo from "@/components/homeabout/Clientvideo";
 import HeroCarousel from "./HeroCarousel";
+import { CarOutlined } from "@ant-design/icons";
+import { Component } from "@/app/testimonials/testimonial";
 // import SolutionSection from "@/components"; // Updated import
-
 
 export default function Home() {
   return (
@@ -40,28 +41,33 @@ export default function Home() {
 
       {/* Demo/Showcase */}
       <DemoOnep />
-      
+
       {/* Achievements */}
       <Achievements />
-      
+
       {/* Hover Slider */}
       {/* <HoverSliderDemo /> */}
-      
+
       {/* Industries */}
       <IndustriesSection />
-      
+
       {/* India Wide */}
       <Indiawide />
-      
+
+      <div className="w-full bg-[#07518a] py-5 rounded-2xl shadow-lg">  <h2 className="text-center text-white text-2xl md:text-3xl font-bold tracking-wide">    Client Testimonials  </h2></div>
+      <Component />
+
       {/* Client Video */}
       <Clientvideo />
-      
+
+
+
       {/* We Serve - hidden for now */}
       {/* <Weserve /> */}
-      
+
       {/* Clients */}
       <ClientsMarqueeHero />
-      
+
       {/* Certifications */}
       <CertificationsGrid5 />
     </div>

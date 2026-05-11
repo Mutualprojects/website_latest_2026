@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
 
-const API_BASE = "http://172.30.0.200:1334/api";
+const API_BASE = "/cms-api/api";
 
 export default function ProductsPage() {
   const [items, setItems] = useState<any[]>([]);

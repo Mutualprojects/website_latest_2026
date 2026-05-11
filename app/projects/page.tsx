@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import dayjs from "dayjs";
 import { FolderOpen, Clock, CheckCircle2, Loader2 } from "lucide-react";
 
-const API = "http://172.30.0.200:1334/api";
+const API = "/cms-api/api";
 const BRAND = "#07518a";
 
 const fadeUp = (delay = 0) => ({
@@ -142,7 +142,7 @@ export default function ProjectsPage() {
                   key={p.id}
                   title={p.title}
                   description={p.description}
-                  imageUrl={`http://172.30.0.200:1334${p.image?.url}`}
+                  imageUrl={`/cms-api${p.image?.url}`}
                   startDate={p.startDate}
                   endDate={p.endDate}
                   status="recent"
@@ -174,7 +174,7 @@ export default function ProjectsPage() {
                 key={p.id}
                 title={p.title}
                 description={p.description}
-                imageUrl={`http://172.30.0.200:1334${p.image?.url}`}
+                imageUrl={`/cms-api${p.image?.url}`}
                 startDate={p.startDate}
                 endDate={p.endDate}
                 status="completed"

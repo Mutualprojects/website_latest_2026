@@ -19,7 +19,7 @@ import { PlusOutlined, EditOutlined, DeleteOutlined, UploadOutlined } from "@ant
 const { TextArea } = Input;
 const { Option } = Select;
 
-const API_BASE = "http://172.30.0.200:1334/api";
+const API_BASE = "/cms-api/api";
 const UPLOAD_API = `${API_BASE}/upload`;
 
 const getAuthHeaders = () => {
@@ -161,7 +161,7 @@ export default function CaseStudyPage() {
             id: img.id,
             name: img.name,
             status: "done",
-            url: `http://172.30.0.200:1334${img.url}`,
+            url: `/cms-api${img.url}`,
         }));
     };
 
@@ -227,7 +227,7 @@ export default function CaseStudyPage() {
                 const img = r.image?.[0];
                 return img ? (
                     <img
-                        src={`http://172.30.0.200:1334${img.url}`}
+                        src={`/cms-api${img.url}`}
                         style={{ width: 50, height: 50, objectFit: "cover", borderRadius: 6 }}
                     />
                 ) : (

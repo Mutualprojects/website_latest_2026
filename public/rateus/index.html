@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0a3060">
+<title>Thank You — Share Your Voice | Brihaspathi</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a3060;
+    --blue: #1565c0;
+    --mid-blue: #1976d2;
+    --sky: #42a5f5;
+    --gold: #ffc107;
+    --green: #43a047;
+    --purple: #7b1fa2;
+    --white: #ffffff;
+    --light: #f0f6ff;
+    --text: #1a2340;
+    --muted: #6b7a99;
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  .svg-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #dfe8f5;
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+    padding-bottom: var(--safe-bottom);
+  }
+
+  /* Mobile-first shell: single column, max width like a phone */
+  .shell {
+    max-width: 440px;
+    margin: 0 auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--light);
+    box-shadow: 0 0 0 1px rgba(10,48,96,.06), 0 12px 40px rgba(10,30,70,.12);
+  }
+
+  .hero {
+    background: linear-gradient(145deg, #0a3060 0%, #1565c0 45%, #00838f 100%);
+    padding: 28px 20px 36px;
+    text-align: center;
+    position: relative;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 24px;
+    background: var(--light);
+    border-radius: 24px 24px 0 0;
+  }
+
+  .logo-wrap {
+    display: inline-block;
+    background: white;
+    padding: 10px 20px;
+    border-radius: 14px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.2);
+    margin-bottom: 18px;
+  }
+  .logo-wrap img {
+    display: block;
+    height: auto;
+    width: auto;
+    max-width: min(300px, 100%);
+    max-height: 64px;
+    object-fit: contain;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.65rem;
+    color: white;
+    line-height: 1.2;
+    position: relative;
+    z-index: 1;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    color: rgba(255,255,255,.88);
+    font-size: .94rem;
+    line-height: 1.5;
+    margin-top: 10px;
+    padding: 0 4px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .badge-mobile {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 14px;
+    padding: 6px 12px;
+    background: rgba(255,255,255,.12);
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.9);
+  }
+
+  .content {
+    padding: 8px 16px 32px;
+  }
+
+  .intro {
+    text-align: center;
+    font-size: .88rem;
+    color: var(--muted);
+    margin-bottom: 22px;
+    line-height: 1.45;
+  }
+
+  /* Step blocks */
+  .step-block {
+    margin-bottom: 20px;
+  }
+  .step-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .step-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--blue), #00838f);
+    color: white;
+    font-weight: 700;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-block:nth-child(2) .step-num { background: linear-gradient(135deg, #f57c00, #ffc107); }
+  .step-block:nth-child(3) .step-num { background: linear-gradient(135deg, var(--purple), #e91e63); }
+  .step-block:nth-child(4) .step-num { background: linear-gradient(135deg, #e1306c, #f77737); }
+
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--navy);
+    font-weight: 700;
+  }
+  .step-desc {
+    font-size: .82rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  .btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 52px;
+    padding: 14px 18px;
+    border-radius: 14px;
+    font-size: .95rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform .15s ease, box-shadow .15s;
+  }
+  .btn:active { transform: scale(0.98); }
+
+  .btn-li {
+    background: linear-gradient(135deg, #0077b5, #004471);
+    color: white;
+    box-shadow: 0 6px 20px rgba(0,119,181,.35);
+    gap: 12px;
+  }
+  .brand-icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .brand-icon svg {
+    display: block;
+    width: 28px;
+    height: 28px;
+  }
+
+  .google-list, .social-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .btn-g, .btn-insta, .btn-fb {
+    background: white;
+    color: var(--navy);
+    border: 2px solid rgba(255,152,0,.35);
+    box-shadow: 0 4px 16px rgba(255,152,0,.12);
+    text-align: left;
+    justify-content: flex-start;
+    padding-left: 16px;
+  }
+  .btn-insta {
+    border-color: rgba(225,48,108,.35);
+    box-shadow: 0 4px 16px rgba(225,48,108,.12);
+  }
+  .btn-fb {
+    border-color: rgba(24,119,242,.35);
+    box-shadow: 0 4px 16px rgba(24,119,242,.12);
+  }
+  .btn-g .g-icon, .btn-insta .s-icon, .btn-fb .s-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.06);
+    box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-g .g-icon svg, .btn-insta .s-icon svg, .btn-fb .s-icon svg {
+    width: 26px;
+    height: 26px;
+  }
+  .btn-g .g-text, .btn-insta .s-text, .btn-fb .s-text { flex: 1; min-width: 0; }
+  .btn-g .g-text strong, .btn-insta .s-text strong, .btn-fb .s-text strong { display: block; font-size: .95rem; }
+  .btn-g .g-text small, .btn-insta .s-text small, .btn-fb .s-text small { font-size: .75rem; color: var(--muted); font-weight: 500; }
+  .btn-g .chev, .btn-insta .chev, .btn-fb .chev { opacity: .45; font-size: 1.2rem; }
+
+  .btn-drive {
+    background: linear-gradient(135deg, var(--green), #1b5e20);
+    color: white;
+    box-shadow: 0 6px 20px rgba(67,160,71,.35);
+    gap: 12px;
+  }
+  .btn-drive .brand-icon svg {
+    width: 30px;
+    height: 26px;
+  }
+
+  .hint {
+    font-size: .76rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.4;
+  }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(21,101,192,.15), transparent);
+    margin: 8px 0 20px;
+  }
+
+  /* Video panel (inline, no modal — better on mobile) */
+  .video-panel {
+    background: white;
+    border-radius: 18px;
+    padding: 16px;
+    border: 1.5px solid rgba(123,31,162,.15);
+    box-shadow: 0 6px 24px rgba(123,31,162,.08);
+  }
+  .mini-steps {
+    margin: 14px 0;
+    display: grid;
+    gap: 10px;
+  }
+  .mini-step {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    font-size: .8rem;
+    color: var(--muted);
+    line-height: 1.45;
+  }
+  .mini-step b {
+    color: var(--navy);
+    min-width: 18px;
+    font-size: .75rem;
+  }
+
+  .important-note {
+    margin: 0 16px 8px;
+    padding: 16px 16px 18px;
+    background: linear-gradient(135deg, rgba(255,193,7,.12), rgba(21,101,192,.08));
+    border: 1.5px solid rgba(255,193,7,.45);
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(10,48,96,.08);
+  }
+  .important-note h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--navy);
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .important-note p {
+    font-size: .84rem;
+    color: var(--text);
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  footer {
+    text-align: center;
+    padding: 20px 16px 28px;
+    font-size: .78rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+  footer a { color: var(--mid-blue); text-decoration: none; }
+  footer strong { color: var(--navy); }
+
+  @media (min-width: 441px) {
+    body { padding: 16px 0; }
+    .shell { border-radius: 20px; min-height: auto; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" class="svg-sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="icon-google-g" viewBox="0 0 24 24">
+      <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+      <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+      <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+      <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+    </symbol>
+    <symbol id="icon-instagram" viewBox="0 0 24 24">
+      <path fill="#E1306C" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+    </symbol>
+    <symbol id="icon-facebook" viewBox="0 0 24 24">
+      <path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.315 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="shell">
+
+  <div class="hero">
+    <div class="logo-wrap">
+      <img src="https://www.brihaspathi.com/_next/image?url=%2Fhighbtlogo-tm-1.png&amp;w=384&amp;q=75" width="280" height="56" alt="Brihaspathi Technologies — The Guru of Tomorrow's Technology" loading="eager" decoding="async">
+    </div>
+    <h1>Share your <span>Experience</span> with Us</h1>
+    <p>Follow us on LinkedIn and Review Us to tell the world about your experience that matters to us.</p>
+  </div>
+
+  <div class="content">
+
+    <p class="intro">Complete each step in order. Links open in your browser or the right app.</p>
+
+    <!-- Step 1: LinkedIn -->
+ 
+
+    <div class="divider" role="presentation"></div>
+ <!-- Step 4: Instagram & Facebook -->
+
+    <section class="step-block" aria-labelledby="s4">
+      <div class="step-head">
+        <!-- <div class="step-num" id="s4">4</div> -->
+        <div>
+          <div class="step-title">Follow us on Social Media</div>
+          <div class="step-desc">Stay connected for updates & features</div>
+        </div>
+      </div>
+         <section class="step-block" aria-labelledby="s1">
+      <div class="step-head">
+        <div class="step-num" id="s1">1</div>
+        <div>
+          <div class="step-title">Follow us on LinkedIn</div>
+          <div class="step-desc">Open our company page and tap Follow</div>
+        </div>
+      </div>
+      <a class="btn btn-li" href="https://www.linkedin.com/company/brihaspathi-technologies/posts/?viewAsMember=true" target="_blank" rel="noopener noreferrer">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path fill="#fff" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.07 2.07 0 1 1 0 4.138 2.07 2.07 0 0 1 0-4.138zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </span>
+        <span>Brihaspathi on LinkedIn — Follow</span>
+      </a>
+      <p class="hint">If the app opens, use Follow on our page. On web, sign in and follow.</p>
+    </section>
+      <div class="social-list">
+        <a class="btn btn-insta" href="https://www.instagram.com/brihaspathi_tech_official?igsh=MTVnZW90dWt2aGR4dQ==" target="_blank" rel="noopener noreferrer">
+          <span class="s-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26"><use href="#icon-instagram"/></svg>
+          </span>
+          <span class="s-text">
+            <strong>Instagram</strong>
+            <small>@brihaspathi_tech_official — Follow us</small>
+          </span>
+          <span class="chev">›</span>
+        </a>
+        <a class="btn btn-fb" href="https://www.facebook.com/share/1GURAwMeJ2/" target="_blank" rel="noopener noreferrer">
+          <span class="s-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26"><use href="#icon-facebook"/></svg>
+          </span>
+          <span class="s-text">
+            <strong>Facebook</strong>
+            <small>Share & Follow our page</small>
+          </span>
+          <span class="chev">›</span>
+        </a>
+      </div>
+      <p class="hint">Tap to open in the Instagram or Facebook app. Follow us to stay updated!</p>
+    </section>
+    <!-- Step 2: Three Google reviews -->
+    <section class="step-block" aria-labelledby="s2">
+      <div class="step-head">
+        <div class="step-num" id="s2">2</div>
+        <div>
+          <div class="step-title">Rate and Review us</div>
+          <div class="step-desc">One review per location — thank you!</div>
+        </div>
+      </div>
+      <div class="google-list">
+        <a class="btn btn-g" href="https://share.google/XYE25x2P9LMcFM2NX" target="_blank" rel="noopener noreferrer">
+          <span class="g-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26"><use href="#icon-google-g"/></svg>
+          </span>
+          <span class="g-text">
+            <strong>Hyderabad</strong>
+            <small>Opens Google — post your review</small>
+          </span>
+          <span class="chev">›</span>
+        </a>
+        <a class="btn btn-g" href="https://share.google/lcVGiCmXjgOhqil2H" target="_blank" rel="noopener noreferrer">
+          <span class="g-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26"><use href="#icon-google-g"/></svg>
+          </span>
+          <span class="g-text">
+            <strong>Kolkata</strong>
+            <small>Opens Google — post your review</small>
+          </span>
+          <span class="chev">›</span>
+        </a>
+        <a class="btn btn-g" href="https://share.google/XLHobU8FWQGyEzywd" target="_blank" rel="noopener noreferrer">
+          <span class="g-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="26" height="26"><use href="#icon-google-g"/></svg>
+          </span>
+          <span class="g-text">
+            <strong>Assam</strong>
+            <small>Opens Google — post your review</small>
+          </span>
+          <span class="chev">›</span>
+        </a>
+      </div>
+      <p class="hint">Each link opens the right listing in Google so you can rate and write your review on your phone.</p>
+    </section>
+
+    <div class="divider" role="presentation"></div>
+
+    <!-- Step 3: Video + Drive -->
+    <section class="step-block" aria-labelledby="s3">
+      <div class="step-head">
+        <div class="step-num" id="s3">3</div>
+        <div>
+          <div class="step-title">Video testimonial</div>
+          <div class="step-desc">Upload to our Google Drive folder</div>
+        </div>
+      </div>
+
+      <div class="video-panel">
+        <div class="mini-steps">
+          <div class="mini-step"><b>①</b> Record 1–3 minutes on your phone (your story with Brihaspathi).</div>
+          <div class="mini-step"><b>②</b> Tap upload below — add the file in Drive (use guest upload if prompted).</div>
+          <div class="mini-step"><b>③</b> Name file: <em style="color:var(--navy)">YourName_Company_Testimonial.mp4</em></div>
+        </div>
+        <a class="btn btn-drive" href="https://drive.google.com/drive/folders/1dOEAyRdKbUQpD_iD3fPWqi_3GzFqfJ_i?usp=sharing" target="_blank" rel="noopener noreferrer">
+          <span class="brand-icon" aria-hidden="true">
+            <svg viewBox="0 0 87.3 78" xmlns="http://www.w3.org/2000/svg"><path fill="#0066DA" d="m6.6 43.9 12.1-21 26.4 45.5H18.9c-2.4 0-4.6-1.3-5.8-3.4L1.3 51.2c-1.2-2.1-1.2-4.7 0-6.8l5.3-9.1"/><path fill="#00AC47" d="m43.1 15.1 12.1 21L28.8 78 6.6 43.9l12.1-21 24.4-7.8"/><path fill="#EA4335" d="M74.7 43.9 62.6 22.9 36.2 68.4h29.2c2.4 0 4.6-1.3 5.8-3.4l11.8-20.4c1.2-2.1 1.2-4.7 0-6.8l-5.3-9.1"/><path fill="#00832D" d="M43.1 15.1 17.5 7.3c-2.4-.8-5.1-.3-7 1.4L1.3 26.5c-1.2 2.1-1.2 4.7 0 6.8l5.3 9.1"/><path fill="#2684FC" d="m69.4 7.6-25.6 7.8 12.1 21 26.4-45.5c1.2-2.1 1.2-4.7 0-6.8L74.7 1.4c-1.2-2.1-3.6-3.1-6-2.5"/><path fill="#FFBA00" d="M69.4 7.6 43.8 15.4 17.4 60.9c-1.2 2.1-.9 4.7.9 6.5l18.6 18.1c2.1 2.1 5.5 2.1 7.6 0l25.6-44.3c1.2-2.1 1.2-4.7 0-6.8l-5.3-9.1"/></svg>
+          </span>
+          <span>Upload video to Google Drive</span>
+        </a>
+      </div>
+    </section>
+
+    <div class="divider" role="presentation"></div>
+
+   
+
+  </div>
+
+  <aside class="important-note" aria-labelledby="important-note-heading">
+    <h2 id="important-note-heading">IMPORTANT NOTE</h2>
+    <p>Post election, we will be posting all the videos on our official channels and tagging you. Make sure to follow our page so that we can identify you and give you the recognition you deserve!</p>
+  </aside>
+
+  <footer>
+    <strong>Brihaspathi Technologies Limited</strong><br>
+    #501, Shangrila Plaza, Road No. 2, Hyderabad<br>
+    <a href="mailto:info@brihaspathi.com">info@brihaspathi.com</a><br>
+    <a href="https://www.brihaspathi.com" target="_blank" rel="noopener">brihaspathi.com</a>
+    — <em>The Guru of Tomorrow's Technology</em>
+  </footer>
+
+</div>
+
+</body>
+</html>

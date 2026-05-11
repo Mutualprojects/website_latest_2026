@@ -124,7 +124,7 @@ export const ACHIEVEMENTS = [
   },
   {
     id: "achievement-8",
-    title: "1.3M+",
+    title: "60M+",
     description: "students monitored in exams (NEET, MHCET & more)",
     bg: "linear-gradient(135deg, #0d9488, #2dd4bf)",
   },

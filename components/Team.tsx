@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Linkedin } from "lucide-react";
-import type { OrgGroup, OrgPerson } from "@/app/about/our-team/org-groups";
+import type { OrgGroup, OrgPerson } from "@/app/our-team/org-groups";
 
 interface TeamHoverGridProps {
   group: OrgGroup;

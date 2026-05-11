@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image, { StaticImageData } from "next/image";
-import { CASE_STUDIES_BY_SECTOR, PRESTIGIOUS_LOGO_KAZIRANGA, PRESTIGIOUS_LOGO_TGBIE } from "../../app/casestudy/data";
+import { CASE_STUDIES_BY_SECTOR, PRESTIGIOUS_LOGO_KAZIRANGA, PRESTIGIOUS_LOGO_TGBIE } from "../../app/case-studies/data";
 
 /* ------------------ Types ------------------ */
 

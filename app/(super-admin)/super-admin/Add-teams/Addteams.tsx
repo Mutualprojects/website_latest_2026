@@ -21,8 +21,8 @@ import {
     PlusOutlined,
 } from "@ant-design/icons";
 
-const API_BASE = "http://172.30.0.200:1334/api";
-const STRAPI_URL = "http://172.30.0.200:1334";
+const API_BASE = "/cms-api/api";
+const STRAPI_URL = "/cms-api";
 
 const getAuthHeaders = () => {
     const token =

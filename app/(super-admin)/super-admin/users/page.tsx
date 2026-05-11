@@ -22,7 +22,7 @@ import {
 const { TextArea } = Input;
 const { Option } = Select;
 
-const API_URL = "http://172.30.0.200:1334/api/categories";
+const API_URL = "/cms-api/api/categories";
 
 type SEO = {
   metaTitle?: string;

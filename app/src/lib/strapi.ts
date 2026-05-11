@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://172.30.0.200:1334/api";
+const API_URL = process.env.NEXT_PUBLIC_STRAPI_URL || "/cms-api/api";
 
 export const loginUser = async (identifier: string, password: string) => {
   try {

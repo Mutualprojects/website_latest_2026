@@ -44,20 +44,21 @@ export default function HoverFooter() {
       title: "Quick Links",
       links: [
         { label: "Home", href: "/" },
-        { label: "Services", href: "/services" },
+        { label: "Services", href: "https://www.brihaspathi.com/services" },
         { label: "Solutions", href: "/solutions" },
         { label: "FAQ", href: "/faq" },
         { label: "Get in Touch", href: "/contact" },
+        {label:"Escalation Matrix" , href:"/escalation-matrix"}
       ],
     },
     {
       title: "Company",
       links: [
         { label: "About Us", href: "/about" },
-        { label: "Who We Are", href: "/about/who-we-are" },
+        { label: "Who We Are", href: "/who-we-are" },
         { label: "Board of Directors", href: "/about/Board_of_directors" },
-        { label: "Our Team", href: "/about/our-team" },
-        { label: "Our Journey", href: "/about/ourjourney" },
+        { label: "Our Team", href: "/our-team" },
+        { label: "Our Journey", href: "/ourjourney" },
         { label: "Chairman & Managing Director", href: "/about/our-cmd" },
       ],
     },
@@ -81,11 +82,13 @@ export default function HoverFooter() {
     {
       title: "Resources",
       links: [
-        { label: "Our Events", href: "/ourevents" },
+        { label: "Our Events", href: "/our-events" },
         { label: "News", href: "/news" },
         { label: "Our Projects", href: "/our-projects" },
+        { label: "Government Projects", href: "/govt-projects" },
         { label: "Media", href: "/media" },
-        { label: "Case Studies", href: "/casestudy" },
+        { label: "Case Studies", href: "/case-studies" },
+        { label: "Press Release", href: "/press-release" },
         { label: "CSR Initiatives", href: "/resources/csr" },
         { label: "Privacy Policy", href: "/privacy-policy" },
         { label: "Terms and Conditions", href: "/terms-and-conditions" },
@@ -162,6 +165,7 @@ export default function HoverFooter() {
               width={220}
               height={80}
               className="object-contain"
+              style={{ width: "auto", height: "auto" }}
             />
             <p className="text-sm leading-relaxed text-[#07518a] max-w-md">
               Brihaspathi delivers intelligent surveillance, smart mobility,

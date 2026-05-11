@@ -4,7 +4,7 @@ import React from 'react'
 
 function page() {
   return (
-<main className="w-full bg-white mt-20">
+    <main className="w-full bg-white mt-20">
       <HeadphoneScroll />
       {/* <AIBusSolutionScroll/> */}
     </main>

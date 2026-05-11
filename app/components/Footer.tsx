@@ -52,6 +52,7 @@ const aboutLinks = [
   { text: "Managing Director", href: "/about/our-cmd" },
   { text: "Board of Directors", href: "/about/Board_of_directors" },
   { text: "Our Team", href: "/about/our-team" },
+  { text: "Who We Are", href: "/who-we-are" },
 ];
 
 const careersLinks = [
@@ -69,24 +70,28 @@ const newsMediaLinks = [
   { text: "Events", href: "/events" },
   { text: "News", href: "/news" },
   { text: "Media", href: "/media" },
+  { text: "Case Studies", href: "/case-studies" },
+  { text: "Press Release", href: "/press-release" },
+  { text: "Government Projects", href: "/govt-projects" },
 ];
 
 const servicesLinks = [
-  { text: "System Integration & Turnkey", href: "/our-services/system-integration-turnkey-delivery" },
-  { text: "Solution Engineering", href: "/our-services/solution-engineering-consulting" },
-  { text: "Command & Control Centre", href: "/our-services/command-control-centre-engineering" },
-  { text: "IT & Digital Infrastructure", href: "/our-services/it-network-digital-infrastructure" },
-  { text: "AI Video Analytics", href: "/our-services/ai-video-analytics-platform-integration" },
-  { text: "Software Products & Services", href: "/our-services/software-products-services" },
-  { text: "Smart Bus Solutions", href: "/our-services/smart-bus-solutions" },
+  { text: "System Integration & Turnkey", href: "https://www.brihaspathi.com/our-services" },
+  { text: "Solution Engineering", href: "https://www.brihaspathi.com/our-services" },
+  { text: "Command & Control Centre", href: "https://www.brihaspathi.com/our-services" },
+  { text: "IT & Digital Infrastructure", href: "https://www.brihaspathi.com/our-services" },
+  { text: "AI Video Analytics", href: "https://www.brihaspathi.com/our-services" },
+  { text: "Software Products & Services", href: "https://www.brihaspathi.com/our-services" },
+  { text: "Smart Bus Solutions", href: "https://www.brihaspathi.com/our-services" },
 ];
 
 const quickLinks = [
   { text: "Our Services", href: "/our-services" },
   { text: "Explore Solutions", href: "/solutions" },
   { text: "Our Projects", href: "/our-projects" },
-  { text: "Case Studies", href: "/casestudy" },
+  { text: "Case Studies", href: "/case-studies" },
   { text: "FAQ", href: "/faq" },
+  { text: "Escalation Matrix", href: "/escalation-matrix" },
   { text: "Get in Touch", href: "/contact" },
 ];
 

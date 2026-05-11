@@ -21,7 +21,7 @@ import {
   Server,
   ClipboardList,
 } from "lucide-react";
-import { servicesData } from "@/app/our-services/servicesdata";
+import { servicesData } from "@/app/services/servicesdata";
 
 /* ─── brand ─── */
 const B = "#07518a";

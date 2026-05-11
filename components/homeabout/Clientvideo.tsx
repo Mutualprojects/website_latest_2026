@@ -10,7 +10,7 @@ export default function Clientvideo() {
   title="Prestigious and Major Projects"
   subtitle="Trusted Across India"
   meta="Since 2006"
-  media="https://ik.imagekit.io/tszzqq5h6/compressed-video.mp4?tr=orig"
+  media="https://ik.imagekit.io/uakttxynx/WE%20SITE%20TESTIMONIAL%20video%20-.mp4?updatedAt=1771420313235"
   overlay={{
     caption: "Trusted by India • Since 2006",
     heading: "Our Prestigious Clients",
