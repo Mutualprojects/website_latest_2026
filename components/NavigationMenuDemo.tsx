@@ -3,7 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ChevronDown, ArrowRight, Calendar, Newspaper, BookOpen, Landmark, Briefcase, Video, FileText, Mic2, MessageSquare, Download, PlayCircle, Star, Shield, Zap, Cpu, Fingerprint, Bus, Wifi, Sun, Settings } from "lucide-react";
+import { Menu, X, ChevronDown, ArrowRight, Calendar, Newspaper, BookOpen, Landmark, Briefcase, Video, FileText, Mic2, MessageSquare, Download, PlayCircle, Star, Shield, Zap, Cpu, Fingerprint, Bus, Wifi, Sun, Settings, VideoIcon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 
@@ -89,7 +89,7 @@ const ABOUT_MENU: AboutItem[] = [
   { id: 4, name: "Our Team", href: "/our-team" },
   { id: 3, name: "Our Journey", href: "/our-journey" },
   { id: 6, name: "Chairman & Managing Director", href: "/about/our-cmd" },
-  // {id:7,name:"google-reviews",href:"/google-reviews"}
+  { id: 7, name: "What Our Clients Said", href: "/testimonials" }
 ];
 
 const RESOURCES_MENU: ResourceMenuItem[] = [
@@ -108,42 +108,49 @@ const RESOURCES_MENU: ResourceMenuItem[] = [
     icon: Newspaper
   },
   {
-    id: 9,
+    id: 3,
     name: "Blogs",
     href: "/blogs",
     description: "Expert insights and industry trends.",
     icon: BookOpen
   },
   {
-    id: 7,
-    name: "Government Projects",
+    id: 4,
+    name: "Govt. Projects",
     href: "/govt-projects",
     description: "Collaborations with government bodies.",
     icon: Landmark
   },
   {
-    id: 3,
+    id: 5,
     name: "Our Projects",
     href: "/our-projects",
     description: "Showcase of our diverse portfolio.",
     icon: Briefcase
   },
   {
-    id: 4,
+    id: 6,
     name: "Media",
     href: "/media",
     description: "Videos and images of our operations.",
     icon: Video
   },
   {
-    id: 5,
+    id: 7,
+    name: "Videos",
+    href: "/videos",
+    description: "Corporate cinematic theater archive.",
+    icon: VideoIcon
+  },
+  {
+    id: 8,
     name: "Case Studies",
     href: "/case-studies",
     description: "In-depth client success stories.",
     icon: FileText
   },
   {
-    id: 8,
+    id: 9,
     name: "Press Release",
     href: "/press-release",
     description: "Official statements and milestones.",
@@ -151,13 +158,13 @@ const RESOURCES_MENU: ResourceMenuItem[] = [
   },
   {
     id: 10,
-    name: "Write a Review",
+    name: "Reviews",
     href: "/write-a-review",
     description: "Share your feedback with us.",
     icon: MessageSquare
   },
   {
-    id: 6,
+    id: 11,
     name: "Brochure",
     href: "/brochure",
     description: "Corporate profile and catalog.",
@@ -380,7 +387,7 @@ export function NavigationMenuDemo() {
                         </div>
 
                         {/* Featured Section */}
-                        <motion.div 
+                        <motion.div
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: 0.2 }}
@@ -392,7 +399,7 @@ export function NavigationMenuDemo() {
                               <h4 className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.3em]">
                                 BTL Products
                               </h4>
-                              <motion.div 
+                              <motion.div
                                 whileHover={{ scale: 1.02 }}
                                 className="relative aspect-[21/9] w-full rounded-lg overflow-hidden border border-gray-100 shadow-md"
                               >
@@ -508,7 +515,7 @@ export function NavigationMenuDemo() {
                         </div>
 
                         {/* Featured Section */}
-                        <motion.div 
+                        <motion.div
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: 0.2 }}
@@ -520,7 +527,7 @@ export function NavigationMenuDemo() {
                               <h4 className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.3em]">
                                 BTL Solutions
                               </h4>
-                              <motion.div 
+                              <motion.div
                                 whileHover={{ scale: 1.02 }}
                                 className="relative aspect-[21/9] w-full rounded-lg overflow-hidden border border-gray-100 shadow-md"
                               >
@@ -535,23 +542,23 @@ export function NavigationMenuDemo() {
 
                             {/* Bottom Aligned Content */}
                             <div className="mt-auto space-y-4">
-                                <div className="space-y-2">
-                                  <h5 className="text-[13px] font-bold text-[#07518a] flex items-center gap-2">
-                                    Integrated Intelligence
-                                    <span className="relative flex h-1.5 w-1.5">
-                                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#07518a] opacity-75"></span>
-                                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#07518a]"></span>
-                                    </span>
-                                  </h5>
-                                  <p className="text-[9px] text-gray-600 leading-relaxed font-medium">
-                                    Smart solutions for enterprise & gov.
-                                  </p>
-                                  <div className="flex flex-wrap gap-1.5 pt-1">
-                                    {["Enterprise", "Smart City", "Security"].map((tag) => (
-                                      <span key={tag} className="text-[8px] font-bold bg-white text-[#07518a] px-2 py-0.5 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default">{tag}</span>
-                                    ))}
-                                  </div>
+                              <div className="space-y-2">
+                                <h5 className="text-[13px] font-bold text-[#07518a] flex items-center gap-2">
+                                  Integrated Intelligence
+                                  <span className="relative flex h-1.5 w-1.5">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#07518a] opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#07518a]"></span>
+                                  </span>
+                                </h5>
+                                <p className="text-[9px] text-gray-600 leading-relaxed font-medium">
+                                  Smart solutions for enterprise & gov.
+                                </p>
+                                <div className="flex flex-wrap gap-1.5 pt-1">
+                                  {["Enterprise", "Smart City", "Security"].map((tag) => (
+                                    <span key={tag} className="text-[8px] font-bold bg-white text-[#07518a] px-2 py-0.5 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default">{tag}</span>
+                                  ))}
                                 </div>
+                              </div>
                             </div>
                           </div>
                         </motion.div>
@@ -588,32 +595,30 @@ export function NavigationMenuDemo() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-screen max-w-5xl z-[1100]"
+                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-screen max-w-7xl z-[1100]"
                     >
-                      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex min-h-[520px]">
-                        <div className="flex-1 p-8 grid grid-cols-1 lg:grid-cols-2 gap-x-8 gap-y-4">
+                      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex">
+                        <div className="flex-1 p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2 content-start">
                           {RESOURCES_MENU.map((item, index) => (
                             <motion.div
                               key={item.id}
-                              initial={{ opacity: 0, x: -10 }}
-                              animate={{ opacity: 1, x: 0 }}
-                              transition={{ delay: index * 0.05 }}
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: index * 0.03 }}
                             >
                               <Link
                                 href={item.href}
-                                className="group flex items-start gap-4 p-4 rounded-xl hover:bg-[#07518a]/5 transition-all duration-300 relative overflow-hidden"
+                                className="group flex items-start gap-4 p-3.5 rounded-xl hover:bg-[#07518a]/5 transition-all duration-300 relative overflow-hidden border border-transparent hover:border-[#07518a]/10"
                               >
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#07518a] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
                                 <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#07518a]/5 flex items-center justify-center text-[#07518a] group-hover:bg-[#07518a] group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
                                   <item.icon className="w-5 h-5" />
                                 </div>
                                 <div className="flex-1 min-w-0">
-                                  <div className="flex items-center justify-between gap-2 mb-1">
-                                    <span className="font-semibold text-gray-800 group-hover:text-[#07518a] transition-colors text-sm">
-                                      {item.name}
-                                    </span>
+                                  <div className="font-bold text-gray-800 group-hover:text-[#07518a] transition-colors text-[13px] mb-0.5 leading-tight">
+                                    {item.name}
                                   </div>
-                                  <p className="text-[11px] text-gray-500 leading-relaxed group-hover:text-gray-700 transition-colors line-clamp-2">
+                                  <p className="text-[10px] text-gray-500 leading-normal group-hover:text-gray-700 transition-colors line-clamp-2">
                                     {item.description}
                                   </p>
                                 </div>
@@ -627,7 +632,7 @@ export function NavigationMenuDemo() {
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: 0.2 }}
-                          className="w-[340px] relative overflow-hidden flex flex-col border-l border-gray-100 bg-gradient-to-b from-gray-50/50 to-white"
+                          className="w-[280px] relative overflow-hidden flex flex-col border-l border-gray-100 bg-gradient-to-b from-gray-50/50 to-white"
                         >
                           <div className="relative z-10 flex flex-col h-full p-8">
                             {/* Top Section with Rectangular Image */}
@@ -635,7 +640,7 @@ export function NavigationMenuDemo() {
                               <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em]">
                                 About BTL
                               </h4>
-                              <motion.div 
+                              <motion.div
                                 whileHover={{ scale: 1.02 }}
                                 className="relative aspect-video w-full rounded-xl overflow-hidden border border-gray-100 shadow-lg"
                               >

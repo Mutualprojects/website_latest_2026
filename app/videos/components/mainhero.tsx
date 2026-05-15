@@ -95,9 +95,9 @@ function MainHero() {
 
             {/* ── YOUTUBE SUBSCRIBE FLOATING BUTTON ────────────────────────────── */}
             <div className="absolute bottom-8 right-8 z-20">
-                <a 
-                    href="https://www.youtube.com/@brihaspathi?sub_confirmation=1" 
-                    target="_blank" 
+                <a
+                    href="https://www.youtube.com/@brihaspathi?sub_confirmation=1"
+                    target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-4 px-6 py-3.5 bg-[#FF0000] text-white rounded-full text-[10px] font-black uppercase tracking-widest shadow-2xl shadow-red-600/30 hover:scale-105 hover:bg-red-700 transition-all"
                 >

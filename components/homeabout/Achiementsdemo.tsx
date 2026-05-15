@@ -100,7 +100,7 @@ export const ACHIEVEMENTS = [
   },
   {
     id: "achievement-3",
-    title: "2 Lakh+",
+    title: "3 Lakh+",
     description: "cameras deployed in General Elections",
     bg: "linear-gradient(135deg, #b45309, #f59e0b)",
   },

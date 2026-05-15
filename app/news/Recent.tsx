@@ -15,7 +15,7 @@ import mediaberief from './nesbanners/Screenshot 2026-02-27 102313.png';
 import apn from './nesbanners/Screenshot 2026-02-27 102429.png';
 import bombay from './nesbanners/Screenshot 2026-02-27 102404.png';
 import csxo from './nesbanners/Screenshot 2026-02-27 102133.png';
-
+import main_image from './Screenshot 2026-05-12 183649.png'
 // =============================
 // PRESS LOGOS
 // =============================
@@ -46,6 +46,9 @@ export interface ArticleData {
 // ARTICLES DATA (15 English Articles)
 // =============================
 export const articlesData: ArticleData[] = [
+
+
+ 
   {
     id: 1,
     title: 'Spotlighting Merit and Awarding Entrepreneurial Spirit',
@@ -76,6 +79,7 @@ export const articlesData: ArticleData[] = [
     pressIcon: Et,
     category: 'Security',
   },
+
   {
     id: 4,
     title: 'Budget 2026 Quotes: Rajasekhar Papolu, Chairman & Managing Director',
@@ -86,6 +90,7 @@ export const articlesData: ArticleData[] = [
     pressIcon: cxoLogo,
     category: 'Policy',
   },
+
   {
     id: 5,
     title: "How Brihaspathi Technologies Is Shaping India's Security, Software and Solar Ecosystem",
@@ -105,6 +110,16 @@ export const articlesData: ArticleData[] = [
     pressName: 'Media Brief',
     pressIcon: mediaBriefLogo,
     category: 'Opinion',
+  },
+   {
+    id: 16,
+    title: 'Advancing Border Security Through Intelligent Surveillance Systems',
+    description: 'Highlights AI intrusion detection, thermal imaging, anti-drone systems and 75,000+ camera integrations.',
+    image: main_image,
+    link: '#',
+    pressName: 'Security & Defence',
+    pressIcon: Et,
+    category: 'Security',
   },
   {
     id: 7,
@@ -136,6 +151,8 @@ export const articlesData: ArticleData[] = [
     pressIcon: bombayTimesLogo,
     category: 'Contracts',
   },
+
+
   {
     id: 10,
     title: 'Brihaspathi Technologies Secures $10 Million Funding and Plans IPO by FY27',
