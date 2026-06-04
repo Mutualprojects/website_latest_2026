@@ -1184,6 +1184,44 @@ function Lightbox({ event, imageIndex, onClose, onNext, onPrev, onSelect }: Ligh
 // MAIN COMPONENT
 // ─────────────────────────────────────────────────────────────
 const EventsShowcase: React.FC = () => {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    async function fetchEvents() {
+      try {
+        const res = await fetch("/strapi/api/events?populate=*");
+        if (!res.ok) throw new Error("Failed to fetch events");
+        const json = await res.json();
+        if (active && json.data) {
+          const fetchedEvents: Event[] = json.data.map((item: any) => {
+            const mainImg = item.mainImage?.url ? `/strapi${item.mainImage.url}` : "";
+            const galleryImgs = item.eventGallery?.map((g: any) => `/strapi${g.url}`) || [];
+            const allImages = mainImg ? [mainImg, ...galleryImgs] : galleryImgs;
+            return {
+              id: item.documentId || String(item.id),
+              title: item.eventTitle || "Untitled",
+              description: item.eventDescription || "",
+              images: allImages,
+              category: item.eventType || "Event",
+              date: item.eventDate || new Date().toISOString().split("T")[0],
+              featured: false,
+              tags: [],
+            };
+          });
+          setEvents(fetchedEvents);
+        }
+      } catch (err) {
+        console.error("Error fetching events:", err);
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+    fetchEvents();
+    return () => { active = false; };
+  }, []);
+
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
   const [activeCategories, setActiveCategories] = useState<Set<string>>(new Set());
@@ -1219,21 +1257,21 @@ const EventsShowcase: React.FC = () => {
   }, [selectedEvent]);
 
   const categoryData = useMemo(() => {
-    const cats = Array.from(new Set(EVENTS.map((e) => e.category)));
+    const cats = Array.from(new Set(events.map((e) => e.category)));
     return ["All", ...cats].map((name) => ({
       name,
-      count: name === "All" ? EVENTS.length : EVENTS.filter((e) => e.category === name).length,
+      count: name === "All" ? events.length : events.filter((e) => e.category === name).length,
     }));
-  }, []);
+  }, [events]);
 
   const allTags = useMemo(() => {
     const s = new Set<string>();
-    EVENTS.forEach((e) => e.tags?.forEach((t) => s.add(t)));
+    events.forEach((e) => e.tags?.forEach((t) => s.add(t)));
     return Array.from(s).sort();
-  }, []);
+  }, [events]);
 
   const filteredEvents = useMemo(() => {
-    let res = [...EVENTS];
+    let res = [...events];
 
     if (activeCategories.size > 0 && !activeCategories.has("All")) {
       res = res.filter((e) => activeCategories.has(e.category));
@@ -1394,7 +1432,7 @@ const EventsShowcase: React.FC = () => {
               className="inline-flex items-center gap-0 rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm divide-x divide-gray-100"
             >
               {[
-                { icon: Calendar, label: "Events", value: EVENTS.length },
+                { icon: Calendar, label: "Events", value: events.length },
                 { icon: Users, label: "Moments", value: "500+" },
                 { icon: Award, label: "Awards", value: "50+" },
               ].map((s, i) => (
