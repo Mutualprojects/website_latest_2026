@@ -46,154 +46,7 @@ const DEFAULT_SIZES: Required<EventParallaxProps["sizes"]> = {
 
 /* ================= YOUR EVENTS DATA ================= */
 
-const IK_BASE = "https://ik.imagekit.io/waxuvuasch/Eventimages";
-
-export const EVENTS_DATA: EventItem[] = [
-  {
-    title: "Independence Day Celebrations",
-    images: [
-      `${IK_BASE}/Independencday%20Celebrations/1.jpeg`,
-      `${IK_BASE}/Independencday%20Celebrations/2.jpeg`,
-      `${IK_BASE}/Independencday%20Celebrations/3.jpeg`,
-    ],
-  },
-  {
-    title: "Conference Room Group Photos",
-    images: [
-      `${IK_BASE}/Conference%20room%20Group%20photos/WhatsApp%20Image%202025-09-16%20at%2014.43.05.jpeg`,
-      `${IK_BASE}/Conference%20room%20Group%20photos/WhatsApp%20Image%202025-09-16%20at%2014.43.04.jpeg`,
-    ],
-  },
-  {
-    title: "Vinayaka Chaturthi Celebrations 2025",
-    images: [
-      `${IK_BASE}/Vinayaka%20Chaturthi%20Celebrations%20-%202025/1.jpeg`,
-      `${IK_BASE}/Vinayaka%20Chaturthi%20Celebrations%20-%202025/2.jpeg`,
-      `${IK_BASE}/Vinayaka%20Chaturthi%20Celebrations%20-%202025/3.jpeg`,
-    ],
-  },
-  {
-    title: "Health Campaign",
-    images: [
-      `${IK_BASE}/Health%20Campign/1.jpg`,
-      `${IK_BASE}/Health%20Campign/2.jpg`,
-      `${IK_BASE}/Health%20Campign/3.jpg`,
-      `${IK_BASE}/Health%20Campign/4.jpg`,
-    ],
-  },
-  {
-    title: "Mother’s Day Celebration",
-    images: [
-      `${IK_BASE}/Mother's%20day%20Celebration/1.jpeg`,
-      `${IK_BASE}/Mother's%20day%20Celebration/2.jpeg`,
-      `${IK_BASE}/Mother's%20day%20Celebration/3.jpeg`,
-    ],
-  },
-  {
-    title: "Awards",
-    images: [
-      "https://ik.imagekit.io/tsuss6ulm/Awards/1.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/Awards/4.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/Awards/6.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/Awards/3.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/Awards/5.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/Awards/2.jpg",
-    ],
-  },
-  {
-    title: "Father's Day",
-    images: [
-      "https://ik.imagekit.io/tsuss6ulm/Father'sDay/3.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Father'sDay/7.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Father'sDay/5.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Father'sDay/4.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Father'sDay/6.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Father'sDay/1.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Father'sDay/2.jpeg",
-    ],
-  },
-  {
-    title: "Women's Day",
-    images: [
-      "https://ik.imagekit.io/tsuss6ulm/Womensday/4.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Womensday/6.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Womensday/3.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Womensday/5.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Womensday/2.jpeg",
-      "https://ik.imagekit.io/tsuss6ulm/Womensday/1.jpeg",
-    ],
-  },
-  {
-    title: "Credai Expo",
-    images: [
-      "https://ik.imagekit.io/tsuss6ulm/EXPO/CredaiExpo/1.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/EXPO/CredaiExpo/2.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/EXPO/CredaiExpo/3.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/EXPO/CredaiExpo/4.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/EXPO/CredaiExpo/5.jpg",
-    ],
-  },
-  {
-    title: "Delhi Expo",
-    images: [
-      "https://ik.imagekit.io/tsuss6ulm/EXPO/DelhiExpo/1.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/EXPO/DelhiExpo/2.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/EXPO/DelhiExpo/3.JPG",
-    ],
-  },
-  {
-    title: "Men's Day",
-    images: [
-      "https://ik.imagekit.io/tsuss6ulm/New%20Compressed%20(zipped)%20Folder/3.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/New%20Compressed%20(zipped)%20Folder/5.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/New%20Compressed%20(zipped)%20Folder/2.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/New%20Compressed%20(zipped)%20Folder/4.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/New%20Compressed%20(zipped)%20Folder/6.JPG",
-    ],
-  },
-  {
-    title: "Diwali",
-    images: [
-      "https://ik.imagekit.io/tsuss6ulm/D/3.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/D/4.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/D/2.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/D/6.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/D/3.JPG",
-    ],
-  },
-  {
-    title: "Tree Plantation",
-    images: [
-      "https://ik.imagekit.io/tsuss6ulm/Tree%20Plantation/67.jpg?updatedAt=1770960427608",
-      "https://ik.imagekit.io/tsuss6ulm/Tree%20Plantation/68.jpg?updatedAt=1770960427566",
-      "https://ik.imagekit.io/tsuss6ulm/Tree%20Plantation/32.jpg?updatedAt=1770960427535",
-      "https://ik.imagekit.io/tsuss6ulm/Tree%20Plantation/35.jpg?updatedAt=1770960427498",
-    ],
-  },
-  {
-    title: "Wild Waters",
-    images: [
-      "https://ik.imagekit.io/tsuss6ulm/wild%20waters/26.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/wild%20waters/20.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/wild%20waters/28.jpg",
-    ],
-  },
-  {
-    title: "BTL Gallery",
-    images: [
-      "https://ik.imagekit.io/tsuss6ulm/Old%20photos/20230329182143_IMG_8851.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/Old%20photos/20230329182127_IMG_8850.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/Old%20photos/IMG-20210406-WA0100.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/Old%20photos/IMG-20210406-WA0087.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/Old%20photos/IMG-20210401-WA0101.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/Old%20photos/IMG_2388.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/Old%20photos/IMG_2387.JPG",
-      "https://ik.imagekit.io/tsuss6ulm/Old%20photos/IMG-20170121-WA0035.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/Old%20photos/IMG-20170121-WA0010.jpg",
-      "https://ik.imagekit.io/tsuss6ulm/Old%20photos/WhatsApp%20Image%202026-02-13%20at%2011.49.02.jpeg",
-    ],
-  },
-];
+// Data fetched from Strapi API dynamically
 
 /* ================= FLATTEN EVENTS ================= */
 
@@ -406,20 +259,53 @@ const EventCard: React.FC<EventCardProps> = ({
 /* ================= DEMO EXPORT ================= */
 
 export default function EventParallaxDemo() {
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let active = true;
+    async function fetchEvents() {
+      try {
+        const res = await fetch("/strapi/api/events?populate=*");
+        if (!res.ok) throw new Error("Failed to fetch events");
+        const json = await res.json();
+        if (active && json.data) {
+          const fetchedEvents: EventItem[] = json.data.map((item: any) => {
+            const mainImg = item.mainImage?.url ? `/strapi${item.mainImage.url}` : "";
+            const galleryImgs = item.eventGallery?.map((g: any) => `/strapi${g.url}`) || [];
+            const allImages = mainImg ? [mainImg, ...galleryImgs] : galleryImgs;
+            return {
+              title: item.eventTitle || "Untitled",
+              description: item.eventDescription || "",
+              images: allImages.filter(Boolean),
+            };
+          });
+          setEvents(fetchedEvents);
+        }
+      } catch (err) {
+        console.error("Error fetching events:", err);
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+    fetchEvents();
+    return () => { active = false; };
+  }, []);
+
   return (
     <section className="relative w-full bg-white overflow-hidden">
       {/* ✅ CONTROL SIZES HERE */}
-      <EventParallax
-        events={EVENTS_DATA}
-        sizes={{
-          mobile: { w: "w-[12.5rem]", h: "h-44" },
-          tablet: { w: "sm:w-[18rem]", h: "sm:h-72" },
-          desktop: { w: "md:w-[30rem]", h: "md:h-96" },
-          gap: { mobile: "space-x-6", desktop: "md:space-x-16" },
-        }}
-      />
-
-  
+      {!loading && events.length > 0 && (
+        <EventParallax
+          events={events}
+          sizes={{
+            mobile: { w: "w-[12.5rem]", h: "h-44" },
+            tablet: { w: "sm:w-[18rem]", h: "sm:h-72" },
+            desktop: { w: "md:w-[30rem]", h: "md:h-96" },
+            gap: { mobile: "space-x-6", desktop: "md:space-x-16" },
+          }}
+        />
+      )}
     </section>
   );
 }
