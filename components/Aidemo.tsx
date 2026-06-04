@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import AIVMSHero from "./Surveillance";
 
 const videoSrc =
-  "https://ik.imagekit.io/tsuss6ulm/Hero%20section%20%20video%20.mp4?tr=orig";
+  "https://ik.imagekit.io/cbrrjodcw/Hero%20section%20video%20.mp4";
 
 export function SplineSceneBasic() {
   return (
