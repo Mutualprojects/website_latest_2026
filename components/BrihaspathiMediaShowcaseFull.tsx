@@ -48,22 +48,15 @@ const brihaspathiMedia: MediaItem[] = [
     category: "article",
   },
 
-  {
-    title:
-      "Brihaspathi Technologies Raises $10 Million Funding, Plans IPO Next Year",
-    url: "https://www.ndtvprofit.com/business/brihaspathi-technologies-raises-10-million-funding-plans-ipo-next-year",
-    platform: "NDTV",
-    date: "27 Jun 2025",
-    category: "article",
-  },
-  {
-    title:
-      "Brihaspathi Technologies Limited The Indian Company Turning AI into Real-World Security",
-    url: "https://republicbytes.com/brihaspathi-technologies-limited-the-indian-company-turning-ai-into-real-world-security",
-    platform: "PUBLIC BYTES",
-    date: "Sep 29, 2025",
-    category: "article",
-  },
+  // {
+  //   title:
+  //     "Brihaspathi Technologies Raises $10 Million Funding, Plans IPO Next Year",
+  //   url: "https://www.ndtvprofit.com/business/brihaspathi-technologies-raises-10-million-funding-plans-ipo-next-year",
+  //   platform: "NDTV",
+  //   date: "27 Jun 2025",
+  //   category: "article",
+  // },
+ 
   {
     title: "Brihaspathi Tech raises $10M, bags MSRTC deal; ready for IPO",
     url: "https://www.thehansindia.com/business/brihaspathi-tech-raises-10m-bags-msrtc-deal-ready-for-ipo-983046",
@@ -73,26 +66,26 @@ const brihaspathiMedia: MediaItem[] = [
   },
 
   // Post + mixed
-  {
-    title: "Power of Women",
-    image:
-      "https://media.licdn.com/dms/image/v2/D5622AQE8S1m5teqe_Q/feedshare-shrink_1280/B56Zc1JBLXHgAk-/0/1748943246715?e=1762387200&v=beta&t=MJOWvhwie2RJGnb58Q2GmgsHJmXg3ORJK2scjI6PiT8",
-    url: "https://www.linkedin.com/posts/brihaspathi-technologies_timespowerwomen-womenempowerment2025-breakingbarriers-activity-7339563193515548672-xzgi?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD0s5osBFRIpzZKGDMrpQR7BkKopqNbbDa4",
-    platform: "TV9 TELUGU",
-    relatedUrl: "https://www.youtube.com/watch?v=AvxqkXx31HI",
-    category: "post",
-  },
+  // {
+  //   title: "Power of Women",
+  //   image:
+  //     "https://media.licdn.com/dms/image/v2/D5622AQE8S1m5teqe_Q/feedshare-shrink_1280/B56Zc1JBLXHgAk-/0/1748943246715?e=1762387200&v=beta&t=MJOWvhwie2RJGnb58Q2GmgsHJmXg3ORJK2scjI6PiT8",
+  //   url: "https://www.linkedin.com/posts/brihaspathi-technologies_timespowerwomen-womenempowerment2025-breakingbarriers-activity-7339563193515548672-xzgi?utm_source=share&utm_medium=member_desktop&rcm=ACoAAD0s5osBFRIpzZKGDMrpQR7BkKopqNbbDa4",
+  //   platform: "TV9 TELUGU",
+  //   relatedUrl: "https://www.youtube.com/watch?v=AvxqkXx31HI",
+  //   category: "post",
+  // },
 
   // Videos
-  {
-    title: "12 Lakh CC Cameras in India Installed by Brihaspathi Technologies",
-    image:
-      "https://media.licdn.com/dms/image/v2/D5622AQFCDioLQad3pA/feedshare-shrink_2048_1536/B56ZgXNztmHMAo-/0/1752736153132?e=1762387200&v=beta&t=xo2lTTCofwN5DUW_-hvRucxS3Xmn7-SjhUY9eARtObo",
-    url: "https://youtu.be/eZ6RPwVYxX4?si=gjZ6C1lhUc58-t3_",
-    platform: "ETV video",
-    date: "Jul 16, 2025",
-    category: "video",
-  },
+  // {
+  //   title: "12 Lakh CC Cameras in India Installed by Brihaspathi Technologies",
+  //   image:
+  //     "https://media.licdn.com/dms/image/v2/D5622AQFCDioLQad3pA/feedshare-shrink_2048_1536/B56ZgXNztmHMAo-/0/1752736153132?e=1762387200&v=beta&t=xo2lTTCofwN5DUW_-hvRucxS3Xmn7-SjhUY9eARtObo",
+  //   url: "https://youtu.be/eZ6RPwVYxX4?si=gjZ6C1lhUc58-t3_",
+  //   platform: "ETV video",
+  //   date: "Jul 16, 2025",
+  //   category: "video",
+  // },
   {
     title:
       "₹7,000 Salary to ₹700 Crores: Brihaspathi Technologies MD Rajasekhar Papolu’s Inspirational Journey",

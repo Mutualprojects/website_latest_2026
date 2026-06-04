@@ -2,6 +2,7 @@ import { EVENTS_DATA } from '@/components/EventHeroParallax'
 import { EventParallax } from '@/components/eventparallax'
 import EventsShowcase from '@/components/Professional'
 import React from 'react'
+import NewsSections from '../case-studies/Newssections'
 
 function page() {
   return (
@@ -18,7 +19,7 @@ function page() {
 />
 
 <EventsShowcase/>
-
+{/* <NewsSections/> */}
     </div>
   )
 }

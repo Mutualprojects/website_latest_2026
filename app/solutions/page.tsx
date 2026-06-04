@@ -9,6 +9,9 @@ export const metadata = {
   title: "Solutions - Our Innovative Offerings",
   description:
     "Explore our range of smart solutions for transportation, security, energy, biometrics, and enterprise management.",
+  alternates: {
+    canonical: "https://www.brihaspathi.com/solutions",
+  },
 };
 
 export default function SolutionsPage() {

@@ -48,7 +48,8 @@ export default function HoverFooter() {
         { label: "Solutions", href: "/solutions" },
         { label: "FAQ", href: "/faq" },
         { label: "Get in Touch", href: "/contact" },
-        {label:"Escalation Matrix" , href:"/escalation-matrix"}
+        {label:"Escalation Matrix" , href:"/escalation-matrix"},
+        {label:"Blogs" , href:"/blogs"}
       ],
     },
     {

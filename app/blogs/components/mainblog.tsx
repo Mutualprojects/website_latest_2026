@@ -481,7 +481,7 @@ function MainBlog() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Hero Section */}
-        <div className="text-center max-w-4xl mx-auto mb-16 md:mb-24 px-4">
+        {/* <div className="text-center max-w-4xl mx-auto mb-16 md:mb-24 px-4">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -521,7 +521,7 @@ function MainBlog() {
           >
             Deep-dive technical archives on enterprise architecture, integrated surveillance systems, and next-generation urban resilience frameworks.
           </motion.p>
-        </div>
+        </div> */}
 
         {/* Control Panel */}
         <motion.div

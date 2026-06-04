@@ -12,3 +12,10 @@ function page() {
 }
 
 export default page
+
+export const metadata = {
+  title: "Products — Brihaspathi Technologies Limited",
+  alternates: {
+    canonical: "https://www.brihaspathi.com/products",
+  },
+};

@@ -68,14 +68,14 @@ const BOARD: BoardMember[] = [
         linkedin: 'https://www.linkedin.com/in/hymavathi-papolu-464b65145/',
         photo: '/teams/HYMAVATHI.jpg',
     },
-    {
-        id: 3,
-        name: 'K. Venkatesham',
-        designation: 'Director – Operations',
-        bio: 'Dr. K. Venkatesham is a distinguished former IPS officer (Maharashtra Cadre, 1988 batch) with over three decades of leadership in public service, strategic operations, and technology-driven governance. He has held key positions including Commissioner of Police (Pune & Nagpur) and Additional Director General – Special Operations, driving major initiatives in law enforcement, cybercrime, and citizen-centric services.In his current role at Brihaspathi Technologies Limited, he leads operational strategy and execution, leveraging his expertise in large-scale program management and technology integration. He has been closely associated with multi-state initiatives such as the 108 Ambulance Network and other government programs, consistently delivering efficiency, scalability, and measurable impact.A recipient of the President’s Police Medal for Distinguished Service, Dr. Venkatesham is widely respected for his leadership, integrity, and commitment to excellence.',
-        linkedin: 'https://www.linkedin.com/in/k-venkatesham-dr-6b5530232?utm_source=share_via&utm_content=profile&utm_medium=member_android',
-        photo: '/teams/K.Venkatesham.jpeg',
-    },
+    // {
+    //     id: 3,
+    //     name: 'K. Venkatesham',
+    //     designation: 'Director – Operations',
+    //     bio: 'Dr. K. Venkatesham is a distinguished former IPS officer (Maharashtra Cadre, 1988 batch) with over three decades of leadership in public service, strategic operations, and technology-driven governance. He has held key positions including Commissioner of Police (Pune & Nagpur) and Additional Director General – Special Operations, driving major initiatives in law enforcement, cybercrime, and citizen-centric services.In his current role at Brihaspathi Technologies Limited, he leads operational strategy and execution, leveraging his expertise in large-scale program management and technology integration. He has been closely associated with multi-state initiatives such as the 108 Ambulance Network and other government programs, consistently delivering efficiency, scalability, and measurable impact.A recipient of the President’s Police Medal for Distinguished Service, Dr. Venkatesham is widely respected for his leadership, integrity, and commitment to excellence.',
+    //     linkedin: 'https://www.linkedin.com/in/k-venkatesham-dr-6b5530232?utm_source=share_via&utm_content=profile&utm_medium=member_android',
+    //     photo: '/teams/K.Venkatesham.jpeg',
+    // },
     {
         id: 4,
         name: 'Murali Krishna Arasala',

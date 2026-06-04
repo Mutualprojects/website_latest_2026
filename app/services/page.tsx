@@ -128,3 +128,5 @@ export default function Page() {
     </div>
   );
 }
+
+// Note: this page is a client component; canonical is provided via app/services/head.tsx

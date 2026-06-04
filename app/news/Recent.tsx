@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import Image, { StaticImageData } from 'next/image';
+import { ChevronLeft, ChevronRight, X, ArrowUpRight, Eye } from 'lucide-react';
 
 // =============================
 // ARTICLE IMAGES
@@ -15,7 +16,8 @@ import mediaberief from './nesbanners/Screenshot 2026-02-27 102313.png';
 import apn from './nesbanners/Screenshot 2026-02-27 102429.png';
 import bombay from './nesbanners/Screenshot 2026-02-27 102404.png';
 import csxo from './nesbanners/Screenshot 2026-02-27 102133.png';
-import main_image from './Screenshot 2026-05-12 183649.png'
+import main_image from './Screenshot 2026-05-12 183649.png';
+
 // =============================
 // PRESS LOGOS
 // =============================
@@ -27,6 +29,20 @@ import economicTimesLogo from './press/logo1.png';
 import mediaBriefLogo from './press/mediabrieflogoapril2018.jpg.webp';
 import telanganaTodayLogo from './press/tt-logo-1.png';
 import Et from './press/et.png';
+
+// =============================
+// BRAND TOKENS
+// =============================
+const BRAND = {
+  primary: '#07518a',
+  primaryDark: '#053d68',
+  primaryLight: '#0a7acc',
+  accent: '#c9a449',       // refined gold — entrepreneurial / editorial feel
+  accentLight: '#e2c074',
+  ink: '#0f1b2a',
+  paper: '#fbfaf7',         // warm off-white, premium magazine paper
+  mute: '#6b7785',
+};
 
 // =============================
 // INTERFACE
@@ -43,12 +59,9 @@ export interface ArticleData {
 }
 
 // =============================
-// ARTICLES DATA (15 English Articles)
+// ARTICLES DATA
 // =============================
 export const articlesData: ArticleData[] = [
-
-
- 
   {
     id: 1,
     title: 'Spotlighting Merit and Awarding Entrepreneurial Spirit',
@@ -79,7 +92,6 @@ export const articlesData: ArticleData[] = [
     pressIcon: Et,
     category: 'Security',
   },
-
   {
     id: 4,
     title: 'Budget 2026 Quotes: Rajasekhar Papolu, Chairman & Managing Director',
@@ -90,7 +102,6 @@ export const articlesData: ArticleData[] = [
     pressIcon: cxoLogo,
     category: 'Policy',
   },
-
   {
     id: 5,
     title: "How Brihaspathi Technologies Is Shaping India's Security, Software and Solar Ecosystem",
@@ -111,7 +122,7 @@ export const articlesData: ArticleData[] = [
     pressIcon: mediaBriefLogo,
     category: 'Opinion',
   },
-   {
+  {
     id: 16,
     title: 'Advancing Border Security Through Intelligent Surveillance Systems',
     description: 'Highlights AI intrusion detection, thermal imaging, anti-drone systems and 75,000+ camera integrations.',
@@ -151,8 +162,6 @@ export const articlesData: ArticleData[] = [
     pressIcon: bombayTimesLogo,
     category: 'Contracts',
   },
-
-
   {
     id: 10,
     title: 'Brihaspathi Technologies Secures $10 Million Funding and Plans IPO by FY27',
@@ -175,7 +184,7 @@ export const articlesData: ArticleData[] = [
   },
   {
     id: 12,
-    title: 'Protecting Rhinos and Securing Elections: Brihaspathi Tech\'s Wide-Ranging Role',
+    title: "Protecting Rhinos and Securing Elections: Brihaspathi Tech's Wide-Ranging Role",
     description: 'An in-depth look at how Rajasekhar Papolu is leading national projects from exam monitoring to wildlife protection.',
     image: imgSpotlighting,
     link: 'https://newsmeter.in/hyderabad/protecting-rhinos-securing-elections-supporting-neet-brihaspathi-techs-wide-ranging-role-714567',
@@ -205,7 +214,7 @@ export const articlesData: ArticleData[] = [
   },
   {
     id: 15,
-    title: 'Powering India\'s ICCC Revolution',
+    title: "Powering India's ICCC Revolution",
     description: 'Transforming digital security infrastructure through Integrated Command and Control Centres for smart cities.',
     image: techobserve,
     link: 'https://www.tribuneindia.com/news/business/brihaspathi-technologies-powering-indias-iccc-revolution-580123',
@@ -216,7 +225,7 @@ export const articlesData: ArticleData[] = [
 ];
 
 // =============================
-// MODAL COMPONENT
+// MODAL — FULL PAGE EDITORIAL
 // =============================
 function ArticleModal({
   article,
@@ -232,14 +241,8 @@ function ArticleModal({
   onPrev: () => void;
 }) {
   useEffect(() => {
-    if (article) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
+    document.body.style.overflow = article ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
   }, [article]);
 
   useEffect(() => {
@@ -258,188 +261,283 @@ function ArticleModal({
   const total = articles.length;
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < total - 1;
+  const hasLink = article.link && article.link !== '#';
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(7,81,138,0.85)', backdropFilter: 'blur(6px)' }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 md:p-8 lg:p-10"
+      style={{
+        background: 'rgba(7, 15, 28, 0.78)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+      }}
       onClick={onClose}
     >
-      {/* Prev Arrow */}
+      {/* ===== Floating Chevron — PREV ===== */}
       <button
         onClick={(e) => { e.stopPropagation(); onPrev(); }}
         disabled={!hasPrev}
-        className="absolute left-3 md:left-6 z-20 w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:scale-110"
-        style={{ background: hasPrev ? '#07518a' : '#aac4db', color: '#fff', border: '2px solid #fff' }}
+        className="hidden md:flex absolute left-3 lg:left-5 top-1/2 -translate-y-1/2 z-30 w-12 h-12 lg:w-14 lg:h-14 rounded-full items-center justify-center transition-all duration-300 disabled:opacity-25 disabled:cursor-not-allowed hover:scale-110 group/nav"
+        style={{
+          background: 'rgba(255,255,255,0.08)',
+          border: '1px solid rgba(255,255,255,0.25)',
+          backdropFilter: 'blur(8px)',
+          color: '#fff',
+        }}
         aria-label="Previous article"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-        </svg>
+        <ChevronLeft className="w-5 h-5 lg:w-6 lg:h-6 transition-transform group-hover/nav:-translate-x-0.5" strokeWidth={2} />
       </button>
 
-      {/* Next Arrow */}
+      {/* ===== Floating Chevron — NEXT ===== */}
       <button
         onClick={(e) => { e.stopPropagation(); onNext(); }}
         disabled={!hasNext}
-        className="absolute right-3 md:right-6 z-20 w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed hover:scale-110"
-        style={{ background: hasNext ? '#07518a' : '#aac4db', color: '#fff', border: '2px solid #fff' }}
+        className="hidden md:flex absolute right-3 lg:right-5 top-1/2 -translate-y-1/2 z-30 w-12 h-12 lg:w-14 lg:h-14 rounded-full items-center justify-center transition-all duration-300 disabled:opacity-25 disabled:cursor-not-allowed hover:scale-110 group/nav"
+        style={{
+          background: 'rgba(255,255,255,0.08)',
+          border: '1px solid rgba(255,255,255,0.25)',
+          backdropFilter: 'blur(8px)',
+          color: '#fff',
+        }}
         aria-label="Next article"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-        </svg>
+        <ChevronRight className="w-5 h-5 lg:w-6 lg:h-6 transition-transform group-hover/nav:translate-x-0.5" strokeWidth={2} />
       </button>
 
-      {/* Modal Card */}
+      {/* ===== Close X (top-right of viewport) ===== */}
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 md:top-6 md:right-6 z-40 w-11 h-11 rounded-full flex items-center justify-center transition-all duration-200 hover:scale-110 hover:rotate-90"
+        style={{
+          background: 'rgba(255,255,255,0.1)',
+          border: '1px solid rgba(255,255,255,0.25)',
+          backdropFilter: 'blur(8px)',
+          color: '#fff',
+        }}
+        aria-label="Close"
+      >
+        <X className="w-5 h-5" strokeWidth={2} />
+      </button>
+
+      {/* ===== Modal Card — Full Page ===== */}
       <div
         key={article.id}
-        className="relative bg-white rounded-3xl overflow-hidden max-w-4xl w-full max-h-[90vh] flex flex-col md:flex-row shadow-2xl"
-        style={{ animation: 'modalIn 0.28s cubic-bezier(0.34,1.56,0.64,1)' }}
         onClick={(e) => e.stopPropagation()}
+        className="relative w-full h-full max-w-7xl rounded-2xl md:rounded-3xl overflow-hidden flex flex-col lg:flex-row shadow-2xl"
+        style={{
+          background: BRAND.paper,
+          animation: 'modalIn 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
       >
-        {/* Image Side */}
-        <div className="relative w-full md:w-1/2 h-64 md:h-auto min-h-[260px] flex-shrink-0">
+        {/* ===== IMAGE COLUMN (Left) ===== */}
+        <div className="relative w-full lg:w-[58%] h-[38vh] sm:h-[42vh] lg:h-full flex-shrink-0 bg-black overflow-hidden">
           <Image
             src={article.image}
             alt={article.title}
             fill
             className="object-cover"
             priority
+            sizes="(max-width: 1024px) 100vw, 58vw"
           />
+          {/* dark vignette for depth */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.45) 100%)',
+            }}
+          />
+
+          {/* Category chip (top-left of image) */}
           {article.category && (
-            <span
-              className="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-white"
-              style={{ background: 'linear-gradient(135deg,#07518a,#0a7acc)' }}
-            >
-              {article.category}
-            </span>
+            <div className="absolute top-5 left-5 md:top-7 md:left-7 flex items-center gap-2">
+              <span
+                className="inline-flex items-center px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.2em] text-white"
+                style={{
+                  background: 'rgba(255,255,255,0.12)',
+                  border: '1px solid rgba(255,255,255,0.3)',
+                  backdropFilter: 'blur(8px)',
+                }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full mr-2"
+                  style={{ background: BRAND.accent }}
+                />
+                {article.category}
+              </span>
+            </div>
           )}
-          {/* Counter badge */}
-          <span
-            className="absolute bottom-4 right-4 px-3 py-1 rounded-full text-xs font-bold text-white"
-            style={{ background: 'rgba(7,81,138,0.75)', backdropFilter: 'blur(4px)' }}
-          >
-            {currentIndex + 1} / {total}
-          </span>
+
+          {/* Edition / Counter (bottom-left of image) — editorial touch */}
+          <div className="absolute bottom-5 left-5 md:bottom-7 md:left-7 text-white">
+            <div
+              className="text-[10px] uppercase tracking-[0.3em] mb-1 font-semibold"
+              style={{ color: BRAND.accentLight }}
+            >
+              Edition
+            </div>
+            <div
+              className="text-2xl md:text-3xl font-bold tabular-nums"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}
+            >
+              {String(currentIndex + 1).padStart(2, '0')}
+              <span className="text-base font-normal opacity-60"> / {String(total).padStart(2, '0')}</span>
+            </div>
+          </div>
         </div>
 
-        {/* Content Side */}
-        <div className="flex flex-col p-8 overflow-y-auto md:w-1/2">
-          {/* Press logo */}
-          <div className="flex items-center gap-3 mb-5">
-            <div className="relative w-28 h-12 rounded-lg overflow-hidden border border-gray-100 bg-white shadow-sm flex-shrink-0">
-              <Image
-                src={article.pressIcon}
-                alt={article.pressName}
-                fill
-                className="object-contain p-1"
-              />
-            </div>
-            <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
-              {article.pressName}
-            </span>
-          </div>
+        {/* ===== CONTENT COLUMN (Right) ===== */}
+        <div className="flex-1 flex flex-col overflow-y-auto bg-[var(--paper)]" style={{ ['--paper' as never]: BRAND.paper }}>
+          <div className="flex-1 flex flex-col px-6 sm:px-10 md:px-14 py-8 md:py-12 lg:py-14">
 
-          <h2
-            className="text-xl md:text-2xl font-extrabold mb-4 leading-tight"
-            style={{ color: '#07518a', fontFamily: "'Georgia', serif" }}
-          >
-            {article.title}
-          </h2>
-
-          <p className="text-sm text-gray-600 leading-relaxed mb-8 flex-grow">
-            {article.description}
-          </p>
-
-          {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-3 mt-auto">
-            {article.link !== '#' ? (
-              <a
-                href={article.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-white text-sm font-bold transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                style={{ background: 'linear-gradient(135deg,#07518a,#0a7acc)' }}
+            {/* Top kicker bar */}
+            <div className="flex items-center gap-3 mb-8">
+              <div className="h-px flex-1" style={{ background: `linear-gradient(to right, ${BRAND.accent}, transparent)` }} />
+              <span
+                className="text-[10px] font-bold uppercase tracking-[0.35em]"
+                style={{ color: BRAND.accent }}
               >
-                Read Full Article
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </a>
-            ) : (
-              <span className="inline-flex items-center px-6 py-3 rounded-xl text-sm font-bold text-gray-400 bg-gray-100 cursor-not-allowed">
-                Coming Soon
+                Press Feature
               </span>
+              <div className="h-px flex-1" style={{ background: `linear-gradient(to left, ${BRAND.accent}, transparent)` }} />
+            </div>
+
+            {/* Press logo + name */}
+            <div className="flex items-center gap-4 mb-8">
+              <div
+                className="relative w-32 h-14 rounded-lg overflow-hidden flex-shrink-0 bg-white"
+                style={{ border: `1px solid ${BRAND.primary}15`, boxShadow: '0 2px 8px rgba(7,81,138,0.06)' }}
+              >
+                <Image src={article.pressIcon} alt={article.pressName} fill className="object-contain p-1.5" />
+              </div>
+              <div>
+                <div
+                  className="text-[10px] uppercase tracking-[0.25em] font-semibold mb-0.5"
+                  style={{ color: BRAND.mute }}
+                >
+                  Featured In
+                </div>
+                <div
+                  className="text-sm font-bold"
+                  style={{ color: BRAND.ink }}
+                >
+                  {article.pressName}
+                </div>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h2
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] font-bold leading-[1.15] mb-6 tracking-tight"
+              style={{
+                color: BRAND.primaryDark,
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              {article.title}
+            </h2>
+
+            {/* Gold accent rule */}
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-12 h-[3px]" style={{ background: BRAND.accent }} />
+              <div className="w-2 h-2 rotate-45" style={{ background: BRAND.accent }} />
+            </div>
+
+            {/* Description / Lede */}
+            <p
+              className="text-base md:text-lg leading-[1.75] mb-10 max-w-2xl"
+              style={{ color: BRAND.mute, fontFamily: "'DM Sans', sans-serif", fontStyle: 'italic' }}
+            >
+              {article.description}
+            </p>
+
+            {/* Spacer pushes CTA + meta to bottom on tall screens */}
+            <div className="flex-grow" />
+
+            {/* CTA Row — Read Article button (only when link exists) */}
+            {hasLink && (
+              <div className="mb-8">
+                <a
+                  href={article.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group/cta inline-flex items-center gap-3 px-7 py-4 rounded-full text-sm font-bold uppercase tracking-[0.15em] transition-all duration-300 hover:gap-4"
+                  style={{
+                    background: BRAND.primaryDark,
+                    color: '#fff',
+                    boxShadow: '0 10px 30px -10px rgba(7,81,138,0.5)',
+                  }}
+                >
+                  Read Full Article
+                  <span
+                    className="w-7 h-7 rounded-full flex items-center justify-center transition-transform duration-300 group-hover/cta:rotate-45"
+                    style={{ background: BRAND.accent }}
+                  >
+                    <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} style={{ color: BRAND.primaryDark }} />
+                  </span>
+                </a>
+              </div>
             )}
 
-            {/* Prev button inside modal */}
-            <button
-              onClick={onPrev}
-              disabled={!hasPrev}
-              className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105"
-              style={{ background: '#07518a', color: '#fff' }}
-              aria-label="Previous"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-              </svg>
-              Prev
-            </button>
+            {/* Footer meta — mobile-friendly chevrons + dot indicator */}
+            <div className="pt-6 mt-auto border-t flex items-center justify-between gap-4" style={{ borderColor: `${BRAND.primary}15` }}>
+              {/* Mobile chevron pair */}
+              <div className="flex md:hidden items-center gap-2">
+                <button
+                  onClick={onPrev}
+                  disabled={!hasPrev}
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-30 hover:scale-105"
+                  style={{ background: BRAND.primaryDark, color: '#fff' }}
+                  aria-label="Previous"
+                >
+                  <ChevronLeft className="w-4 h-4" strokeWidth={2.5} />
+                </button>
+                <button
+                  onClick={onNext}
+                  disabled={!hasNext}
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-all disabled:opacity-30 hover:scale-105"
+                  style={{ background: BRAND.primaryDark, color: '#fff' }}
+                  aria-label="Next"
+                >
+                  <ChevronRight className="w-4 h-4" strokeWidth={2.5} />
+                </button>
+              </div>
 
-            {/* Next button inside modal */}
-            <button
-              onClick={onNext}
-              disabled={!hasNext}
-              className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl text-sm font-bold transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105"
-              style={{ background: '#07518a', color: '#fff' }}
-              aria-label="Next"
-            >
-              Next
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+              {/* Dot indicators (desktop) */}
+              <div className="hidden md:flex items-center gap-1.5 flex-1 justify-start overflow-hidden">
+                {articles.slice(0, 12).map((a, i) => (
+                  <span
+                    key={a.id}
+                    className="rounded-full transition-all duration-300"
+                    style={{
+                      width: i === currentIndex ? '24px' : '6px',
+                      height: '6px',
+                      background: i === currentIndex ? BRAND.accent : `${BRAND.primary}25`,
+                    }}
+                  />
+                ))}
+                {articles.length > 12 && (
+                  <span className="text-[10px] ml-1" style={{ color: BRAND.mute }}>
+                    +{articles.length - 12}
+                  </span>
+                )}
+              </div>
 
-            <button
-              onClick={onClose}
-              className="px-5 py-3 rounded-xl text-sm font-semibold text-gray-500 bg-gray-100 hover:bg-gray-200 transition"
-            >
-              Close
-            </button>
-          </div>
-
-          {/* Dot indicators */}
-          <div className="flex items-center justify-center gap-1.5 mt-5">
-            {articles.map((a, i) => (
-              <span
-                key={a.id}
-                className="rounded-full transition-all duration-200"
-                style={{
-                  width: i === currentIndex ? '20px' : '8px',
-                  height: '8px',
-                  background: i === currentIndex ? '#07518a' : '#cbd9e8',
-                }}
-              />
-            ))}
+              {/* Right-side meta */}
+              <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] font-semibold" style={{ color: BRAND.mute }}>
+                <span>Brihaspathi</span>
+                <span style={{ color: BRAND.accent }}>•</span>
+                <span>Press Room</span>
+              </div>
+            </div>
           </div>
         </div>
-
-        {/* Close X */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center shadow-md hover:bg-white transition z-10"
-          aria-label="Close"
-        >
-          <svg className="w-4 h-4 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
       </div>
 
       <style>{`
         @keyframes modalIn {
-          from { opacity: 0; transform: scale(0.88) translateY(20px); }
+          from { opacity: 0; transform: scale(0.96) translateY(12px); }
           to   { opacity: 1; transform: scale(1) translateY(0); }
         }
       `}</style>
@@ -462,71 +560,122 @@ function ArticleCard({
   return (
     <article
       onClick={onClick}
-      className="group bg-white rounded-2xl overflow-hidden shadow-md cursor-pointer flex flex-col transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
-      style={{ animationDelay: `${index * 80}ms` }}
       tabIndex={0}
       role="button"
       onKeyDown={(e) => e.key === 'Enter' && onClick()}
       aria-label={`Read more about ${article.title}`}
+      className="group bg-white rounded-2xl overflow-hidden cursor-pointer flex flex-col transition-all duration-500 hover:-translate-y-2"
+      style={{
+        animationDelay: `${index * 80}ms`,
+        border: `1px solid ${BRAND.primary}10`,
+        boxShadow: '0 4px 20px -8px rgba(7,81,138,0.08)',
+      }}
     >
       {/* Thumbnail */}
-      <div className="relative w-full overflow-hidden" style={{ height: '220px' }}>
+      <div className="relative w-full overflow-hidden" style={{ height: '230px' }}>
         <Image
           src={article.image}
           alt={article.title}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
 
-        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
-          <span className="bg-white/95 text-[#07518a] text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-            </svg>
-            Quick View
+        {/* Category badge */}
+        {article.category && (
+          <span
+            className="absolute top-4 left-4 px-2.5 py-1 rounded-full text-[9px] font-bold uppercase tracking-[0.2em] text-white"
+            style={{
+              background: 'rgba(7,15,28,0.55)',
+              border: '1px solid rgba(255,255,255,0.2)',
+              backdropFilter: 'blur(8px)',
+            }}
+          >
+            <span
+              className="inline-block w-1 h-1 rounded-full mr-1.5"
+              style={{ background: BRAND.accent, verticalAlign: 'middle' }}
+            />
+            {article.category}
+          </span>
+        )}
+
+        {/* Hover overlay */}
+        <div
+          className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          style={{ background: 'rgba(7,15,28,0.35)' }}
+        >
+          <span
+            className="text-white text-xs font-bold uppercase tracking-[0.2em] flex items-center gap-2 px-5 py-2.5 rounded-full"
+            style={{ background: BRAND.primaryDark, border: `1px solid ${BRAND.accent}` }}
+          >
+            <Eye className="w-3.5 h-3.5" strokeWidth={2.5} />
+            Read Story
           </span>
         </div>
       </div>
 
-      {/* Card body */}
-      <div className="p-5 flex flex-col flex-grow">
-        <div className="flex items-center gap-2.5 mb-3">
-          <div className="relative w-24 h-10 rounded-lg overflow-hidden border border-gray-100 bg-white shadow-sm flex-shrink-0">
-            <Image
-              src={article.pressIcon}
-              alt={article.pressName}
-              fill
-              className="object-contain p-1"
-            />
+      {/* Body */}
+      <div className="p-6 flex flex-col flex-grow">
+        {/* Press row */}
+        <div className="flex items-center gap-3 mb-4">
+          <div
+            className="relative w-20 h-9 rounded-md overflow-hidden bg-white flex-shrink-0"
+            style={{ border: `1px solid ${BRAND.primary}10` }}
+          >
+            <Image src={article.pressIcon} alt={article.pressName} fill className="object-contain p-1" />
           </div>
-          <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider truncate">
-            {article.pressName}
-          </span>
+          <div className="min-w-0 flex-1">
+            <div
+              className="text-[9px] uppercase tracking-[0.25em] font-semibold mb-0.5"
+              style={{ color: BRAND.accent }}
+            >
+              Featured In
+            </div>
+            <div
+              className="text-[11px] font-bold truncate"
+              style={{ color: BRAND.ink }}
+            >
+              {article.pressName}
+            </div>
+          </div>
         </div>
 
+        {/* Title */}
         <h3
-          className="text-base font-bold leading-snug mb-2 group-hover:text-[#0a7acc] transition-colors duration-200"
-          style={{ color: '#07518a', fontFamily: "'Georgia', serif" }}
+          className="text-lg font-bold leading-snug mb-3 transition-colors duration-300 line-clamp-2"
+          style={{ color: BRAND.primaryDark, fontFamily: "'DM Sans', sans-serif" }}
         >
           {article.title}
         </h3>
 
-        <p className="text-sm text-gray-500 leading-relaxed flex-grow line-clamp-3">
+        {/* Description */}
+        <p
+          className="text-sm leading-relaxed flex-grow line-clamp-3"
+          style={{ color: BRAND.mute }}
+        >
           {article.description}
         </p>
 
-        <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-          <span className="text-xs text-[#07518a] font-semibold flex items-center gap-1.5 group-hover:gap-2.5 transition-all duration-200">
-            View Article
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-            </svg>
+        {/* Footer */}
+        <div
+          className="mt-5 pt-4 flex items-center justify-between"
+          style={{ borderTop: `1px solid ${BRAND.primary}10` }}
+        >
+          <span
+            className="text-[10px] font-bold uppercase tracking-[0.25em] flex items-center gap-1.5 transition-all duration-300 group-hover:gap-2.5"
+            style={{ color: BRAND.primaryDark }}
+          >
+            Read More
+            <ArrowUpRight
+              className="w-3.5 h-3.5 transition-transform duration-300 group-hover:rotate-45"
+              strokeWidth={2.5}
+            />
           </span>
-          <svg className="w-5 h-5 text-gray-200 group-hover:text-[#07518a] transition-colors duration-200" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-            <path fillRule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clipRule="evenodd" />
-          </svg>
+          <span
+            className="w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 group-hover:scale-110"
+            style={{ background: `${BRAND.accent}15`, border: `1px solid ${BRAND.accent}40` }}
+          >
+            <ChevronRight className="w-3.5 h-3.5" strokeWidth={2.5} style={{ color: BRAND.accent }} />
+          </span>
         </div>
       </div>
     </article>
@@ -540,119 +689,213 @@ export default function Recent() {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [filter, setFilter] = useState<string>('All');
 
-  const categories = ['All', ...Array.from(new Set(articlesData.map((a) => a.category).filter(Boolean))) as string[]];
+  const categories = ['All', ...(Array.from(new Set(articlesData.map((a) => a.category).filter(Boolean))) as string[])];
 
   const filtered =
     filter === 'All' ? articlesData : articlesData.filter((a) => a.category === filter);
 
   const handleNext = useCallback(() => {
-    if (selectedIndex === null) return;
-    if (selectedIndex < filtered.length - 1) setSelectedIndex(selectedIndex + 1);
-  }, [selectedIndex, filtered.length]);
+    setSelectedIndex((prev) => {
+      if (prev === null) return prev;
+      return prev < filtered.length - 1 ? prev + 1 : prev;
+    });
+  }, [filtered.length]);
 
   const handlePrev = useCallback(() => {
-    if (selectedIndex === null) return;
-    if (selectedIndex > 0) setSelectedIndex(selectedIndex - 1);
-  }, [selectedIndex]);
+    setSelectedIndex((prev) => {
+      if (prev === null) return prev;
+      return prev > 0 ? prev - 1 : prev;
+    });
+  }, []);
 
   const selectedArticle = selectedIndex !== null ? filtered[selectedIndex] : null;
 
   return (
     <>
-      <section className="w-full py-20 font-sans" style={{ background: 'linear-gradient(160deg, #f0f6fc 0%, #e8f2fa 50%, #f8fafc 100%)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section
+        className="w-full py-20 md:py-28 font-sans relative overflow-hidden"
+        style={{ background: BRAND.paper }}
+      >
+        {/* Subtle background ornaments — entrepreneurial editorial feel */}
+        <div
+          className="absolute top-0 left-0 w-full h-px"
+          style={{ background: `linear-gradient(to right, transparent, ${BRAND.accent}40, transparent)` }}
+        />
+        <div
+          aria-hidden
+          className="absolute -top-32 -right-32 w-96 h-96 rounded-full opacity-[0.04] pointer-events-none"
+          style={{ background: BRAND.primary, filter: 'blur(80px)' }}
+        />
+        <div
+          aria-hidden
+          className="absolute -bottom-32 -left-32 w-96 h-96 rounded-full opacity-[0.05] pointer-events-none"
+          style={{ background: BRAND.accent, filter: 'blur(80px)' }}
+        />
 
-          {/* Header */}
-          <div className="mb-12 text-center">
-            <p className="text-xs font-bold uppercase tracking-[0.35em] text-[#0a7acc] mb-3">
-              Media Coverage
-            </p>
-            <h2
-              className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#07518a] leading-tight"
-              style={{ fontFamily: "'Georgia', serif" }}
-            >
-              Recent News &amp; Press
-            </h2>
-            <div className="mt-4 flex items-center justify-center gap-2">
-              <div className="w-12 h-0.5 bg-[#07518a] rounded-full" />
-              <div className="w-3 h-3 rounded-full border-2 border-[#07518a]" />
-              <div className="w-12 h-0.5 bg-[#07518a] rounded-full" />
-            </div>
-            <p className="mt-4 text-gray-500 text-sm max-w-xl mx-auto leading-relaxed">
-              Stay updated with the latest stories, recognitions, and milestones from Brihaspathi Technologies across leading publications.
-            </p>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
 
-          {/* Filter Pills */}
-          <div className="flex flex-wrap gap-2 justify-center mb-10">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => { setFilter(cat); setSelectedIndex(null); }}
-                className="px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all duration-200 border"
-                style={
-                  filter === cat
-                    ? { background: 'linear-gradient(135deg,#07518a,#1a8fd1)', color: '#fff', borderColor: 'transparent', transform: 'scale(1.05)' }
-                    : { background: '#fff', color: '#07518a', borderColor: '#cbd9e8' }
-                }
+          {/* ===== Header ===== */}
+          <div className="mb-16 text-center max-w-3xl mx-auto">
+            <div className="inline-flex items-center gap-3 mb-5">
+              <div className="w-8 h-px" style={{ background: BRAND.primary }} />
+              <span
+                className="text-[11px] font-bold uppercase tracking-[0.4em]"
+                style={{ color: BRAND.primary }}
               >
-                {cat}
-              </button>
-            ))}
+                Media · Press · Recognition
+              </span>
+              <div className="w-8 h-px" style={{ background: BRAND.primary }} />
+            </div>
+            <h2
+              className="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] tracking-tight"
+              style={{ color: BRAND.primary, fontFamily: "'DM Sans', sans-serif" }}
+            >
+              The <em style={{ color: BRAND.primary, fontStyle: 'italic' }}>Press Room</em>
+            </h2>
+            <p
+              className="mt-6 text-base md:text-lg leading-relaxed"
+              style={{ color: BRAND.primary, fontFamily: "'DM Sans', sans-serif", fontStyle: 'italic' }}
+            >
+              Stories, milestones, and recognitions of Brihaspathi Technologies across India's most respected publications.
+            </p>
+            <div className="mt-8 flex items-center justify-center gap-3">
+              <div className="w-16 h-px" style={{ background: BRAND.primary }} />
+              <div className="w-2 h-2 rotate-45" style={{ background: BRAND.primary }} />
+              <div className="w-16 h-px" style={{ background: BRAND.primary }} />
+            </div>
           </div>
 
-          {/* Featured Hero Card */}
+          {/* ===== Filter Pills ===== */}
+          <div className="flex flex-wrap gap-2 justify-center mb-14">
+            {categories.map((cat) => {
+              const active = filter === cat;
+              return (
+                <button
+                  key={cat}
+                  onClick={() => { setFilter(cat); setSelectedIndex(null); }}
+                  className="px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-[0.25em] transition-all duration-300"
+                  style={
+                    active
+                      ? {
+                          background: BRAND.primaryDark,
+                          color: '#fff',
+                          border: `1px solid ${BRAND.primaryDark}`,
+                          boxShadow: `0 6px 20px -6px ${BRAND.primary}80`,
+                        }
+                      : {
+                          background: 'transparent',
+                          color: BRAND.primaryDark,
+                          border: `1px solid ${BRAND.primary}25`,
+                        }
+                  }
+                >
+                  {cat}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* ===== Featured Hero Card ===== */}
           {filter === 'All' && articlesData.length > 0 && (
             <div
-              className="mb-10 rounded-3xl overflow-hidden shadow-xl cursor-pointer group relative flex flex-col md:flex-row"
-              style={{ minHeight: '320px' }}
               onClick={() => setSelectedIndex(0)}
               tabIndex={0}
               role="button"
               onKeyDown={(e) => e.key === 'Enter' && setSelectedIndex(0)}
+              className="mb-14 rounded-3xl overflow-hidden cursor-pointer group relative flex flex-col lg:flex-row bg-white"
+              style={{
+                minHeight: '420px',
+                border: `1px solid ${BRAND.primary}10`,
+                boxShadow: '0 30px 60px -30px rgba(7,81,138,0.25)',
+              }}
             >
-              <div className="relative w-full md:w-3/5 h-64 md:h-auto flex-shrink-0">
+              <div className="relative w-full lg:w-3/5 h-72 lg:h-auto flex-shrink-0 overflow-hidden">
                 <Image
                   src={articlesData[0].image}
                   alt={articlesData[0].title}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="object-cover transition-transform duration-1000 group-hover:scale-105"
                   priority
                 />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(to right, transparent 60%, white 100%)' }} />
+                <div
+                  className="absolute inset-0 hidden lg:block"
+                  style={{ background: `linear-gradient(to right, transparent 55%, ${BRAND.paper} 100%)` }}
+                />
+                <div
+                  className="absolute inset-0 lg:hidden"
+                  style={{ background: `linear-gradient(to bottom, transparent 50%, ${BRAND.paper} 100%)` }}
+                />
+
+                {/* Editorial badge top-left */}
+                <div className="absolute top-6 left-6 flex items-center gap-2">
+                  <span
+                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-[0.3em] text-white"
+                    style={{
+                      background: 'rgba(7,15,28,0.55)',
+                      border: `1px solid ${BRAND.accent}`,
+                      backdropFilter: 'blur(8px)',
+                    }}
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: BRAND.accent }} />
+                    Featured Story
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col justify-center bg-white p-8 md:p-10 md:w-2/5">
-                <span
-                  className="inline-block mb-3 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest text-white w-fit"
-                  style={{ background: 'linear-gradient(135deg,#07518a,#1a8fd1)' }}
-                >
-                  Featured
-                </span>
-                <div className="flex items-center gap-2.5 mb-4">
-                  <div className="relative w-24 h-10 rounded-lg overflow-hidden border border-gray-100 bg-white shadow-sm flex-shrink-0">
+
+              <div className="flex flex-col justify-center p-8 md:p-12 lg:p-14 lg:w-2/5 relative">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-8 h-px" style={{ background: BRAND.accent }} />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.3em]" style={{ color: BRAND.accent }}>
+                    Cover Story
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3 mb-6">
+                  <div
+                    className="relative w-24 h-10 rounded-md overflow-hidden bg-white flex-shrink-0"
+                    style={{ border: `1px solid ${BRAND.primary}15` }}
+                  >
                     <Image src={articlesData[0].pressIcon} alt={articlesData[0].pressName} fill className="object-contain p-1" />
                   </div>
-                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{articlesData[0].pressName}</span>
+                  <span className="text-xs font-bold uppercase tracking-[0.2em]" style={{ color: BRAND.mute }}>
+                    {articlesData[0].pressName}
+                  </span>
                 </div>
+
                 <h3
-                  className="text-xl md:text-2xl font-extrabold text-[#07518a] leading-snug mb-3 group-hover:text-[#0a7acc] transition-colors"
-                  style={{ fontFamily: "'Georgia', serif" }}
+                  className="text-2xl md:text-3xl font-bold leading-[1.2] mb-5 transition-colors duration-300"
+                  style={{ color: BRAND.primaryDark, fontFamily: "'DM Sans', sans-serif" }}
                 >
                   {articlesData[0].title}
                 </h3>
-                <p className="text-sm text-gray-500 leading-relaxed mb-6">{articlesData[0].description}</p>
-                <span className="inline-flex items-center gap-2 text-sm font-bold text-[#07518a] group-hover:gap-3 transition-all duration-200">
-                  Read Full Story
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                  </svg>
+
+                <div className="w-12 h-[3px] mb-5" style={{ background: BRAND.accent }} />
+
+                <p
+                  className="text-base leading-relaxed mb-8"
+                  style={{ color: BRAND.mute, fontFamily: "'DM Sans', sans-serif", fontStyle: 'italic' }}
+                >
+                  {articlesData[0].description}
+                </p>
+
+                <span
+                  className="inline-flex items-center gap-3 text-xs font-bold uppercase tracking-[0.25em] group-hover:gap-4 transition-all duration-300 w-fit"
+                  style={{ color: BRAND.primaryDark }}
+                >
+                  Read Cover Story
+                  <span
+                    className="w-8 h-8 rounded-full flex items-center justify-center transition-transform duration-300 group-hover:rotate-45"
+                    style={{ background: BRAND.accent }}
+                  >
+                    <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} style={{ color: BRAND.primaryDark }} />
+                  </span>
                 </span>
               </div>
             </div>
           )}
 
-          {/* Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 xl:gap-8">
+          {/* ===== Grid ===== */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 xl:gap-8">
             {(filter === 'All' ? filtered.slice(1) : filtered).map((article, index) => {
               const realIndex = filter === 'All' ? index + 1 : index;
               return (

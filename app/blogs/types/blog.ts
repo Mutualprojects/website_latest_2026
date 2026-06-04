@@ -105,7 +105,13 @@ export interface FAQSection {
   items: FAQItem[];
 }
 
-export type BlogZone = TableSection | TextSection | StepSection | ListSection | FAQSection;
+export interface VideoSection {
+  __component: "shared.video-links";
+  id: number;
+  video: string;
+}
+
+export type BlogZone = TableSection | TextSection | StepSection | ListSection | FAQSection | VideoSection;
 export type Section = BlogZone;
 
 export interface Author {

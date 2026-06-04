@@ -313,13 +313,13 @@ export const Header: React.FC = () => (
         </h1>
 
         {/* Brand Icon Badge */}
-        <motion.div 
+        {/* <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center justify-center w-14 h-14 bg-neutral-900 rounded-2xl shadow-xl mb-10 rotate-3 hover:rotate-0 transition-transform duration-300"
         >
-          <span className="text-white font-black text-2xl">N</span>
-        </motion.div>
+
+        </motion.div> */}
 
         <div className="space-y-8">
           <p className="text-lg md:text-xl text-neutral-600 font-medium leading-relaxed">
@@ -330,11 +330,11 @@ export const Header: React.FC = () => (
           <div className="flex flex-col sm:flex-row gap-6 pt-4 border-t border-neutral-100">
             <div className="flex-1">
               <span className="block text-[10px] text-neutral-400 uppercase font-bold mb-1">Featured in</span>
-              <span className="text-sm font-bold text-neutral-800">50+ Media Houses</span>
+              <span className="text-sm font-bold text-neutral-800">200 Media Houses</span>
             </div>
             <div className="flex-1 border-l sm:border-l sm:pl-6 border-neutral-100">
               <span className="block text-[10px] text-neutral-400 uppercase font-bold mb-1">Coverage</span>
-              <span className="text-sm font-bold text-neutral-800">Pan India Visibility</span>
+              <span className="text-sm font-bold text-neutral-800">Global & Pan india</span>
             </div>
           </div>
         </div>

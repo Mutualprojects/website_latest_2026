@@ -180,7 +180,7 @@ export default function PressCoverage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("https://sheetdb.io/api/v1/h6vfyfkd9ovqg");
+        const res = await fetch("https://sheetdb.io/api/v1/ucamot2uzbrda");
         if (!res.ok) throw new Error(`HTTP error ${res.status}`);
         const data: PressItem[] = await res.json();
 

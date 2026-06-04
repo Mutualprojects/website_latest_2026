@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     title: service.title,
     description: service.overview,
     alternates: {
-      canonical: `/services/${params.slug}` // 👈 IMPORTANT CHANGE
+      canonical: `https://www.brihaspathi.com/services/${params.slug}`
     }
   };
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { use, useRef, useEffect } from "react";
-import { notFound } from "next/navigation";
+import { useState, useRef, useEffect } from "react";
+import { useParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -19,8 +19,6 @@ import {
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 
-import { getCaseStudy } from "../../data";
-
 import challengeImg from "../../casestudyimages/c1-01.png";
 import solutionImg from "../../casestudyimages/c2-01.png";
 
@@ -31,6 +29,91 @@ gsap.registerPlugin(ScrollTrigger);
 /* ================= BACKGROUND ================= */
 
 const bgcase = "/futuristic-hexagon-mobile-phone-wallpaper-story.png";
+const API_BASE = "/strapi";
+const getCaseStudyUrl = (slug: string) =>
+  `${API_BASE}/api/case-studies?filters[slug][$eq]=${encodeURIComponent(
+    slug
+  )}&populate[detail]=true&populate[image]=true&populate[sector]=true`;
+
+interface CaseStudy {
+  id: number;
+  name: string;
+  role: string;
+  city: string;
+  company: string;
+  avatar: string;
+  rating: number;
+  quote: string;
+  project_objective: string;
+  challenges: string[];
+  solutions: string[];
+  results: string[];
+  slug: string;
+  sector: string;
+  sectorSlug: string;
+}
+
+function normalizeStringArray(value?: string) {
+  if (!value) return [];
+  return value
+    .split(/\r?\n/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function resolveImageUrl(image: any) {
+  if (!image) return "";
+  const url = image.url ?? image.attributes?.url;
+  if (!url) return "";
+  if (typeof url !== "string") return "";
+  if (url.startsWith("http")) {
+    if (url.startsWith("http://183.82.117.36:2334")) {
+      return url.replace("http://183.82.117.36:2334", "/strapi");
+    }
+    if (url.startsWith("http://172.30.0.200:1334")) {
+      return url.replace("http://172.30.0.200:1334", "/strapi");
+    }
+    return url;
+  }
+  if (url.startsWith("/")) {
+    return `/strapi${url}`;
+  }
+  return url;
+}
+
+function normalizeStudy(item: any) {
+  const record = item.attributes ?? item;
+  const detail = record.detail ?? {};
+  const imageData = record.image?.data ?? record.image;
+  const firstImage = Array.isArray(imageData) ? imageData[0] : imageData;
+  const sectorData = record.sector?.data ?? record.sector;
+
+  const sectorSlug = String(
+    sectorData?.attributes?.slug ?? sectorData?.slug ?? ""
+  ).toLowerCase();
+  const sectorName =
+    sectorData?.attributes?.title ?? sectorData?.title ?? "";
+
+  return {
+    id: item.id ?? record.id,
+    name: record.name ?? "",
+    role: record.role ?? "",
+    city: record.city ?? "",
+    company: record.company ?? "",
+    avatar: resolveImageUrl(firstImage),
+    rating: Number(record.rating ?? 0),
+    quote: record.quote ?? "",
+    project_objective:
+      record.projectobjective ?? record.project_objective ?? "",
+    challenges:
+      normalizeStringArray(detail.challanges ?? detail.challenges ?? ""),
+    solutions: normalizeStringArray(detail.solutions ?? ""),
+    results: normalizeStringArray(detail.result ?? detail.results ?? ""),
+    slug: record.slug ?? "",
+    sector: sectorName,
+    sectorSlug,
+  };
+}
 
 /* ================= VARIANTS ================= */
 
@@ -62,15 +145,60 @@ const itemVariant: Variants = {
 
 /* ================= PAGE ================= */
 
-export default function CaseStudyPage({
-  params,
-}: {
-  params: Promise<{ sectorSlug: string; caseSlug: string }>;
-}) {
-  const { sectorSlug, caseSlug } = use(params);
+export default function CaseStudyPage() {
+  const params = useParams();
+  const sectorSlug = Array.isArray(params?.sectorSlug)
+    ? params?.sectorSlug[0]
+    : params?.sectorSlug ?? "";
+  const caseSlug = Array.isArray(params?.caseSlug)
+    ? params?.caseSlug[0]
+    : params?.caseSlug ?? "";
 
-  const study = getCaseStudy(sectorSlug, caseSlug);
-  if (!study) notFound();
+  const [study, setStudy] = useState<CaseStudy | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!caseSlug) return;
+
+    const fetchStudy = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(getCaseStudyUrl(caseSlug));
+        if (!response.ok) {
+          throw new Error(`Failed to load case study: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const item = Array.isArray(data?.data) ? data.data[0] : null;
+        if (!item) {
+          throw new Error("Case study not found");
+        }
+
+        const normalized = normalizeStudy(item);
+        if (
+          sectorSlug &&
+          normalized.sectorSlug !== sectorSlug.toLowerCase()
+        ) {
+          throw new Error("Case study not found");
+        }
+
+        setStudy(normalized);
+      } catch (fetchError) {
+        setError(
+          fetchError instanceof Error
+            ? fetchError.message
+            : "Unable to load case study"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStudy();
+  }, [caseSlug, sectorSlug]);
 
   /* ================= SCROLL REFS ================= */
 
@@ -82,13 +210,15 @@ export default function CaseStudyPage({
 
   /* ================= SCROLL PROGRESS ================= */
 
+  const hasStudyContent = Boolean(study && !loading && !error);
+
   const { scrollYProgress: challengeScroll } = useScroll({
-    target: challengeRef,
+    target: hasStudyContent ? challengeRef : undefined,
     offset: ["start end", "end center"],
   });
 
   const { scrollYProgress: solutionScroll } = useScroll({
-    target: solutionRef,
+    target: hasStudyContent ? solutionRef : undefined,
     offset: ["start end", "end center"],
   });
 
@@ -130,6 +260,37 @@ export default function CaseStudyPage({
 
     return () => ctx.revert();
   }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6 py-24">
+        <div className="text-center">
+          <p className="text-xl font-semibold text-[#07518a]">
+            Loading case study...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !study) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-6 py-24">
+        <div className="text-center max-w-lg">
+          <p className="text-2xl font-semibold text-[#07518a] mb-4">
+            Unable to load case study
+          </p>
+          <p className="text-gray-600 mb-6">{error ?? "Please check the URL and try again."}</p>
+          <Link
+            href="/case-studies"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-[#07518a] text-white hover:bg-[#064a7d]"
+          >
+            <ChevronLeft size={18} /> Back to case studies
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -175,12 +336,11 @@ export default function CaseStudyPage({
         </motion.div>
 
         <div className="relative w-full h-[420px]">
-          <Image
+          <img
             src={study.avatar}
             alt={study.name}
-            fill
-            priority
-            className="object-contain"
+            className="w-full h-full object-contain"
+            loading="eager"
           />
         </div>
       </motion.section>
@@ -232,7 +392,7 @@ export default function CaseStudyPage({
           </h3>
 
           <ul className="space-y-6">
-            {study.challenges.map((item, idx) => (
+            {study.challenges.map((item: string, idx: number) => (
               <motion.li
                 key={idx}
                 variants={itemVariant}
@@ -277,7 +437,7 @@ export default function CaseStudyPage({
           </h3>
 
           <ul className="space-y-6">
-            {study.solutions.map((item, idx) => (
+            {study.solutions.map((item: string, idx: number) => (
               <motion.li
                 key={idx}
                 variants={itemVariant}
@@ -307,7 +467,7 @@ export default function CaseStudyPage({
         </h3>
 
         <div className="grid gap-6 max-w-3xl mx-auto">
-          {study.results.map((item, idx) => (
+          {study.results.map((item: string, idx: number) => (
             <motion.div
               key={idx}
               variants={fadeUp}

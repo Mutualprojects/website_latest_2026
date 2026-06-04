@@ -100,19 +100,20 @@ const RESOURCES_MENU: ResourceMenuItem[] = [
     description: "Latest corporate events and seminars.",
     icon: Calendar
   },
+  
   {
     id: 2,
-    name: "News",
-    href: "/news",
-    description: "Latest company updates and news.",
-    icon: Newspaper
-  },
-  {
-    id: 3,
     name: "Blogs",
     href: "/blogs",
     description: "Expert insights and industry trends.",
     icon: BookOpen
+  },
+  {
+    id: 3,
+    name: "News",
+    href: "/news",
+    description: "Latest company updates and news.",
+    icon: Newspaper
   },
   {
     id: 4,
@@ -308,6 +309,7 @@ export function NavigationMenuDemo() {
                           <Link
                             key={item.id}
                             href={item.href}
+                            onClick={() => setShowAboutMenu(false)}
                             className="group flex items-center justify-between px-5 py-3 text-sm text-gray-700 hover:bg-[#07518a]/5 hover:text-[#07518a] transition-all duration-200"
                           >
                             <span className="font-medium">{item.name}</span>
@@ -360,6 +362,7 @@ export function NavigationMenuDemo() {
                               >
                                 <Link
                                   href={`/products/${product.slug}`}
+                                  onClick={() => setShowProductsMenu(false)}
                                   className="group flex gap-3 p-3 rounded-xl hover:bg-[#07518a]/5 transition-all duration-200"
                                 >
                                   {/* Product Image */}
@@ -490,6 +493,7 @@ export function NavigationMenuDemo() {
                                         <li key={item.id}>
                                           <Link
                                             href={`/solutions/${item.slug}`}
+                                            onClick={() => setShowSolutionsMenu(false)}
                                             className="group block p-2.5 rounded-xl hover:bg-[#07518a]/5 transition-all duration-200"
                                           >
                                             <div className="flex items-center gap-3">
@@ -608,6 +612,7 @@ export function NavigationMenuDemo() {
                             >
                               <Link
                                 href={item.href}
+                                onClick={() => setShowResourcesMenu(false)}
                                 className="group flex items-start gap-4 p-3.5 rounded-xl hover:bg-[#07518a]/5 transition-all duration-300 relative overflow-hidden border border-transparent hover:border-[#07518a]/10"
                               >
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#07518a] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
@@ -697,6 +702,7 @@ export function NavigationMenuDemo() {
                               <div className="pt-2">
                                 <Link
                                   href="/brochure"
+                                  onClick={() => setShowResourcesMenu(false)}
                                   className="w-full py-3.5 px-4 bg-[#07518a] text-white rounded-xl text-sm font-bold shadow-lg shadow-[#07518a]/20 hover:shadow-xl hover:shadow-[#07518a]/30 transition-all flex items-center justify-center gap-2 group overflow-hidden relative"
                                 >
                                   <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 skew-x-[-20deg]" />

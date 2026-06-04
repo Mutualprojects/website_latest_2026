@@ -59,6 +59,58 @@ type ViewMode = "grid" | "list";
 // DATA
 // ─────────────────────────────────────────────────────────────
 const EVENTS: Event[] = [
+
+   {
+  id: "Times power Women 2026",
+  title: "Times Power Women 2026",
+  description:
+    "Brihaspathi supports Times Power Women 2026, celebrating leadership and empowerment.",
+  images: [
+"https://ik.imagekit.io/tsuss6ulm/Times%20Power%20Women/1.png",
+"https://ik.imagekit.io/tsuss6ulm/Times%20Power%20Women/2.png",
+
+  ],
+  category: "expo",
+  date: "2026-05-20", // Updated to current date
+  featured: true,
+  tags: ["AI", "IoT",  "Innovation", "TechIntelligence"],
+},
+
+   {
+  id: "Tech Maha Impact",
+  title: "Tech Maha Impact",
+  description:
+    "Proudly showcased innovative automation solutions, strengthening partnerships and industry presence.",
+  images: [
+"https://ik.imagekit.io/tsuss6ulm/Tech%20Maha%20Impact/IMG_4570.JPG.jpeg",
+"https://ik.imagekit.io/tsuss6ulm/Tech%20Maha%20Impact/IMG_4628.JPG.jpeg",
+"https://ik.imagekit.io/tsuss6ulm/Tech%20Maha%20Impact/IMG_4629.JPG.jpeg",
+"https://ik.imagekit.io/tsuss6ulm/Tech%20Maha%20Impact/4K6A3671.JPG"
+  ],
+  category: "expo",
+  date: "2026-05-20", // Updated to current date
+  featured: true,
+  tags: ["AI", "IoT",  "Innovation", "TechIntelligence"],
+},
+
+ {
+  id: "Smart Home Expo",
+  title: "Smart Home Expo 2026 mumbai",
+  description:
+    "Successful Mumbai expo participation highlighting innovation, technology, and partnerships",
+  images: [
+    "https://ik.imagekit.io/tsuss6ulm/Smart%20Home%20expo/3.png",
+    "https://ik.imagekit.io/tsuss6ulm/Smart%20Home%20expo/2.png",
+"https://ik.imagekit.io/tsuss6ulm/Smart%20Home%20expo/1.png"
+  ],
+  category: "expo",
+  date: "2026-04-29", // Updated to current date
+  featured: true,
+  tags: ["AI", "IoT",  "Innovation", "TechIntelligence"],
+},
+
+
+
   {
   id: "office-inauguration-2026",
   title: "New Office Space Inauguration",

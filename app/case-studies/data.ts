@@ -51,6 +51,10 @@ import KAZIRANGA_NATIONAL_PARK from "./casestudyimages/Forestry/kaziranga-nation
    GOVERNMENT
 ========================= */
 import AP_GRADUATE_CONSTITUENCY_ELECTIONS from "./casestudyimages/Government/ap-graduate-constituency-elections.png";
+import West_bengal from './casestudyimages/Government/West_Bengal_and_Election_Commission.avif'
+import Assam_image from './casestudyimages/Government/Assam.avif'
+import TELANGANA_MUNICIPAL_ELECTIONS_2026 from "./casestudyimages/Government/405569-telangana-municipal-elections-2026.webp";
+import GRAMA_SARPANCH from "./casestudyimages/Government/1706939394.webp";
 import APSBCL_OPERATIONS from "./casestudyimages/Government/apsbcl-operations.png";
 import AROGYA_MITHRA_KIOSKS from "./casestudyimages/Government/arogya-mithra-kiosks.png";
 import BIHAR_ELECTIONS from "./casestudyimages/Government/bihar-elections.png";
@@ -60,6 +64,9 @@ import TELANGANA_ELECTIONS_2024 from "./casestudyimages/Government/telangana-ele
 import TELANGANA_HIGH_COURT from "./casestudyimages/Government/telangana-high-court.png";
 import TELANGANA_INTER_BOARD_EXAMS from "./casestudyimages/Government/telangana-inter-board-exams.png";
 import VIZAG_CITY_POLICE_COMMISSIONERATE from "./casestudyimages/Government/vizag-city-police-commissionerate.png";
+// External images for newly added election case studies
+export const ASSAM_ELECTIONS_IMAGE = "https://sec.assam.gov.in/assets/user/img/web-logo.png";
+export const WEST_BENGAL_ELECTIONS_IMAGE = "https://cf-images.assettype.com/barandbench%2F2021-03%2F4694baf7-ad3c-46af-b060-cb95c07f5bda%2FWest_Bengal_and_Election_Commission.jpeg?rect=0%2C0%2C1280%2C720&w=480&auto=format%2Ccompress&fit=max";
 
 /* =========================
    HEALTH CARE
@@ -988,6 +995,71 @@ export const CASE_STUDIES_BY_SECTOR: Record<string, CaseStudy[]> = {
   ],
   Government: [
     {
+      id: 1001,
+      pdf: "/case studies/GOVT/Assam Legislative Assembly Elections 2026.pdf",
+      name: "Assam Legislative Assembly Elections 2026 ",
+      role: "Assam Election Commission",
+      city: "Assam",
+
+      company: "State Election Authorities",
+      avatar: Assam_image,
+      rating: 5,
+      quote: "State-wide integrated surveillance delivering full polling visibility across districts and constituencies.",
+      challenges: [
+        "Large geographic footprint: 31,490 polling stations across diverse terrain.",
+        "Massive scale of webcasting: 70,000+ camera feeds requiring low-latency streaming and high-availability ingest.",
+        "Remote connectivity and power challenges in low-network areas.",
+        "Coordinating 32,000+ manpower, mobile surveillance vehicles, and check-post monitoring in a synchronized manner.",
+      ],
+      solutions: [
+        "Deployment of 70,000+ cameras with hierarchical district-level ingest and RTMP/HLS pipelines to state CCC.",
+        "2,000 FST/SST mobile surveillance vehicles fitted with PTZ cameras for dynamic monitoring across the 30-day period.",
+        "Hybrid connectivity model with primary 4G/5G & fiber links and secondary VSAT/store-and-forward for remote sites.",
+        "Centralized Command & Control Centres integrated with NOC for 24×7 monitoring and real-time escalation.",
+      ],
+      results: [
+        "Real-time monitoring of all polling stations, check posts, and mobile units across the state.",
+        "Improved situational awareness and faster operational coordination through centralized monitoring.",
+        "Minimal disruptions during election operations and demonstrable audit trails for transparency.",
+      ],
+      slug: "assam-legislative-assembly-elections-2026",
+      sector: "Government",
+      sectorSlug: "government",
+      project_objective: "To ensure a secure, transparent, and efficiently monitored election process across 35 districts and 126 assembly constituencies through a large-scale, technology-driven surveillance ecosystem enabling real-time visibility and centralized coordination.",
+    },
+    {
+      id: 1002,
+      pdf: "/case studies/GOVT/West Bengal Election 2026.pdf",
+      name: "West Bengal Election 2026",
+      role: "West Bengal Election Commission",
+      city: "West Bengal",
+
+      company: "State Election Authorities",
+      avatar: West_bengal,
+      rating: 5,
+      quote: "Comprehensive, zero-blindspot monitoring across polling stations and election-sensitive zones with uninterrupted live streaming.",
+      challenges: [
+        "Coverage across 21,055 polling stations spread across urban and rural districts.",
+        "Streaming stability for 45,250+ cameras with sustained 24×7 uptime and zero downtime expectations.",
+        "Maintaining high data integrity and secure redundant storage under the W-Hammer dual-write policy.",
+      ],
+      solutions: [
+        "Deployed 47,513+ cameras with RTMP/HLS streaming integrated into ECI and District Command Centres.",
+        "Advanced storage and dual-write backup strategy with local edge caches and central mirrored object storage.",
+        "Dedicated NOC teams and zonal/cluster managers for 24×7 monitoring and rapid incident response.",
+      ],
+      results: [
+        "100% monitoring coverage across all targeted polling stations and districts.",
+        "Maintained uninterrupted 24×7 monitoring with zero operational downtime during the election period.",
+        "Streamed and managed hundreds of thousands of camera-hours with verification by District Election Officers.",
+      ],
+      slug: "west-bengal-election-2026",
+      sector: "Government",
+      sectorSlug: "government",
+      project_objective: "To establish a secure, transparent, and technology-driven election surveillance ecosystem across West Bengal enabling centralized command operations, uninterrupted live coverage, and improved public safety during the 2026 Legislative Assembly Elections.",
+    },
+
+  {
       id: 27,
       pdf: "/case studies/BANK/Andhra Pragathi Grameena Bank.pdf",
       name: "Border Security Force (BSF)",
@@ -1018,6 +1090,40 @@ export const CASE_STUDIES_BY_SECTOR: Record<string, CaseStudy[]> = {
       sectorSlug: "government",
       project_objective: "The objective of the project was to strengthen surveillance and monitoring capabilities along three critical stretches of India’s international borders—Berhampore and Malda in West Bengal (bordering Bangladesh), and Jaisalmer in Rajasthan (bordering Pakistan). ",
     },
+
+
+
+    // {
+    //   id: 27,
+    //   pdf: "/case studies/BANK/Andhra Pragathi Grameena Bank.pdf",
+    //   name: "Border Security Force (BSF)",
+    //   role: "Border Guarding Organization",
+    //   city: "",
+
+    //   company: "BSF",
+    //   avatar: BORDER_SECURITY_FORCE,
+    //   rating: 5,
+    //   quote: "The IP-based surveillance system strengthened monitoring capabilities along critical international border stretches in West Bengal and Rajasthan.",
+    //   challenges: [
+    //     "Vast and Remote Terrain: The border areas spanned hundreds of kilometers with difficult access, dense vegetation, and varying elevations, making installation and maintenance logistically challenging.",
+    //     "Harsh Environmental Conditions: Extreme weather, including heavy rains in West Bengal and desert heat in Rajasthan, required durable equipment that could operate reliably in adverse conditions.",
+    //     "Seamless Integration with Existing Systems: The new surveillance needed to connect with BSF's command and control centers without disrupting ongoing operations or requiring extensive retraining.",
+    //   ],
+    //   solutions: [
+    //     "Strategic Deployment of IP Cameras: Installed high-resolution PTZ and fixed IP cameras at key vantage points along the Berhampore, Malda, and Jaisalmer border stretches to provide 360-degree coverage.",
+    //     "Ruggedized Equipment for Durability: Used weatherproof, tamper-resistant cameras with night vision and thermal imaging capabilities to ensure functionality in low-light and extreme conditions.",
+    //     "Network Backbone with Fiber Optics: Established a secure, high-bandwidth fiber optic network linking cameras to central monitoring stations, enabling real-time video streaming and remote access.",
+    //   ],
+    //   results: [
+    //     "Enhanced Intrusion Detection: The system significantly improved early warning for illegal crossings and smuggling activities, reducing response times by over 50%.",
+    //     "Operational Efficiency Gains: BSF personnel could monitor multiple sectors from centralized hubs, freeing up resources for patrols.",
+    //     "Improved Border Integrity: Recorded footage provided evidentiary support for investigations, contributing to a notable decrease in transnational crimes along the monitored borders.",
+    //   ],
+    //   slug: "border-security-force-bsf",
+    //   sector: "Government",
+    //   sectorSlug: "government",
+    //   project_objective: "The objective of the project was to strengthen surveillance and monitoring capabilities along three critical stretches of India’s international borders—Berhampore and Malda in West Bengal (bordering Bangladesh), and Jaisalmer in Rajasthan (bordering Pakistan). ",
+    // },
     {
       id: 52,
       pdf: "/case studies/BANK/Andhra Pragathi Grameena Bank.pdf",
@@ -1203,6 +1309,78 @@ export const CASE_STUDIES_BY_SECTOR: Record<string, CaseStudy[]> = {
       sector: "Government",
       sectorSlug: "government",
       project_objective: "The Telangana Legislative Assembly Elections of 2023–24 demanded a reliable, real-time surveillance infrastructure to oversee polling stations, counting rooms, EVM strong rooms, check posts, and key administrative offices across 16 districts. Brihaspathi Technologies was tasked with designing and deploying a 4G IP-based surveillance and control system. The core objective was to create a secured monitoring framework.",
+    },
+    {
+      id: 35,
+      pdf: "/case studies/GOVT/Telangana Municipal Elections 2026.pdf",
+      name: "Telangana Municipal Elections 2026",
+      role: "State Election Commission",
+      city: "Telangana",
+      company: "Telangana State Election Commission",
+      avatar: TELANGANA_MUNICIPAL_ELECTIONS_2026,
+      rating: 5,
+      quote: "Live webcasting and surveillance delivered real-time visibility across 8,300 polling stations and 13,000+ cameras during the Telangana Urban Local Bodies Elections 2026.",
+      challenges: [
+        "Managing large-scale deployment of 13,000+ surveillance cameras across nearly 8,300 polling stations in 32 districts.",
+        "Ensuring stable internet connectivity for live streaming in both urban and semi-urban polling locations.",
+        "Maintaining voter privacy while strategically positioning cameras for effective polling activity monitoring.",
+        "Coordinating technical teams, equipment logistics, and monitoring infrastructure within strict election timelines.",
+        "Ensuring continuous system reliability and uninterrupted video recording throughout polling hours.",
+      ],
+      solutions: [
+        "Installed 13,000+ surveillance cameras across 8,300 polling stations, strong rooms, and counting halls for comprehensive monitoring.",
+        "Maintained continuous monitoring and performance checks throughout polling hours to ensure system stability.",
+        "Established centralized monitoring centers at election control rooms and district offices for live feed observation.",
+        "Assigned trained technical personnel at each polling station to manage equipment, connectivity, and live streaming operations.",
+        "Implemented a secure streaming platform and dedicated help desk support for smooth monitoring during polling hours.",
+      ],
+      results: [
+        "Enabled real-time monitoring across thousands of polling stations during the municipal elections.",
+        "Provided continuous live visibility to election authorities across multiple districts in Telangana.",
+        "Achieved stable streaming and recording performance from nearly 13,000+ surveillance cameras deployed in the field.",
+        "Enabled quick response and issue resolution through centralized monitoring systems.",
+        "Ensured smooth, transparent, and technology-enabled election monitoring operations.",
+      ],
+      slug: "telangana-municipal-elections-2026",
+      sector: "Government",
+      sectorSlug: "government",
+      project_objective: "Implement a live webcasting and surveillance system at polling stations to enable real-time monitoring of election activities, strengthen transparency and security, and support centralized oversight during the Telangana Urban Local Bodies Elections 2026.",
+    },
+    {
+      id: 36,
+      pdf: "/case studies/GOVT/Telangana Local Bodies Elections 2025.pdf",
+      name: "Live Webcasting & Surveillance System for Telangana Local Bodies Elections 2025",
+      role: "TSEC, PR&RE, and District Election Authorities",
+      city: "Telangana",
+      company: "Telangana State Election Commission",
+      avatar: GRAMA_SARPANCH,
+      rating: 5,
+      quote: "A secure, scalable live streaming and recording solution that enabled fair polling oversight at 11,031 polling stations.",
+      challenges: [
+        "Managing deployment of 11,031 4G cameras across 11,031 polling stations in remote and rural locations.",
+        "Ensuring stable live streaming and recording under inconsistent or low network connectivity.",
+        "Maintaining voter secrecy while capturing critical polling processes in compliance with Election Commission guidelines.",
+        "Training and coordinating a large, geographically distributed workforce within tight election timelines.",
+        "Achieving high system uptime and rapid fault resolution on polling day.",
+      ],
+      solutions: [
+        "Deployed trained manpower at each polling station for camera operation, connectivity management, and on-site troubleshooting.",
+        "Installed 4G cameras with local storage for uninterrupted recording during connectivity disruptions and enabled secure web-based live streaming with timestamping and digital watermarking.",
+        "Implemented secure access controls, encrypted streaming, and role-based viewing permissions to prevent unauthorized access.",
+        "Set up a central help desk at TSEC and PR&RE offices with trained technical staff for real-time issue escalation and resolution.",
+        "Established centralized and district-level monitoring dashboards enabling simultaneous viewing of multiple live video streams.",
+      ],
+      results: [
+        "Successful live monitoring and recording across 11,031 polling stations on election day.",
+        "High system availability and uptime achieved across all 30 districts despite fluctuating connectivity.",
+        "Real-time visibility enabled faster intervention and informed decision-making by election officials.",
+        "Complete and timely submission of recorded data and reports to TSEC and PR&RE in line with SLA requirements.",
+        "No major technical failures impacting polling operations.",
+      ],
+      slug: "telangana-local-bodies-elections-2025",
+      sector: "Government",
+      sectorSlug: "government",
+      project_objective: "Deliver live audio-video webcasting and secure recording across 11,031 polling stations for the Telangana Local Bodies Elections 2025, ensuring transparency, compliance, centralized monitoring, and reliable election data capture in India.",
     },
     {
       id: 34,

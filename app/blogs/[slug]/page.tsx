@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { motion, useScroll, useSpring, AnimatePresence, useInView } from 'framer-motion'
 import { format, parseISO } from 'date-fns'
 import { fetchBlogBySlug, fetchLatestBlogs, updateBlogLikes, getStrapiMedia } from '@/app/lib/strapi'
-import { Blog, TableSection, TextSection, StepSection, ListSection, FAQSection, RichTextNode } from '../types/blog'
+import { Blog, TableSection, TextSection, StepSection, ListSection, FAQSection, VideoSection, RichTextNode } from '../types/blog'
 import { notFound } from 'next/navigation'
 import { Tag as TagIcon, Clock, ChevronRight, TrendingUp, Heart } from 'lucide-react'
 
@@ -87,6 +87,54 @@ const StrategicImage: React.FC<StrategicImageProps> = ({
       {!contain && <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />}
     </div>
   )
+}
+
+const YT_RE = /(?:youtube\.com|youtu\.be)/i
+const VIMEO_RE = /vimeo\.com/i
+const DIRECT_VIDEO_RE = /\.(mp4|webm|ogg)(\?|#|$)/i
+
+const toYouTubeEmbed = (url: string) => {
+  try {
+    const parsed = new URL(url)
+    const id = parsed.hostname.includes('youtu.be')
+      ? parsed.pathname.slice(1)
+      : parsed.searchParams.get('v') || parsed.pathname.split('/').filter(Boolean).pop()
+    return id ? `https://www.youtube.com/embed/${id}` : url
+  } catch {
+    return url
+  }
+}
+
+const toVimeoEmbed = (url: string) => {
+  try {
+    const parsed = new URL(url)
+    const id = parsed.pathname.split('/').filter(Boolean).pop()
+    return id ? `https://player.vimeo.com/video/${id}` : url
+  } catch {
+    return url
+  }
+}
+
+const normalizeVideoEmbedUrl = (url: string): string => {
+  if (YT_RE.test(url)) return toYouTubeEmbed(url)
+  if (VIMEO_RE.test(url)) return toVimeoEmbed(url)
+  return url
+}
+
+const getAutoplayEmbedUrl = (url: string): string => {
+  const normalized = normalizeVideoEmbedUrl(url)
+  if (DIRECT_VIDEO_RE.test(normalized)) return normalized
+
+  try {
+    const parsed = new URL(normalized)
+    parsed.searchParams.set('autoplay', '1')
+    parsed.searchParams.set('mute', '1')
+    parsed.searchParams.set('rel', '0')
+    parsed.searchParams.set('modestbranding', '1')
+    return parsed.toString()
+  } catch {
+    return normalized
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1084,6 +1132,32 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
                           url={(section as ListSection).image!.url}
                           alt={(section as ListSection).title}
                           className="aspect-video rounded-xl shadow-md"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {section.__component === 'shared.video-links' && (
+                  <div className="my-10 bg-slate-950/5 rounded-[2rem] border border-slate-200 overflow-hidden shadow-xl">
+                    {(DIRECT_VIDEO_RE.test((section as VideoSection).video)) ? (
+                      <video
+                        src={(section as VideoSection).video}
+                        autoPlay
+                        muted
+                        playsInline
+                        controls
+                        className="w-full h-auto block rounded-[2rem] bg-black"
+                      />
+                    ) : (
+                      <div className="relative w-full h-0 pb-[56.25%] overflow-hidden">
+                        <iframe
+                          src={getAutoplayEmbedUrl((section as VideoSection).video)}
+                          title="Embedded video"
+                          className="absolute inset-0 w-full h-full"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                          allowFullScreen
+                          loading="lazy"
                         />
                       </div>
                     )}
