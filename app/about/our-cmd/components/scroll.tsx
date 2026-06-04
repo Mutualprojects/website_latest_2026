@@ -59,7 +59,7 @@ function resolveImage(image?: MediaImage): string {
   if (!image) return "";
   const fmt = image.formats?.large ?? image.formats?.medium ?? image.formats?.small ?? null;
   const path = fmt?.url ?? image.url;
-  return path.startsWith("http") ? path : `${API_BASE}${path}`;
+  return path.startsWith("http") ? path : `/strapi${path}`;
 }
 
 /* ---------- Component ---------- */

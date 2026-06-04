@@ -111,7 +111,7 @@ export default function IndustriesWeServeSection() {
           ) : (
             industries.map((item, index) => {
               const isOdd = index % 2 !== 0;
-              const imageUrl = item.image ? `http://183.82.117.36:2334${item.image.url}` : "";
+              const imageUrl = item.image ? `/strapi${item.image.url}` : "";
 
               return (
                 <motion.div
