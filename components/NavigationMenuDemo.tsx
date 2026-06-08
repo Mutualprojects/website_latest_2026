@@ -3,7 +3,28 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Menu, X, ChevronDown, ArrowRight, Calendar, Newspaper, BookOpen, Landmark, Briefcase, Video, FileText, Mic2, MessageSquare, Download, PlayCircle, Star, Shield, Zap, Cpu, Fingerprint, Bus, Wifi, Sun, Settings, VideoIcon } from "lucide-react";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  ArrowRight,
+  Calendar,
+  Newspaper,
+  BookOpen,
+  Landmark,
+  Briefcase,
+  Video,
+  FileText,
+  Mic2,
+  MessageSquare,
+  Download,
+  Zap,
+  Cpu,
+  Fingerprint,
+  Wifi,
+  Settings,
+  VideoIcon,
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 
@@ -89,7 +110,7 @@ const ABOUT_MENU: AboutItem[] = [
   { id: 4, name: "Our Team", href: "/our-team" },
   { id: 3, name: "Our Journey", href: "/our-journey" },
   { id: 6, name: "Chairman & Managing Director", href: "/about/our-cmd" },
-  { id: 7, name: "What Our Clients Said", href: "/testimonials" }
+  { id: 7, name: "What Our Clients Said", href: "/testimonials" },
 ];
 
 const RESOURCES_MENU: ResourceMenuItem[] = [
@@ -98,78 +119,77 @@ const RESOURCES_MENU: ResourceMenuItem[] = [
     name: "Our Events",
     href: "/our-events",
     description: "Latest corporate events and seminars.",
-    icon: Calendar
+    icon: Calendar,
   },
-  
   {
     id: 2,
     name: "Blogs",
     href: "/blogs",
     description: "Expert insights and industry trends.",
-    icon: BookOpen
+    icon: BookOpen,
   },
   {
     id: 3,
     name: "News",
     href: "/news",
     description: "Latest company updates and news.",
-    icon: Newspaper
+    icon: Newspaper,
   },
   {
     id: 4,
     name: "Govt. Projects",
     href: "/govt-projects",
     description: "Collaborations with government bodies.",
-    icon: Landmark
+    icon: Landmark,
   },
   {
     id: 5,
     name: "Our Projects",
     href: "/our-projects",
     description: "Showcase of our diverse portfolio.",
-    icon: Briefcase
+    icon: Briefcase,
   },
   {
     id: 6,
     name: "Media",
     href: "/media",
     description: "Videos and images of our operations.",
-    icon: Video
+    icon: Video,
   },
   {
     id: 7,
     name: "Videos",
     href: "/videos",
     description: "Corporate cinematic theater archive.",
-    icon: VideoIcon
+    icon: VideoIcon,
   },
   {
     id: 8,
     name: "Case Studies",
     href: "/case-studies",
     description: "In-depth client success stories.",
-    icon: FileText
+    icon: FileText,
   },
   {
     id: 9,
     name: "Press Release",
     href: "/press-release",
     description: "Official statements and milestones.",
-    icon: Mic2
+    icon: Mic2,
   },
   {
     id: 10,
     name: "Reviews",
     href: "/write-a-review",
     description: "Share your feedback with us.",
-    icon: MessageSquare
+    icon: MessageSquare,
   },
   {
     id: 11,
     name: "Brochure",
     href: "/brochure",
     description: "Corporate profile and catalog.",
-    icon: Download
+    icon: Download,
   },
 ];
 
@@ -224,12 +244,18 @@ export function NavigationMenuDemo() {
   /* === Helper for Solutions Icons === */
   const getSolutionIcon = (category: string) => {
     switch (category) {
-      case "Smart Mobility": return Wifi;
-      case "AI Surveillance": return Video;
-      case "Renewable Energy": return Zap;
-      case "Biometrics": return Fingerprint;
-      case "Software": return Cpu;
-      default: return Settings;
+      case "Smart Mobility":
+        return Wifi;
+      case "AI Surveillance":
+        return Video;
+      case "Renewable Energy":
+        return Zap;
+      case "Biometrics":
+        return Fingerprint;
+      case "Software":
+        return Cpu;
+      default:
+        return Settings;
     }
   };
 
@@ -247,7 +273,7 @@ export function NavigationMenuDemo() {
                 src={logoSrc}
                 alt="Company Logo"
                 width={140}
-                height={45}
+                height={40}
                 className="h-10 md:h-12 w-auto transition-all duration-300"
                 style={{ width: "auto", height: "auto" }}
                 priority
@@ -259,10 +285,11 @@ export function NavigationMenuDemo() {
               {/* Home */}
               <Link
                 href="/"
-                className={`relative shrink-0 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${pathname === "/"
-                  ? "text-[#07518a]"
-                  : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
-                  }`}
+                className={`relative shrink-0 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${
+                  pathname === "/"
+                    ? "text-[#07518a]"
+                    : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
+                }`}
               >
                 Home
                 {pathname === "/" && (
@@ -275,7 +302,7 @@ export function NavigationMenuDemo() {
                 )}
               </Link>
 
-              {/* About Us Dropdown (simple) */}
+              {/* Company / About Dropdown */}
               <div
                 className="relative shrink-0 pb-2"
                 onMouseEnter={() => setShowAboutMenu(true)}
@@ -283,15 +310,17 @@ export function NavigationMenuDemo() {
               >
                 <button
                   type="button"
-                  className={`flex items-center gap-1 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${pathname.startsWith("/about")
-                    ? "text-[#07518a]"
-                    : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
-                    }`}
+                  className={`flex items-center gap-1 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${
+                    pathname.startsWith("/about")
+                      ? "text-[#07518a]"
+                      : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
+                  }`}
                 >
                   Company
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${showAboutMenu ? "rotate-180" : ""
-                      }`}
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      showAboutMenu ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
 
@@ -322,6 +351,7 @@ export function NavigationMenuDemo() {
                 </AnimatePresence>
               </div>
 
+              {/* Products Mega Menu */}
               <div
                 className="shrink-0 pb-2"
                 onMouseEnter={() => setShowProductsMenu(true)}
@@ -329,15 +359,17 @@ export function NavigationMenuDemo() {
               >
                 <button
                   type="button"
-                  className={`flex items-center gap-1 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${pathname.startsWith("/products")
-                    ? "text-[#07518a]"
-                    : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
-                    }`}
+                  className={`flex items-center gap-1 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${
+                    pathname.startsWith("/products")
+                      ? "text-[#07518a]"
+                      : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
+                  }`}
                 >
                   Products
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${showProductsMenu ? "rotate-180" : ""
-                      }`}
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      showProductsMenu ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
 
@@ -371,6 +403,7 @@ export function NavigationMenuDemo() {
                                       src={product.bannerImage}
                                       alt={product.name}
                                       fill
+                                      sizes="48px"
                                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                                     />
                                   </div>
@@ -410,6 +443,7 @@ export function NavigationMenuDemo() {
                                   src="/colorful-illustration-computer-with-graphic-all-way-logo.png"
                                   alt="BTL Products"
                                   fill
+                                  sizes="300px"
                                   className="object-cover"
                                 />
                               </motion.div>
@@ -429,9 +463,16 @@ export function NavigationMenuDemo() {
                                   Engineering high-performance AI intelligence.
                                 </p>
                                 <div className="flex flex-wrap gap-1.5 pt-1">
-                                  {["Hardware", "Software", "AI Ready"].map((tag) => (
-                                    <span key={tag} className="text-[8px] font-bold bg-white text-[#07518a] px-2 py-0.5 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default">{tag}</span>
-                                  ))}
+                                  {["Hardware", "Software", "AI Ready"].map(
+                                    (tag) => (
+                                      <span
+                                        key={tag}
+                                        className="text-[8px] font-bold bg-white text-[#07518a] px-2 py-0.5 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default"
+                                      >
+                                        {tag}
+                                      </span>
+                                    )
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -443,8 +484,6 @@ export function NavigationMenuDemo() {
                 </AnimatePresence>
               </div>
 
-
-
               {/* Solutions Mega Menu */}
               <div
                 className="shrink-0 pb-2"
@@ -453,15 +492,17 @@ export function NavigationMenuDemo() {
               >
                 <button
                   type="button"
-                  className={`flex items-center gap-1 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${pathname.startsWith("/solutions")
-                    ? "text-[#07518a]"
-                    : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
-                    }`}
+                  className={`flex items-center gap-1 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${
+                    pathname.startsWith("/solutions")
+                      ? "text-[#07518a]"
+                      : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
+                  }`}
                 >
                   Solutions
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${showSolutionsMenu ? "rotate-180" : ""
-                      }`}
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      showSolutionsMenu ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
 
@@ -485,15 +526,21 @@ export function NavigationMenuDemo() {
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{ duration: 0.3 }}
                                 >
-                                  <h4 className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-3">{category}</h4>
+                                  <h4 className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-3">
+                                    {category}
+                                  </h4>
                                   <ul className="space-y-0.5">
                                     {items.map((item) => {
-                                      const Icon = getSolutionIcon(item.category);
+                                      const Icon = getSolutionIcon(
+                                        item.category
+                                      );
                                       return (
                                         <li key={item.id}>
                                           <Link
                                             href={`/solutions/${item.slug}`}
-                                            onClick={() => setShowSolutionsMenu(false)}
+                                            onClick={() =>
+                                              setShowSolutionsMenu(false)
+                                            }
                                             className="group block p-2.5 rounded-xl hover:bg-[#07518a]/5 transition-all duration-200"
                                           >
                                             <div className="flex items-center gap-3">
@@ -539,6 +586,7 @@ export function NavigationMenuDemo() {
                                   src="/hand-holding-bright-light-bulb-with-gears-symbolizing-innovation-creative-ideas-vector-illustration.png"
                                   alt="BTL Solutions"
                                   fill
+                                  sizes="300px"
                                   className="object-cover"
                                 />
                               </motion.div>
@@ -558,9 +606,16 @@ export function NavigationMenuDemo() {
                                   Smart solutions for enterprise & gov.
                                 </p>
                                 <div className="flex flex-wrap gap-1.5 pt-1">
-                                  {["Enterprise", "Smart City", "Security"].map((tag) => (
-                                    <span key={tag} className="text-[8px] font-bold bg-white text-[#07518a] px-2 py-0.5 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default">{tag}</span>
-                                  ))}
+                                  {["Enterprise", "Smart City", "Security"].map(
+                                    (tag) => (
+                                      <span
+                                        key={tag}
+                                        className="text-[8px] font-bold bg-white text-[#07518a] px-2 py-0.5 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default"
+                                      >
+                                        {tag}
+                                      </span>
+                                    )
+                                  )}
                                 </div>
                               </div>
                             </div>
@@ -580,15 +635,17 @@ export function NavigationMenuDemo() {
               >
                 <button
                   type="button"
-                  className={`flex items-center gap-1 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${pathname.startsWith("/resources")
-                    ? "text-[#07518a]"
-                    : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
-                    }`}
+                  className={`flex items-center gap-1 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${
+                    pathname.startsWith("/resources")
+                      ? "text-[#07518a]"
+                      : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
+                  }`}
                 >
                   Resources
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${showResourcesMenu ? "rotate-180" : ""
-                      }`}
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      showResourcesMenu ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
 
@@ -653,6 +710,7 @@ export function NavigationMenuDemo() {
                                   src="/3083.jpg"
                                   alt="BTL Technology"
                                   fill
+                                  sizes="280px"
                                   className="object-cover"
                                 />
                               </motion.div>
@@ -671,6 +729,7 @@ export function NavigationMenuDemo() {
                                     width={180}
                                     height={50}
                                     className="object-contain"
+                                    style={{ width: "auto", height: "auto" }}
                                   />
                                 </motion.div>
 
@@ -683,18 +742,21 @@ export function NavigationMenuDemo() {
                                     </span>
                                   </h5>
                                   <p className="text-[10px] text-gray-600 leading-relaxed font-medium">
-                                    Pioneering AI-driven intelligence solutions for a smarter and safer future.
+                                    Pioneering AI-driven intelligence solutions
+                                    for a smarter and safer future.
                                   </p>
 
                                   <div className="flex flex-wrap gap-2 pt-2">
-                                    {["AI Solutions", "Surveillance", "Innovation"].map((tag) => (
-                                      <span
-                                        key={tag}
-                                        className="text-[9px] font-bold bg-white text-[#07518a] px-3 py-1 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default"
-                                      >
-                                        {tag}
-                                      </span>
-                                    ))}
+                                    {["AI Solutions", "Surveillance", "Innovation"].map(
+                                      (tag) => (
+                                        <span
+                                          key={tag}
+                                          className="text-[9px] font-bold bg-white text-[#07518a] px-3 py-1 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default"
+                                        >
+                                          {tag}
+                                        </span>
+                                      )
+                                    )}
                                   </div>
                                 </div>
                               </div>
@@ -706,7 +768,9 @@ export function NavigationMenuDemo() {
                                   className="w-full py-3.5 px-4 bg-[#07518a] text-white rounded-xl text-sm font-bold shadow-lg shadow-[#07518a]/20 hover:shadow-xl hover:shadow-[#07518a]/30 transition-all flex items-center justify-center gap-2 group overflow-hidden relative"
                                 >
                                   <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 skew-x-[-20deg]" />
-                                  <span className="relative z-10">Download Brochure</span>
+                                  <span className="relative z-10">
+                                    Download Brochure
+                                  </span>
                                   <Download className="w-4 h-4 relative z-10" />
                                 </Link>
                               </div>
@@ -722,13 +786,14 @@ export function NavigationMenuDemo() {
               {/* Services */}
               <Link
                 href="/services"
-                className={`relative shrink-0 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${pathname === "/services" || pathname.startsWith("/services")
-                  ? "text-[#07518a]"
-                  : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
-                  }`}
+                className={`relative shrink-0 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${
+                  pathname.startsWith("/services")
+                    ? "text-[#07518a]"
+                    : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
+                }`}
               >
                 Services
-                {(pathname === "/services" || pathname.startsWith("/services")) && (
+                {pathname.startsWith("/services") && (
                   <motion.div
                     layoutId="activeTab"
                     className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#07518a]"
@@ -741,10 +806,11 @@ export function NavigationMenuDemo() {
               {/* Contact */}
               <Link
                 href="/contact"
-                className={`relative shrink-0 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${pathname === "/contact"
-                  ? "text-[#07518a]"
-                  : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
-                  }`}
+                className={`relative shrink-0 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${
+                  pathname === "/contact"
+                    ? "text-[#07518a]"
+                    : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
+                }`}
               >
                 Contact
                 {pathname === "/contact" && (
@@ -805,6 +871,7 @@ export function NavigationMenuDemo() {
                     width={120}
                     height={40}
                     className="h-8 w-auto"
+                    style={{ width: "auto", height: "auto" }}
                   />
                 </div>
                 <button
@@ -821,10 +888,11 @@ export function NavigationMenuDemo() {
                 <Link
                   href="/"
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${pathname === "/"
-                    ? "bg-[#07518a] text-white shadow-lg"
-                    : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
-                    }`}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${
+                    pathname === "/"
+                      ? "bg-[#07518a] text-white shadow-lg"
+                      : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
+                  }`}
                 >
                   Home
                   {pathname === "/" && <ArrowRight className="w-5 h-5" />}
@@ -834,15 +902,17 @@ export function NavigationMenuDemo() {
                 <div className="space-y-1">
                   <button
                     onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${pathname.startsWith("/about")
-                      ? "bg-[#07518a]/10 text-[#07518a]"
-                      : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
-                      }`}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${
+                      pathname.startsWith("/about")
+                        ? "bg-[#07518a]/10 text-[#07518a]"
+                        : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
+                    }`}
                   >
                     About Us
                     <ChevronDown
-                      className={`w-5 h-5 transition-transform duration-300 ${mobileAboutOpen ? "rotate-180" : ""
-                        }`}
+                      className={`w-5 h-5 transition-transform duration-300 ${
+                        mobileAboutOpen ? "rotate-180" : ""
+                      }`}
                     />
                   </button>
                   <AnimatePresence>
@@ -876,15 +946,17 @@ export function NavigationMenuDemo() {
                 <div className="space-y-1">
                   <button
                     onClick={() => setMobileSolutionsOpen(!mobileSolutionsOpen)}
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${pathname.startsWith("/solutions")
-                      ? "bg-[#07518a]/10 text-[#07518a]"
-                      : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
-                      }`}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${
+                      pathname.startsWith("/solutions")
+                        ? "bg-[#07518a]/10 text-[#07518a]"
+                        : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
+                    }`}
                   >
                     Solutions
                     <ChevronDown
-                      className={`w-5 h-5 transition-transform duration-300 ${mobileSolutionsOpen ? "rotate-180" : ""
-                        }`}
+                      className={`w-5 h-5 transition-transform duration-300 ${
+                        mobileSolutionsOpen ? "rotate-180" : ""
+                      }`}
                     />
                   </button>
                   <AnimatePresence>
@@ -925,19 +997,21 @@ export function NavigationMenuDemo() {
                   </AnimatePresence>
                 </div>
 
-                {/* Products Accordion (NEW) */}
+                {/* Products Accordion */}
                 <div className="space-y-1">
                   <button
                     onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
-                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${pathname.startsWith("/products")
-                      ? "bg-[#07518a]/10 text-[#07518a]"
-                      : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
-                      }`}
+                    className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${
+                      pathname.startsWith("/products")
+                        ? "bg-[#07518a]/10 text-[#07518a]"
+                        : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
+                    }`}
                   >
                     Products
                     <ChevronDown
-                      className={`w-5 h-5 transition-transform duration-300 ${mobileProductsOpen ? "rotate-180" : ""
-                        }`}
+                      className={`w-5 h-5 transition-transform duration-300 ${
+                        mobileProductsOpen ? "rotate-180" : ""
+                      }`}
                     />
                   </button>
                   <AnimatePresence>
@@ -962,6 +1036,7 @@ export function NavigationMenuDemo() {
                                   src={product.bannerImage}
                                   alt={product.name}
                                   fill
+                                  sizes="32px"
                                   className="object-cover"
                                 />
                               </div>
@@ -982,8 +1057,9 @@ export function NavigationMenuDemo() {
                   >
                     Resources
                     <ChevronDown
-                      className={`w-5 h-5 transition-transform duration-300 ${mobileResourcesOpen ? "rotate-180" : ""
-                        }`}
+                      className={`w-5 h-5 transition-transform duration-300 ${
+                        mobileResourcesOpen ? "rotate-180" : ""
+                      }`}
                     />
                   </button>
                   <AnimatePresence>
@@ -1007,8 +1083,12 @@ export function NavigationMenuDemo() {
                                 <item.icon className="w-4 h-4" />
                               </div>
                               <div className="flex flex-col">
-                                <span className="font-medium text-gray-700">{item.name}</span>
-                                <span className="text-[11px] text-gray-500 leading-tight line-clamp-2">{item.description}</span>
+                                <span className="font-medium text-gray-700">
+                                  {item.name}
+                                </span>
+                                <span className="text-[11px] text-gray-500 leading-tight line-clamp-2">
+                                  {item.description}
+                                </span>
                               </div>
                             </Link>
                           ))}
@@ -1022,13 +1102,14 @@ export function NavigationMenuDemo() {
                 <Link
                   href="/services"
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${pathname === "/services" || pathname.startsWith("/services")
-                    ? "bg-[#07518a] text-white shadow-lg"
-                    : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
-                    }`}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${
+                    pathname.startsWith("/services")
+                      ? "bg-[#07518a] text-white shadow-lg"
+                      : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
+                  }`}
                 >
                   Services
-                  {(pathname === "/services" || pathname.startsWith("/services")) && (
+                  {pathname.startsWith("/services") && (
                     <ArrowRight className="w-5 h-5" />
                   )}
                 </Link>
@@ -1037,10 +1118,11 @@ export function NavigationMenuDemo() {
                 <Link
                   href="/contact"
                   onClick={() => setMobileOpen(false)}
-                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${pathname === "/contact"
-                    ? "bg-[#07518a] text-white shadow-lg"
-                    : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
-                    }`}
+                  className={`flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${
+                    pathname === "/contact"
+                      ? "bg-[#07518a] text-white shadow-lg"
+                      : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
+                  }`}
                 >
                   Contact
                   {pathname === "/contact" && <ArrowRight className="w-5 h-5" />}

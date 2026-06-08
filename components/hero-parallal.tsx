@@ -8,7 +8,7 @@ import {
   useSpring,
   MotionValue,
 } from "framer-motion";
-import newsConceptImg from "./tiny-people-read-breaking-news-online-using-laptop-breaking-news-concept.png";
+import newsConceptImg from "./new.png";
 
 /* ================= TYPES ================= */
 

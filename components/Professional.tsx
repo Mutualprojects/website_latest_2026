@@ -7,96 +7,135 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useSpring,
+  useReducedMotion,
+} from "framer-motion";
 import {
   X,
   ChevronLeft,
   ChevronRight,
-  Calendar,
-  Users,
-  Award,
+  ArrowUpRight,
+  Camera,
   Search,
-  Grid,
-  List,
-  Sparkles,
-  ArrowUpDown,
-  SlidersHorizontal,
-  Check,
-  Tag,
-  Images,
-  ZoomIn,
-  ChevronDown,
-  Layers,
+  RefreshCw,
 } from "lucide-react";
 
 // ─────────────────────────────────────────────────────────────
-// BRAND
+// DESIGN TOKENS
 // ─────────────────────────────────────────────────────────────
 const BRAND = "#07518a";
-const BRAND_LIGHT = "#0a6ab8";
-const BRAND_GRADIENT = `linear-gradient(135deg, ${BRAND} 0%, ${BRAND_LIGHT} 100%)`;
-const PLACEHOLDER = "https://via.placeholder.com/600x450/e2e8f0/64748b?text=Photo";
+const ACCENT = "#b48a4a";
+const INK = "#0a0a0a";
+const INK_DIM = "#6b6b6b";
+const INK_FAINT = "#a0a0a0";
+const PAPER = "#ffffff";
+const RULE = "#ececec";
+const RULE_SOFT = "#f4f4f4";
+
+const BLANK =
+  "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 5 4'><rect width='5' height='4' fill='%23f4f4f4'/></svg>";
+
+// ─────────────────────────────────────────────────────────────
+// SEEDED RNG (for stable, reshuffle-able scatter positions)
+// ─────────────────────────────────────────────────────────────
+class SeededRandom {
+  private seed: number;
+  constructor(seed: number) { this.seed = seed; }
+  next(): number {
+    this.seed = (this.seed * 9301 + 49297) % 233280;
+    return this.seed / 233280;
+  }
+  range(min: number, max: number): number {
+    return min + this.next() * (max - min);
+  }
+}
 
 // ─────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────
+interface MediaFormat { url: string; width?: number; height?: number; }
+interface MediaItem {
+  url: string;
+  formats?: {
+    thumbnail?: MediaFormat;
+    small?: MediaFormat;
+    medium?: MediaFormat;
+    large?: MediaFormat;
+  };
+}
 interface Event {
   id: string;
   title: string;
   description: string;
-  images: string[];
+  images: MediaItem[];
   category: string;
   date: string;
   featured?: boolean;
-  tags?: string[];
 }
 
-type SortOption = "date-desc" | "date-asc" | "title-asc" | "title-desc";
-type ViewMode = "grid" | "list";
+// ─────────────────────────────────────────────────────────────
+// IMAGE HELPERS
+// ─────────────────────────────────────────────────────────────
+function pickSrc(img: MediaItem | undefined, target: "thumb" | "card" | "full"): string {
+  if (!img) return BLANK;
+  const f = img.formats ?? {};
+  let path: string | undefined;
+  if (target === "thumb") path = f.thumbnail?.url || f.small?.url || f.medium?.url || img.url;
+  else if (target === "card") path = f.medium?.url || f.small?.url || f.large?.url || img.url;
+  else path = f.large?.url || f.medium?.url || img.url;
+  if (!path) return BLANK;
+  return path.startsWith("http") ? path : `/strapi${path}`;
+}
+function cardSrcSet(img: MediaItem | undefined): string | undefined {
+  if (!img?.formats) return undefined;
+  const parts: string[] = [];
+  const add = (f: MediaFormat | undefined, w: number) => {
+    if (!f?.url) return;
+    const url = f.url.startsWith("http") ? f.url : `/strapi${f.url}`;
+    parts.push(`${url} ${w}w`);
+  };
+  add(img.formats.small, 500);
+  add(img.formats.medium, 750);
+  add(img.formats.large, 1000);
+  return parts.length ? parts.join(", ") : undefined;
+}
 
 // ─────────────────────────────────────────────────────────────
-// DATA
+// CATEGORY DOTS
 // ─────────────────────────────────────────────────────────────
-const EVENTS: Event[] = [];
-
-// ─────────────────────────────────────────────────────────────
-// CATEGORY COLOR MAP
-// ─────────────────────────────────────────────────────────────
-const CATEGORY_COLORS: Record<string, { bg: string; text: string; dot: string }> = {
-  "Special Day": { bg: "bg-rose-50", text: "text-rose-700", dot: "bg-rose-400" },
-  National: { bg: "bg-orange-50", text: "text-orange-700", dot: "bg-orange-400" },
-  Corporate: { bg: "bg-sky-50", text: "text-sky-700", dot: "bg-sky-400" },
-  Festival: { bg: "bg-amber-50", text: "text-amber-700", dot: "bg-amber-400" },
-  Wellness: { bg: "bg-green-50", text: "text-green-700", dot: "bg-green-400" },
-  Achievement: { bg: "bg-purple-50", text: "text-purple-700", dot: "bg-purple-400" },
-  Expo: { bg: "bg-indigo-50", text: "text-indigo-700", dot: "bg-indigo-400" },
-  Initiative: { bg: "bg-teal-50", text: "text-teal-700", dot: "bg-teal-400" },
-  Team: { bg: "bg-cyan-50", text: "text-cyan-700", dot: "bg-cyan-400" },
-  Gallery: { bg: "bg-slate-50", text: "text-slate-700", dot: "bg-slate-400" },
+const CATEGORY_DOTS: Record<string, string> = {
+  "Special Day": "#c64a6b",
+  National: "#c47138",
+  Corporate: BRAND,
+  Festival: "#b48a4a",
+  Wellness: "#3f8b6c",
+  Achievement: "#7a5ea8",
+  Expo: "#3d6fa7",
+  Initiative: "#318e94",
+  Team: "#2a8fa3",
+  Gallery: "#6b6f7a",
 };
+const getDot = (cat: string) => CATEGORY_DOTS[cat] ?? BRAND;
 
-function getCategoryStyle(cat: string) {
-  return (
-    CATEGORY_COLORS[cat] ?? {
-      bg: "bg-blue-50",
-      text: "text-blue-700",
-      dot: "bg-blue-400",
-    }
-  );
+// ─────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────
+function formatDate(d: string, opts?: Intl.DateTimeFormatOptions) {
+  try {
+    return new Date(d).toLocaleDateString(
+      "en-US",
+      opts ?? { month: "short", day: "numeric", year: "numeric" }
+    );
+  } catch { return d; }
 }
 
 // ─────────────────────────────────────────────────────────────
 // HOOKS
 // ─────────────────────────────────────────────────────────────
-function useDebouncedValue<T>(value: T, delay: number): T {
-  const [debounced, setDebounced] = useState<T>(value);
-  useEffect(() => {
-    const t = setTimeout(() => setDebounced(value), delay);
-    return () => clearTimeout(t);
-  }, [value, delay]);
-  return debounced;
-}
-
 function useKeyboard(
   onNext: () => void,
   onPrev: () => void,
@@ -115,574 +154,350 @@ function useKeyboard(
   }, [onNext, onPrev, onClose, active]);
 }
 
+function useIdlePreload(urls: string[]) {
+  useEffect(() => {
+    if (!urls.length) return;
+    const w = window as any;
+    const ric: (cb: () => void) => number =
+      w.requestIdleCallback || ((cb: () => void) => window.setTimeout(cb, 200));
+    const id = ric(() => {
+      urls.slice(0, 12).forEach((u) => {
+        const img = new Image();
+        img.decoding = "async";
+        img.src = u;
+      });
+    });
+    return () => {
+      const cancel = w.cancelIdleCallback || window.clearTimeout;
+      cancel(id);
+    };
+  }, [urls]);
+}
+
 // ─────────────────────────────────────────────────────────────
-// TILT CARD WRAPPER
+// EYEBROW
 // ─────────────────────────────────────────────────────────────
-function TiltCard({ children, className = "" }: { children: React.ReactNode; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useTransform(y, [-0.5, 0.5], [4, -4]);
-  const rotateY = useTransform(x, [-0.5, 0.5], [-4, 4]);
-
-  function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
-    const rect = ref.current?.getBoundingClientRect();
-    if (!rect) return;
-    const nx = (e.clientX - rect.left) / rect.width - 0.5;
-    const ny = (e.clientY - rect.top) / rect.height - 0.5;
-    x.set(nx);
-    y.set(ny);
-  }
-
-  function handleMouseLeave() {
-    x.set(0);
-    y.set(0);
-  }
-
+function Eyebrow({ children, className = "" }: { children: React.ReactNode; className?: string }) {
   return (
-    <motion.div
-      ref={ref}
-      className={className}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    <span
+      className={`inline-flex items-center gap-2 text-[10.5px] font-semibold uppercase ${className}`}
+      style={{ letterSpacing: "0.22em", color: INK_DIM }}
     >
       {children}
-    </motion.div>
+    </span>
   );
 }
 
 // ─────────────────────────────────────────────────────────────
-// ACTIVE FILTER PILL
+// HERO IMAGE STACK — responsive scatter, fed by fetched events
 // ─────────────────────────────────────────────────────────────
-function ActivePill({
-  label,
-  onRemove,
+//
+// Design size: a 520x520 canvas. Cards sit at fixed pixel positions
+// inside it. The whole canvas is then transform-scaled to fit whatever
+// container it lives in — so the layout looks identical at every size,
+// it just gets smaller. No re-layout, no math drift, no clipping.
+//
+function HeroImageStack({
+  events,
+  onCardClick,
+  seed = 73219,
 }: {
-  label: string;
-  onRemove: () => void;
+  events: Event[];
+  onCardClick?: (event: Event) => void;
+  seed?: number;
 }) {
-  return (
-    <motion.span
-      layout
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.8 }}
-      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200"
-    >
-      {label}
-      <button
-        onClick={onRemove}
-        className="w-4 h-4 rounded-full bg-blue-200 hover:bg-blue-300 flex items-center justify-center transition-colors"
-        aria-label={`Remove ${label} filter`}
-      >
-        <X className="w-2.5 h-2.5" />
-      </button>
-    </motion.span>
-  );
-}
+  const cards = events.slice(0, 5);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(1);
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentSeed, setCurrentSeed] = useState(seed);
+  const prefersReducedMotion = useReducedMotion();
 
-// ─────────────────────────────────────────────────────────────
-// FILTER PANEL (Desktop Sidebar + Mobile Bottom Sheet)
-// ─────────────────────────────────────────────────────────────
-interface FilterPanelProps {
-  isOpen: boolean;
-  onClose: () => void;
-  categoryData: { name: string; count: number }[];
-  activeCategories: Set<string>;
-  onCategoryToggle: (cat: string) => void;
-  allTags: string[];
-  activeTags: Set<string>;
-  onTagToggle: (tag: string) => void;
-  sortBy: SortOption;
-  onSortChange: (s: SortOption) => void;
-  hasActiveFilters: boolean;
-  onClearAll: () => void;
-  isMobile: boolean;
-}
+  // Card dimensions at 1x (the "design" scale)
+  const CARD_W = 210;
+  const CARD_H = 265;
+  const DESIGN_W = 520; // canvas width at 1x
 
-function FilterPanel({
-  isOpen,
-  onClose,
-  categoryData,
-  activeCategories,
-  onCategoryToggle,
-  allTags,
-  activeTags,
-  onTagToggle,
-  sortBy,
-  onSortChange,
-  hasActiveFilters,
-  onClearAll,
-  isMobile,
-}: FilterPanelProps) {
-  const sortOptions: { value: SortOption; label: string; icon: string }[] = [
-    { value: "date-desc", label: "Newest First", icon: "↓" },
-    { value: "date-asc", label: "Oldest First", icon: "↑" },
-    { value: "title-asc", label: "Title A → Z", icon: "A" },
-    { value: "title-desc", label: "Title Z → A", icon: "Z" },
-  ];
+  // Watch container width → set scale
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const ro = new ResizeObserver((entries) => {
+      const w = entries[0].contentRect.width;
+      const s = Math.min(1, Math.max(0.42, w / DESIGN_W));
+      setScale(s);
+    });
+    ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, []);
 
-  const panelContent = (
-    <div className="flex flex-col h-full">
-      {/* Panel Header */}
-      <div className="flex items-center justify-between p-5 border-b border-gray-100">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: BRAND_GRADIENT }}>
-            <SlidersHorizontal className="w-4 h-4 text-white" />
-          </div>
-          <div>
-            <p className="font-bold text-gray-900 text-sm">Filters</p>
-            <p className="text-xs text-gray-400">Refine your results</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {hasActiveFilters && (
-            <button
-              onClick={onClearAll}
-              className="text-xs font-semibold text-red-500 hover:text-red-600 px-2 py-1 rounded-lg hover:bg-red-50 transition-colors"
-            >
-              Reset all
-            </button>
-          )}
-          <button
-            onClick={onClose}
-            className="w-8 h-8 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-            aria-label="Close filters"
-          >
-            <X className="w-4 h-4 text-gray-600" />
-          </button>
-        </div>
-      </div>
+  // Reveal when in view
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const io = new IntersectionObserver(
+      ([e]) => { if (e.isIntersecting) setIsVisible(true); },
+      { threshold: 0.2 }
+    );
+    io.observe(containerRef.current);
+    return () => io.disconnect();
+  }, []);
 
-      {/* Scrollable Body */}
-      <div className="flex-1 overflow-y-auto p-5 space-y-7">
+  // Seeded scatter positions
+  const positions = useMemo(() => {
+    const rng = new SeededRandom(currentSeed);
+    return cards.map(() => ({
+      x: rng.range(-110, 110),
+      y: rng.range(-75, 75),
+      rotation: rng.range(-14, 14),
+      sc: rng.range(0.92, 1.05),
+    }));
+  }, [cards.length, currentSeed]);
 
-        {/* Sort */}
-        <div>
-          <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-            <ArrowUpDown className="w-3.5 h-3.5" />
-            Sort by
-          </h4>
-          <div className="grid grid-cols-2 gap-2">
-            {sortOptions.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => onSortChange(opt.value)}
-                className={`flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold border-2 transition-all ${
-                  sortBy === opt.value
-                    ? "border-blue-500 bg-blue-50 text-blue-700"
-                    : "border-gray-100 bg-white text-gray-600 hover:border-gray-200 hover:bg-gray-50"
-                }`}
-              >
-                <span
-                  className={`w-5 h-5 rounded-md text-[10px] font-black flex items-center justify-center flex-shrink-0 ${
-                    sortBy === opt.value ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-500"
-                  }`}
-                >
-                  {opt.icon}
-                </span>
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </div>
+  // Reshuffle
+  const reshuffle = useCallback(() => {
+    setCurrentSeed(Math.floor(Math.random() * 1_000_000));
+    setIsVisible(false);
+    setTimeout(() => setIsVisible(true), 80);
+  }, []);
 
-        {/* Categories */}
-        <div>
-          <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-            <Layers className="w-3.5 h-3.5" />
-            Category
-          </h4>
-          <div className="space-y-1.5">
-            {categoryData.map((cat) => {
-              const style = cat.name === "All" ? null : getCategoryStyle(cat.name);
-              const isActive =
-                activeCategories.has(cat.name) ||
-                (cat.name === "All" && activeCategories.size === 0);
-              return (
-                <button
-                  key={cat.name}
-                  onClick={() => onCategoryToggle(cat.name)}
-                  className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all border-2 ${
-                    isActive
-                      ? "border-blue-500 bg-blue-50 text-blue-700"
-                      : "border-transparent bg-gray-50 text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  <span className="flex items-center gap-2.5">
-                    {style ? (
-                      <span className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${style.dot}`} />
-                    ) : (
-                      <span className="w-2.5 h-2.5 rounded-full flex-shrink-0 bg-gradient-to-br from-blue-400 to-purple-400" />
-                    )}
-                    {cat.name}
-                  </span>
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-xs font-bold ${
-                      isActive ? "bg-blue-200 text-blue-700" : "bg-gray-200 text-gray-500"
-                    }`}
-                  >
-                    {cat.count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+  const containerVariants = {
+    hidden: {},
+    visible: { transition: { delayChildren: 0.05, staggerChildren: 0.16 } },
+  };
+  const cardVariants = {
+    hidden: { x: 0, y: 0, rotate: 0, scale: 0.85, opacity: 0 },
+    visible: (custom: { x: number; y: number; rotation: number; sc: number }) => ({
+      x: custom.x,
+      y: custom.y,
+      rotate: custom.rotation,
+      scale: custom.sc,
+      opacity: 1,
+      transition: prefersReducedMotion
+        ? { duration: 0.25 }
+        : { type: "spring", stiffness: 95, damping: 18 } as any,
+    }),
+  };
 
-        {/* Tags */}
-        {allTags.length > 0 && (
-          <div>
-            <h4 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <Tag className="w-3.5 h-3.5" />
-              Tags
-            </h4>
-            <div className="flex flex-wrap gap-2">
-              {allTags.map((tag) => {
-                const isActive = activeTags.has(tag);
-                return (
-                  <motion.button
-                    key={tag}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => onTagToggle(tag)}
-                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border-2 transition-all ${
-                      isActive
-                        ? "border-blue-500 bg-blue-500 text-white"
-                        : "border-gray-200 bg-white text-gray-600 hover:border-blue-200 hover:text-blue-600"
-                    }`}
-                  >
-                    {isActive && <Check className="w-3 h-3" />}
-                    #{tag}
-                  </motion.button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-
-  if (isMobile) {
-    // Bottom Sheet
+  if (cards.length === 0) {
     return (
-      <AnimatePresence>
-        {isOpen && (
-          <>
-            <motion.div
-              key="overlay"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={onClose}
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50"
-            />
-            <motion.div
-              key="sheet"
-              initial={{ y: "100%" }}
-              animate={{ y: 0 }}
-              exit={{ y: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed inset-x-0 bottom-0 z-50 bg-white rounded-t-3xl shadow-2xl max-h-[85vh] flex flex-col"
-            >
-              {/* Drag Handle */}
-              <div className="flex justify-center pt-3 pb-1">
-                <div className="w-10 h-1.5 rounded-full bg-gray-300" />
-              </div>
-              {panelContent}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+      <div
+        ref={containerRef}
+        className="relative w-full"
+        style={{ aspectRatio: "1 / 1", background: RULE_SOFT, borderRadius: 2 }}
+      />
     );
   }
 
-  // Desktop Slide-out Sidebar
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <>
-          <motion.div
-            key="overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            className="fixed inset-0 bg-black/20 backdrop-blur-[2px] z-30"
-          />
-          <motion.aside
-            key="sidebar"
-            initial={{ x: "100%", opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: "100%", opacity: 0 }}
-            transition={{ type: "spring", damping: 28, stiffness: 260 }}
-            className="fixed top-0 right-0 bottom-0 w-80 bg-white shadow-2xl z-40 flex flex-col border-l border-gray-100"
-          >
-            {panelContent}
-          </motion.aside>
-        </>
-      )}
-    </AnimatePresence>
+    <div ref={containerRef} className="relative w-full" style={{ aspectRatio: "1 / 1" }}>
+      {/* Scaled inner canvas */}
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        style={{ perspective: "1000px" }}
+      >
+        <motion.div
+          className="relative"
+          style={{
+            width: DESIGN_W,
+            height: DESIGN_W,
+            transform: `scale(${scale})`,
+            transformOrigin: "center center",
+          }}
+          variants={containerVariants}
+          initial="hidden"
+          animate={isVisible ? "visible" : "hidden"}
+        >
+          {cards.map((event, i) => {
+            const pos = positions[i];
+            if (!pos) return null;
+            return (
+              <motion.div
+                key={`${event.id}-${currentSeed}`}
+                className="absolute cursor-pointer"
+                variants={cardVariants}
+                custom={pos}
+                onClick={() => onCardClick?.(event)}
+                whileHover={prefersReducedMotion ? undefined : { scale: pos.sc * 1.05, y: pos.y - 4, transition: { duration: 0.2 } }}
+                style={{
+                  left: "50%",
+                  top: "50%",
+                  marginLeft: -(CARD_W + 24) / 2,  // half of full polaroid width
+                  marginTop: -(CARD_H + 56) / 2,   // half of full polaroid height (img + caption)
+                  zIndex: cards.length - i,
+                  willChange: "transform",
+                }}
+              >
+                <div
+                  className="bg-white"
+                  style={{
+                    padding: "10px 10px 28px 10px",
+                    border: `1px solid ${RULE}`,
+                    boxShadow: "0 22px 50px rgba(10,10,10,0.18), 0 4px 12px rgba(10,10,10,0.08)",
+                    borderRadius: 2,
+                  }}
+                >
+                  <div
+                    className="overflow-hidden"
+                    style={{ width: CARD_W, height: CARD_H, background: RULE_SOFT }}
+                  >
+                    <img
+                      src={pickSrc(event.images[0], "card")}
+                      srcSet={cardSrcSet(event.images[0])}
+                      sizes="240px"
+                      alt={event.title}
+                      loading="eager"
+                      decoding="async"
+                      {...{ fetchPriority: "high" as any }}
+                      className="w-full h-full object-cover"
+                      onError={(e) => ((e.target as HTMLImageElement).src = BLANK)}
+                      draggable={false}
+                    />
+                  </div>
+                  <div
+                    className="mt-2 text-center text-[11px] tabular-nums px-2"
+                    style={{ color: INK_DIM, fontWeight: 500, letterSpacing: "0.04em", maxWidth: CARD_W }}
+                  >
+                    <span
+                      className="inline-block max-w-full overflow-hidden whitespace-nowrap"
+                      style={{ textOverflow: "ellipsis" }}
+                    >
+                      {event.title}
+                    </span>
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </motion.div>
+      </div>
+
+      {/* Reshuffle button */}
+      <button
+        onClick={reshuffle}
+        aria-label="Reshuffle the stack"
+        className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 flex items-center gap-1.5 px-3 py-2 rounded-full transition-all hover:scale-105 z-20"
+        style={{
+          background: PAPER,
+          border: `1px solid ${RULE}`,
+          color: INK,
+          boxShadow: "0 6px 14px rgba(10,10,10,0.08)",
+        }}
+      >
+        <RefreshCw className="w-3.5 h-3.5" />
+        <span className="text-[10.5px] uppercase tracking-[0.2em] font-semibold">Shuffle</span>
+      </button>
+    </div>
   );
 }
 
 // ─────────────────────────────────────────────────────────────
-// EVENT CARD – GRID
+// EVENT CARD
 // ─────────────────────────────────────────────────────────────
-interface CardProps {
+function EventCard({
+  event,
+  index,
+  onOpen,
+  eager,
+}: {
   event: Event;
   index: number;
   onOpen: (event: Event, idx: number) => void;
-  onTagClick: (tag: string) => void;
-}
-
-function GridCard({ event, index, onOpen, onTagClick }: CardProps) {
+  eager: boolean;
+}) {
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
-  const catStyle = getCategoryStyle(event.category);
+  const first = event.images[0];
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 32 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: Math.min(index * 0.07, 0.5), type: "spring", stiffness: 100, damping: 14 }}
+      initial={{ opacity: 0, y: 22 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ delay: Math.min(index * 0.05, 0.3), duration: 0.55, ease: [0.2, 0.7, 0.2, 1] }}
+      className="group cursor-pointer"
+      onClick={() => onOpen(event, 0)}
     >
-      <TiltCard className="h-full">
-        <div className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-shadow duration-500 overflow-hidden border border-gray-100 h-full flex flex-col group">
+      <div
+        className="relative overflow-hidden"
+        style={{ aspectRatio: "5 / 4", background: RULE_SOFT, borderRadius: 2 }}
+      >
+        {!loaded && <div className="absolute inset-0" style={{ background: RULE_SOFT }} />}
+        <img
+          src={errored ? BLANK : pickSrc(first, "card")}
+          srcSet={errored ? undefined : cardSrcSet(first)}
+          sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+          alt={event.title}
+          loading={eager ? "eager" : "lazy"}
+          decoding="async"
+          {...(eager ? { fetchPriority: "high" as any } : {})}
+          onLoad={() => setLoaded(true)}
+          onError={() => { setErrored(true); setLoaded(true); }}
+          className="w-full h-full object-cover ev-card-img"
+          style={{
+            opacity: loaded ? 1 : 0,
+            transition: "opacity 0.35s ease, transform 0.9s cubic-bezier(.2,.7,.2,1)",
+          }}
+        />
 
-          {/* Image */}
+        {event.images.length > 1 && (
           <div
-            className="aspect-[16/10] relative cursor-pointer overflow-hidden bg-gray-100"
-            onClick={() => onOpen(event, 0)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && onOpen(event, 0)}
-            aria-label={`View gallery for ${event.title}`}
+            className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10.5px] font-semibold flex items-center gap-1.5"
+            style={{
+              background: "rgba(10,10,10,0.78)",
+              backdropFilter: "blur(6px)",
+              color: "white",
+              letterSpacing: "0.04em",
+            }}
           >
-            {!loaded && (
-              <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse" />
-            )}
-            <img
-              src={errored ? PLACEHOLDER : event.images[0]}
-              alt={event.title}
-              className={`w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 ${loaded ? "opacity-100" : "opacity-0"}`}
-              loading="lazy"
-              onLoad={() => setLoaded(true)}
-              onError={() => { setErrored(true); setLoaded(true); }}
-            />
-
-            {/* Hover glass overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
-              <div className="flex items-center gap-2 text-white text-sm font-semibold">
-                <ZoomIn className="w-4 h-4" />
-                View {event.images.length} Photos
-              </div>
-            </div>
-
-            {/* Badges */}
-            <div className="absolute top-3 left-3 right-3 flex items-start justify-between pointer-events-none">
-              {event.featured ? (
-                <span className="px-2.5 py-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white text-xs font-bold shadow flex items-center gap-1">
-                  <Award className="w-3 h-3" /> Featured
-                </span>
-              ) : <span />}
-              <span className={`px-2.5 py-1 rounded-full text-xs font-bold ${catStyle.bg} ${catStyle.text} border border-white/70 shadow-sm`}>
-                {event.category}
-              </span>
-            </div>
-
-            {/* Photo count pill */}
-            <div className="absolute bottom-3 right-3 px-2.5 py-1 rounded-full bg-black/50 backdrop-blur-sm text-white text-xs font-semibold flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              <Images className="w-3.5 h-3.5" />
-              {event.images.length}
-            </div>
+            <Camera className="w-3 h-3" />
+            {event.images.length}
           </div>
+        )}
 
-          {/* Body */}
-          <div className="p-5 flex-1 flex flex-col">
-            <h3 className="text-base font-bold text-gray-900 mb-1.5 group-hover:text-blue-700 transition-colors line-clamp-1">
-              {event.title}
-            </h3>
-            <p className="text-gray-500 text-xs leading-relaxed mb-3 line-clamp-2 flex-1">
-              {event.description}
-            </p>
-
-            {/* Tags */}
-            {event.tags && event.tags.length > 0 && (
-              <div className="flex flex-wrap gap-1 mb-3">
-                {event.tags.slice(0, 3).map((tag) => (
-                  <button
-                    key={tag}
-                    onClick={() => onTagClick(tag)}
-                    className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700 transition-colors"
-                  >
-                    #{tag}
-                  </button>
-                ))}
-              </div>
-            )}
-
-            {/* Footer row */}
-            <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-              <span className="text-xs text-gray-400 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" />
-                {new Date(event.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-              </span>
-
-              {/* Thumbnails */}
-              <div className="flex -space-x-1.5">
-                {event.images.slice(0, 3).map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => onOpen(event, i)}
-                    className="w-7 h-7 rounded-full overflow-hidden border-2 border-white hover:z-10 hover:scale-110 transition-transform focus:outline-none focus:ring-2 focus:ring-blue-400"
-                    aria-label={`Open image ${i + 1}`}
-                  >
-                    <img
-                      src={img}
-                      alt=""
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                      onError={(e) => { (e.target as HTMLImageElement).src = PLACEHOLDER; }}
-                    />
-                  </button>
-                ))}
-                {event.images.length > 3 && (
-                  <button
-                    onClick={() => onOpen(event, 3)}
-                    className="w-7 h-7 rounded-full bg-blue-600 text-white text-[9px] font-bold border-2 border-white flex items-center justify-center hover:bg-blue-700 hover:scale-110 transition-all focus:outline-none"
-                    aria-label="View more images"
-                  >
-                    +{event.images.length - 3}
-                  </button>
-                )}
-              </div>
-            </div>
+        {event.featured && (
+          <div
+            className="absolute top-3 right-3 flex items-center gap-1 px-2 py-0.5 text-[10px] font-semibold"
+            style={{ background: ACCENT, color: "white", letterSpacing: "0.18em", textTransform: "uppercase" }}
+          >
+            Featured
           </div>
-        </div>
-      </TiltCard>
-    </motion.article>
-  );
-}
+        )}
+      </div>
 
-// ─────────────────────────────────────────────────────────────
-// EVENT CARD – LIST
-// ─────────────────────────────────────────────────────────────
-function ListCard({ event, index, onOpen, onTagClick }: CardProps) {
-  const [loaded, setLoaded] = useState(false);
-  const [errored, setErrored] = useState(false);
-  const catStyle = getCategoryStyle(event.category);
-
-  return (
-    <motion.article
-      initial={{ opacity: 0, x: -24 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: Math.min(index * 0.06, 0.4), type: "spring", stiffness: 110, damping: 16 }}
-      className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-shadow duration-400 overflow-hidden border border-gray-100 group"
-    >
-      <div className="flex flex-col sm:flex-row">
-        {/* Image */}
-        <div
-          className="sm:w-52 md:w-60 h-48 sm:h-auto flex-shrink-0 relative cursor-pointer overflow-hidden bg-gray-100"
-          onClick={() => onOpen(event, 0)}
-          role="button"
-          tabIndex={0}
-          onKeyDown={(e) => e.key === "Enter" && onOpen(event, 0)}
-          aria-label={`View gallery for ${event.title}`}
-        >
-          {!loaded && (
-            <div className="absolute inset-0 bg-gradient-to-br from-gray-200 to-gray-300 animate-pulse" />
-          )}
-          <img
-            src={errored ? PLACEHOLDER : event.images[0]}
-            alt={event.title}
-            className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${loaded ? "opacity-100" : "opacity-0"}`}
-            loading="lazy"
-            onLoad={() => setLoaded(true)}
-            onError={() => { setErrored(true); setLoaded(true); }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-3">
-            <span className="text-white text-xs font-semibold flex items-center gap-1">
-              <ZoomIn className="w-3.5 h-3.5" /> {event.images.length} Photos
+      <div className="pt-4">
+        <div className="flex items-center gap-3 mb-1.5">
+          <Eyebrow>
+            <span className="tabular-nums" style={{ color: INK_FAINT }}>
+              N°&thinsp;{String(index + 1).padStart(2, "0")}
             </span>
-          </div>
-          {event.featured && (
-            <div className="absolute top-2.5 left-2.5">
-              <span className="px-2 py-1 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 text-white text-[10px] font-bold shadow flex items-center gap-1">
-                <Award className="w-2.5 h-2.5" /> Featured
-              </span>
-            </div>
-          )}
-        </div>
-
-        {/* Content */}
-        <div className="p-5 flex-1 flex flex-col min-w-0">
-          <div className="flex items-start justify-between gap-3 mb-2 flex-wrap">
-            <h3 className="text-base font-bold text-gray-900 group-hover:text-blue-700 transition-colors flex-1 min-w-0 truncate">
-              {event.title}
-            </h3>
-            <span className={`px-2.5 py-1 rounded-full text-xs font-bold flex-shrink-0 ${catStyle.bg} ${catStyle.text}`}>
+            <span style={{ color: RULE }}>/</span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: getDot(event.category) }} />
               {event.category}
             </span>
-          </div>
+          </Eyebrow>
+        </div>
 
-          <p className="text-gray-500 text-sm leading-relaxed mb-3 line-clamp-2 flex-1">
-            {event.description}
-          </p>
+        <h3
+          className="text-[19px] sm:text-[20px] leading-[1.22] mb-1.5"
+          style={{ color: INK, fontWeight: 700, letterSpacing: "-0.012em" }}
+        >
+          {event.title}
+        </h3>
+        <p className="text-[13.5px] leading-[1.65] line-clamp-2" style={{ color: INK_DIM }}>
+          {event.description}
+        </p>
 
-          <div className="flex items-center gap-4 text-xs text-gray-400 mb-3">
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5" />
-              {new Date(event.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-            </span>
-            <span className="flex items-center gap-1">
-              <Users className="w-3.5 h-3.5" />
-              {event.images.length} Photos
-            </span>
-          </div>
-
-          {event.tags && event.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1 mb-3">
-              {event.tags.slice(0, 4).map((tag) => (
-                <button
-                  key={tag}
-                  onClick={() => onTagClick(tag)}
-                  className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 hover:bg-blue-100 hover:text-blue-700 transition-colors"
-                >
-                  #{tag}
-                </button>
-              ))}
-            </div>
-          )}
-
-          <div className="flex gap-1.5">
-            {event.images.slice(0, 5).map((img, i) => (
-              <button
-                key={i}
-                onClick={() => onOpen(event, i)}
-                className="w-10 h-10 rounded-lg overflow-hidden border-2 border-transparent hover:border-blue-400 hover:scale-105 transition-all focus:outline-none focus:ring-2 focus:ring-blue-400"
-                aria-label={`View image ${i + 1}`}
-              >
-                <img
-                  src={img}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = PLACEHOLDER; }}
-                />
-              </button>
-            ))}
-            {event.images.length > 5 && (
-              <button
-                onClick={() => onOpen(event, 5)}
-                className="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 text-xs font-bold hover:bg-blue-100 transition-colors focus:outline-none flex items-center justify-center"
-              >
-                +{event.images.length - 5}
-              </button>
-            )}
-          </div>
+        <div className="mt-3 flex items-center justify-between">
+          <span className="text-[11px] tabular-nums" style={{ color: INK_FAINT, letterSpacing: "0.04em" }}>
+            {formatDate(event.date)}
+          </span>
+          <span
+            className="inline-flex items-center gap-1 text-xs font-medium transition-all opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0"
+            style={{ color: BRAND }}
+          >
+            View
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </span>
         </div>
       </div>
     </motion.article>
@@ -690,7 +505,24 @@ function ListCard({ event, index, onOpen, onTagClick }: CardProps) {
 }
 
 // ─────────────────────────────────────────────────────────────
-// LIGHTBOX
+// SKELETON
+// ─────────────────────────────────────────────────────────────
+function SkeletonCard() {
+  return (
+    <div>
+      <div className="animate-pulse" style={{ aspectRatio: "5 / 4", background: RULE_SOFT, borderRadius: 2 }} />
+      <div className="pt-4 space-y-2">
+        <div className="h-3 w-24 animate-pulse rounded" style={{ background: RULE_SOFT }} />
+        <div className="h-5 w-3/4 animate-pulse rounded" style={{ background: RULE_SOFT }} />
+        <div className="h-3 w-full animate-pulse rounded" style={{ background: RULE_SOFT }} />
+        <div className="h-3 w-1/2 animate-pulse rounded" style={{ background: RULE_SOFT }} />
+      </div>
+    </div>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// LIGHTBOX — frosted blur backdrop, prominent close button
 // ─────────────────────────────────────────────────────────────
 interface LightboxProps {
   event: Event | null;
@@ -703,26 +535,34 @@ interface LightboxProps {
 
 function Lightbox({ event, imageIndex, onClose, onNext, onPrev, onSelect }: LightboxProps) {
   useKeyboard(onNext, onPrev, onClose, !!event);
-
-  // Touch swipe
   const touchStartX = useRef<number | null>(null);
 
-  function handleTouchStart(e: React.TouchEvent) {
-    touchStartX.current = e.touches[0].clientX;
-  }
-
+  function handleTouchStart(e: React.TouchEvent) { touchStartX.current = e.touches[0].clientX; }
   function handleTouchEnd(e: React.TouchEvent) {
     if (touchStartX.current === null) return;
     const diff = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 50) {
-      diff > 0 ? onNext() : onPrev();
-    }
+    if (Math.abs(diff) > 50) (diff > 0 ? onNext() : onPrev());
     touchStartX.current = null;
   }
 
-  if (!event) return null;
+  useEffect(() => {
+    if (!event) return;
+    const next = event.images[(imageIndex + 1) % event.images.length];
+    const prev = event.images[(imageIndex - 1 + event.images.length) % event.images.length];
+    [next, prev].forEach((img) => {
+      if (!img) return;
+      const i = new Image();
+      i.decoding = "async";
+      i.src = pickSrc(img, "full");
+    });
+  }, [event, imageIndex]);
 
-  const lightboxPlaceholder = "https://via.placeholder.com/1200x800/1e293b/94a3b8?text=Image+Unavailable";
+  if (!event) return null;
+  const current = event.images[imageIndex];
+
+  function onBackdropClick(e: React.MouseEvent<HTMLDivElement>) {
+    if (e.target === e.currentTarget) onClose();
+  }
 
   return (
     <AnimatePresence>
@@ -731,130 +571,173 @@ function Lightbox({ event, imageIndex, onClose, onNext, onPrev, onSelect }: Ligh
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        className="fixed inset-0 z-50 bg-black/95 flex flex-col"
-        role="dialog"
-        aria-modal="true"
-        aria-label={`Photo gallery: ${event.title}`}
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
+        transition={{ duration: 0.22 }}
+        className="fixed inset-0 z-50 flex flex-col"
+        style={{
+          background: "rgba(10,10,10,0.58)",
+          backdropFilter: "blur(22px) saturate(160%)",
+          WebkitBackdropFilter: "blur(22px) saturate(160%)",
+        }}
+        role="dialog" aria-modal="true" aria-label={event.title}
+        onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}
+        onClick={onBackdropClick}
       >
-        {/* Top Bar */}
-        <div className="flex items-center justify-between px-4 py-3 sm:px-6 bg-gradient-to-b from-black/60 to-transparent absolute top-0 left-0 right-0 z-10">
-          <div>
-            <h3 className="text-white font-bold text-sm sm:text-base leading-tight">{event.title}</h3>
-            <p className="text-gray-400 text-xs flex items-center gap-1.5 mt-0.5">
-              <Calendar className="w-3 h-3" />
-              {new Date(event.date).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="text-gray-400 text-sm hidden sm:block">
-              {imageIndex + 1} / {event.images.length}
-            </span>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onClose}
-              className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors focus:outline-none focus:ring-2 focus:ring-white/50"
-              aria-label="Close"
+        {/* Top bar */}
+        <div
+          className="flex items-center justify-between gap-4 px-5 sm:px-10 pt-5 sm:pt-7 pb-4"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="min-w-0 pr-2">
+            <Eyebrow className="!text-white/65">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full" style={{ background: getDot(event.category) }} />
+                {event.category}
+              </span>
+              <span className="opacity-40">·</span>
+              {formatDate(event.date, { month: "long", day: "numeric", year: "numeric" })}
+            </Eyebrow>
+            <h3
+              className="text-base sm:text-2xl mt-1.5 leading-tight truncate text-white"
+              style={{ fontWeight: 700, letterSpacing: "-0.012em" }}
             >
-              <X className="w-5 h-5" />
-            </motion.button>
+              {event.title}
+            </h3>
+          </div>
+
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <span
+              className="hidden sm:inline-flex items-center gap-1 text-xs tabular-nums px-3 py-1.5 rounded-full text-white/80"
+              style={{ background: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.15)" }}
+            >
+              <span className="text-white font-semibold">{String(imageIndex + 1).padStart(2, "0")}</span>
+              <span className="opacity-50">/</span>
+              <span>{String(event.images.length).padStart(2, "0")}</span>
+            </span>
+
+            <div className="flex items-center gap-2">
+              <span
+                className="hidden sm:inline-block text-[10px] uppercase tracking-[0.18em] px-2 py-1 rounded-md text-white/65"
+                style={{ background: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}
+              >
+                Esc
+              </span>
+              <motion.button
+                whileHover={{ scale: 1.06 }}
+                whileTap={{ scale: 0.94 }}
+                onClick={onClose}
+                aria-label="Close gallery"
+                className="relative flex items-center justify-center rounded-full transition-colors"
+                style={{
+                  width: 48, height: 48,
+                  background: PAPER, color: INK,
+                  boxShadow: "0 10px 28px rgba(0,0,0,0.32)",
+                }}
+              >
+                <X className="w-5 h-5" strokeWidth={2.4} />
+              </motion.button>
+            </div>
           </div>
         </div>
 
-        {/* Main Image Area */}
-        <div className="flex-1 flex items-center justify-center relative px-14 sm:px-20 py-16">
-          {/* Prev */}
+        {/* Image area */}
+        <div
+          className="flex-1 flex items-center justify-center relative px-4 sm:px-20 py-3 sm:py-6"
+          onClick={(e) => e.stopPropagation()}
+        >
           <motion.button
-            whileHover={{ x: -3 }}
-            whileTap={{ scale: 0.93 }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.92 }}
             onClick={onPrev}
             disabled={event.images.length <= 1}
-            className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition-colors disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
-            aria-label="Previous image"
+            aria-label="Previous"
+            className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 rounded-full disabled:opacity-20 z-10 flex items-center justify-center"
+            style={{
+              width: 48, height: 48,
+              background: "rgba(255,255,255,0.92)", color: INK,
+              boxShadow: "0 8px 24px rgba(0,0,0,0.28)",
+            }}
           >
-            <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7" />
+            <ChevronLeft className="w-5 h-5" strokeWidth={2.4} />
           </motion.button>
 
-          {/* Image */}
           <AnimatePresence mode="wait">
             <motion.img
               key={imageIndex}
-              src={event.images[imageIndex] ?? lightboxPlaceholder}
-              alt={`${event.title} — photo ${imageIndex + 1}`}
-              initial={{ opacity: 0, scale: 0.96 }}
+              src={pickSrc(current, "full")}
+              alt={`${event.title} — frame ${imageIndex + 1}`}
+              initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.96 }}
-              transition={{ duration: 0.22 }}
-              className="max-w-full max-h-full object-contain rounded-xl shadow-2xl select-none"
-              style={{ maxHeight: "calc(100vh - 200px)" }}
-              onError={(e) => { (e.target as HTMLImageElement).src = lightboxPlaceholder; }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 0.28, ease: [0.2, 0.7, 0.2, 1] }}
+              className="max-w-full max-h-full object-contain select-none rounded-sm"
+              style={{
+                maxHeight: "calc(100vh - 240px)",
+                boxShadow: "0 30px 80px rgba(0,0,0,0.55), 0 6px 18px rgba(0,0,0,0.30)",
+              }}
               draggable={false}
+              decoding="async"
+              onError={(e) => ((e.target as HTMLImageElement).src = BLANK)}
             />
           </AnimatePresence>
 
-          {/* Next */}
           <motion.button
-            whileHover={{ x: 3 }}
-            whileTap={{ scale: 0.93 }}
+            whileHover={{ scale: 1.06 }}
+            whileTap={{ scale: 0.92 }}
             onClick={onNext}
             disabled={event.images.length <= 1}
-            className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-white/10 hover:bg-white/25 flex items-center justify-center text-white transition-colors disabled:opacity-30 focus:outline-none focus:ring-2 focus:ring-white/50 z-10"
-            aria-label="Next image"
+            aria-label="Next"
+            className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 rounded-full disabled:opacity-20 z-10 flex items-center justify-center"
+            style={{
+              width: 48, height: 48,
+              background: "rgba(255,255,255,0.92)", color: INK,
+              boxShadow: "0 8px 24px rgba(0,0,0,0.28)",
+            }}
           >
-            <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7" />
+            <ChevronRight className="w-5 h-5" strokeWidth={2.4} />
           </motion.button>
 
-          {/* Mobile counter */}
-          <div className="absolute bottom-2 left-0 right-0 flex justify-center sm:hidden">
-            <span className="px-3 py-1 rounded-full bg-black/50 text-white text-xs font-semibold">
-              {imageIndex + 1} / {event.images.length}
+          <div className="absolute bottom-1 left-0 right-0 flex justify-center sm:hidden pointer-events-none">
+            <span
+              className="px-3 py-1 rounded-full text-[11px] tabular-nums text-white"
+              style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(6px)" }}
+            >
+              {String(imageIndex + 1).padStart(2, "0")}
+              <span className="opacity-50 mx-1">/</span>
+              {String(event.images.length).padStart(2, "0")}
             </span>
           </div>
         </div>
 
-        {/* Thumbnail Strip */}
-        <div className="bg-black/40 backdrop-blur-sm border-t border-white/10 px-4 py-3">
-          <div className="flex gap-2 justify-center overflow-x-auto pb-0.5 max-w-5xl mx-auto">
+        {/* Bottom */}
+        <div className="px-5 sm:px-10 pb-5 sm:pb-7 pt-3" onClick={(e) => e.stopPropagation()}>
+          {event.description && (
+            <p className="text-sm leading-relaxed max-w-3xl mx-auto text-center mb-4 hidden sm:block text-white/80">
+              {event.description}
+            </p>
+          )}
+          <div className="flex gap-2 justify-center overflow-x-auto pb-1 max-w-5xl mx-auto">
             {event.images.map((img, i) => (
-              <motion.button
-                key={i}
-                onClick={() => onSelect(i)}
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.95 }}
-                className={`flex-shrink-0 rounded-lg overflow-hidden border-2 transition-all focus:outline-none ${
-                  i === imageIndex
-                    ? "border-white scale-105 shadow-lg shadow-white/20"
-                    : "border-transparent opacity-60 hover:opacity-90 hover:border-white/40"
-                }`}
-                style={{ width: 56, height: 56 }}
-                aria-label={`Go to image ${i + 1}`}
-                aria-current={i === imageIndex ? "true" : undefined}
-              >
-                <img
-                  src={img}
-                  alt=""
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onError={(e) => { (e.target as HTMLImageElement).src = lightboxPlaceholder; }}
-                />
-              </motion.button>
-            ))}
-          </div>
-
-          {/* Dot Indicators */}
-          <div className="flex justify-center gap-1.5 mt-2">
-            {event.images.map((_, i) => (
               <button
                 key={i}
                 onClick={() => onSelect(i)}
-                className={`rounded-full transition-all ${
-                  i === imageIndex ? "w-5 h-1.5 bg-white" : "w-1.5 h-1.5 bg-white/40 hover:bg-white/60"
-                }`}
-                aria-label={`Go to image ${i + 1}`}
-              />
+                className="flex-shrink-0 overflow-hidden transition-all rounded-sm"
+                style={{
+                  width: 52, height: 52,
+                  border: `2px solid ${i === imageIndex ? "white" : "rgba(255,255,255,0.18)"}`,
+                  opacity: i === imageIndex ? 1 : 0.5,
+                  boxShadow: i === imageIndex ? "0 6px 18px rgba(0,0,0,0.4)" : "none",
+                }}
+                aria-label={`Frame ${i + 1}`}
+              >
+                <img
+                  src={pickSrc(img, "thumb")}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  onError={(e) => ((e.target as HTMLImageElement).src = BLANK)}
+                />
+              </button>
             ))}
           </div>
         </div>
@@ -864,7 +747,7 @@ function Lightbox({ event, imageIndex, onClose, onNext, onPrev, onSelect }: Ligh
 }
 
 // ─────────────────────────────────────────────────────────────
-// MAIN COMPONENT
+// MAIN
 // ─────────────────────────────────────────────────────────────
 const EventsShowcase: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -878,10 +761,16 @@ const EventsShowcase: React.FC = () => {
         if (!res.ok) throw new Error("Failed to fetch events");
         const json = await res.json();
         if (active && json.data) {
-          const fetchedEvents: Event[] = json.data.map((item: any) => {
-            const mainImg = item.mainImage?.url ? `/strapi${item.mainImage.url}` : "";
-            const galleryImgs = item.eventGallery?.map((g: any) => `/strapi${g.url}`) || [];
-            const allImages = mainImg ? [mainImg, ...galleryImgs] : galleryImgs;
+          const fetched: Event[] = json.data.map((item: any) => {
+            const toMedia = (m: any): MediaItem | null =>
+              m?.url ? { url: m.url, formats: m.formats } : null;
+
+            const main = toMedia(item.mainImage);
+            const gallery: MediaItem[] = (item.eventGallery || [])
+              .map(toMedia)
+              .filter(Boolean) as MediaItem[];
+            const allImages: MediaItem[] = main ? [main, ...gallery] : gallery;
+
             return {
               id: item.documentId || String(item.id),
               title: item.eventTitle || "Untitled",
@@ -890,10 +779,9 @@ const EventsShowcase: React.FC = () => {
               category: item.eventType || "Event",
               date: item.eventDate || new Date().toISOString().split("T")[0],
               featured: false,
-              tags: [],
             };
           });
-          setEvents(fetchedEvents);
+          setEvents(fetched);
         }
       } catch (err) {
         console.error("Error fetching events:", err);
@@ -907,540 +795,277 @@ const EventsShowcase: React.FC = () => {
 
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [selectedImageIdx, setSelectedImageIdx] = useState(0);
-  const [activeCategories, setActiveCategories] = useState<Set<string>>(new Set());
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<SortOption>("date-desc");
-  const [viewMode, setViewMode] = useState<ViewMode>("grid");
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [activeTags, setActiveTags] = useState<Set<string>>(new Set());
-  const [isMobile, setIsMobile] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
 
-  const debouncedSearch = useDebouncedValue(searchQuery, 300);
+  const { scrollYProgress } = useScroll();
+  const progressX = useSpring(scrollYProgress, { stiffness: 240, damping: 30, restDelta: 0.001 });
 
-  // Detect mobile
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
-
-  // Scroll-aware header
-  useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 60);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
-
-  // Body scroll lock
   useEffect(() => {
     document.body.style.overflow = selectedEvent ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
   }, [selectedEvent]);
 
-  const categoryData = useMemo(() => {
-    const cats = Array.from(new Set(events.map((e) => e.category)));
-    return ["All", ...cats].map((name) => ({
-      name,
-      count: name === "All" ? events.length : events.filter((e) => e.category === name).length,
-    }));
+  const sortedEvents = useMemo(() => {
+    const list = [...events];
+    list.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+    list.sort((a, b) => (a.featured && !b.featured ? -1 : !a.featured && b.featured ? 1 : 0));
+    return list;
   }, [events]);
 
-  const allTags = useMemo(() => {
-    const s = new Set<string>();
-    events.forEach((e) => e.tags?.forEach((t) => s.add(t)));
-    return Array.from(s).sort();
-  }, [events]);
+  const totalPhotos = useMemo(
+    () => events.reduce((sum, e) => sum + e.images.length, 0),
+    [events]
+  );
+  const chapterCount = useMemo(
+    () => new Set(events.map((e) => e.category)).size,
+    [events]
+  );
 
-  const filteredEvents = useMemo(() => {
-    let res = [...events];
-
-    if (activeCategories.size > 0 && !activeCategories.has("All")) {
-      res = res.filter((e) => activeCategories.has(e.category));
-    }
-
-    if (debouncedSearch.trim()) {
-      const q = debouncedSearch.toLowerCase().trim();
-      res = res.filter(
-        (e) =>
-          e.title.toLowerCase().includes(q) ||
-          e.description.toLowerCase().includes(q) ||
-          e.category.toLowerCase().includes(q) ||
-          e.tags?.some((t) => t.toLowerCase().includes(q))
-      );
-    }
-
-    if (activeTags.size > 0) {
-      res = res.filter((e) => e.tags?.some((t) => activeTags.has(t)));
-    }
-
-    res.sort((a, b) => {
-      if (sortBy === "date-desc") return new Date(b.date).getTime() - new Date(a.date).getTime();
-      if (sortBy === "date-asc") return new Date(a.date).getTime() - new Date(b.date).getTime();
-      if (sortBy === "title-asc") return a.title.localeCompare(b.title);
-      if (sortBy === "title-desc") return b.title.localeCompare(a.title);
-      return 0;
-    });
-
-    res.sort((a, b) => (a.featured && !b.featured ? -1 : !a.featured && b.featured ? 1 : 0));
-    return res;
-  }, [activeCategories, debouncedSearch, sortBy, activeTags]);
-
-  const hasActiveFilters = useMemo(() => {
-    const catFiltered = activeCategories.size > 0 && !activeCategories.has("All");
-    return catFiltered || debouncedSearch.trim() !== "" || sortBy !== "date-desc" || activeTags.size > 0;
-  }, [activeCategories, debouncedSearch, sortBy, activeTags]);
-
-  const activeFilterCount = useMemo(() => {
-    let c = 0;
-    if (activeCategories.size > 0 && !activeCategories.has("All")) c++;
-    if (debouncedSearch.trim()) c++;
-    if (sortBy !== "date-desc") c++;
-    if (activeTags.size > 0) c++;
-    return c;
-  }, [activeCategories, debouncedSearch, sortBy, activeTags]);
-
-  const handleCategoryToggle = useCallback((cat: string) => {
-    setActiveCategories((prev) => {
-      const next = new Set(prev);
-      if (cat === "All") return new Set(["All"]);
-      next.delete("All");
-      if (next.has(cat)) next.delete(cat);
-      else next.add(cat);
-      return next.size === 0 ? new Set(["All"]) : next;
-    });
-  }, []);
-
-  const handleTagToggle = useCallback((tag: string) => {
-    setActiveTags((prev) => {
-      const next = new Set(prev);
-      if (next.has(tag)) next.delete(tag);
-      else next.add(tag);
-      return next;
-    });
-  }, []);
+  const preloadUrls = useMemo(
+    () => sortedEvents.slice(6, 18).map((e) => pickSrc(e.images[0], "card")).filter(Boolean),
+    [sortedEvents]
+  );
+  useIdlePreload(preloadUrls);
 
   const openLightbox = useCallback((event: Event, idx: number) => {
-    setSelectedEvent(event);
-    setSelectedImageIdx(idx);
+    setSelectedEvent(event); setSelectedImageIdx(idx);
   }, []);
-
   const closeLightbox = useCallback(() => {
-    setSelectedEvent(null);
-    setSelectedImageIdx(0);
+    setSelectedEvent(null); setSelectedImageIdx(0);
   }, []);
-
   const nextImage = useCallback(() => {
     setSelectedImageIdx((prev) =>
       selectedEvent ? (prev === selectedEvent.images.length - 1 ? 0 : prev + 1) : prev
     );
   }, [selectedEvent]);
-
   const prevImage = useCallback(() => {
     setSelectedImageIdx((prev) =>
       selectedEvent ? (prev === 0 ? selectedEvent.images.length - 1 : prev - 1) : prev
     );
   }, [selectedEvent]);
 
-  const clearAll = useCallback(() => {
-    setActiveCategories(new Set(["All"]));
-    setSearchQuery("");
-    setSortBy("date-desc");
-    setActiveTags(new Set());
+  const openFromStack = useCallback((event: Event) => {
+    setSelectedEvent(event);
+    setSelectedImageIdx(0);
   }, []);
 
+  const currentYear = new Date().getFullYear();
+
   return (
-    <div className="min-h-screen bg-[#f5f7fb]">
+    <div className="min-h-screen" style={{ background: PAPER, color: INK }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap');
-        * { font-family: 'DM Sans', system-ui, sans-serif; }
-        h1, h2, h3 { font-family: 'Sora', system-ui, sans-serif; }
-        .line-clamp-1 { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
-        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
-        .thumb-strip::-webkit-scrollbar { height: 4px; }
-        .thumb-strip::-webkit-scrollbar-track { background: transparent; }
-        .thumb-strip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 2px; }
-        .cat-scroll::-webkit-scrollbar { height: 0px; }
-        .search-input::placeholder { color: #a0aec0; }
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800;900&display=swap');
+        html, body, * { font-family: 'DM Sans', system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .line-clamp-2 { display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+        .group:hover .ev-card-img { transform: scale(1.05); }
       `}</style>
 
-      {/* ── HERO ── */}
-      <header className="relative overflow-hidden pt-12 pb-10 px-4 sm:px-6 lg:px-8">
-        {/* Background decoration */}
-        <div
-          className="absolute inset-0 opacity-[0.06]"
-          style={{
-            backgroundImage: `radial-gradient(circle at 20% 50%, ${BRAND} 0%, transparent 50%), radial-gradient(circle at 80% 20%, ${BRAND_LIGHT} 0%, transparent 50%)`,
-          }}
-        />
-        <div
-          className="absolute top-0 left-0 right-0 h-1"
-          style={{ background: BRAND_GRADIENT }}
-        />
+      {/* Scroll progress hairline */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-[2px] z-[60] origin-left"
+        style={{ scaleX: progressX, background: BRAND }}
+      />
 
-        <div className="max-w-7xl mx-auto relative">
+      {/* ╔══════════════════════════════════════════════════════════
+          MASTHEAD
+          ══════════════════════════════════════════════════════════ */}
+      <header className="relative">
+        <div
+          className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-7 pb-3 flex items-center justify-between"
+          style={{ borderBottom: `1px solid ${RULE}` }}
+        >
+          <Eyebrow>
+            <span style={{ color: BRAND, fontWeight: 800 }}>Brihaspathi</span>
+            <span style={{ color: RULE }}>—</span>
+            The Culture Archive
+          </Eyebrow>
+          <Eyebrow>Folio · {currentYear}</Eyebrow>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 pt-10 pb-12 sm:pt-16 sm:pb-20 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          {/* LEFT — copy */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-center"
+            transition={{ duration: 0.65, ease: [0.2, 0.7, 0.2, 1] }}
+            className="lg:col-span-6"
           >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.1 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-blue-200/60 bg-blue-50/80 mb-5"
-            >
-              <Sparkles className="w-4 h-4" style={{ color: BRAND }} />
-              <span className="text-sm font-semibold text-blue-700">Our Culture & Milestones</span>
-            </motion.div>
+            <Eyebrow className="mb-6">
+              <span style={{ color: BRAND }}>No. 01</span>
+              <span style={{ color: RULE }}>·</span>
+              A photographic record
+            </Eyebrow>
 
             <h1
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold mb-4 bg-clip-text text-transparent leading-tight"
-              style={{ backgroundImage: BRAND_GRADIENT }}
+              className="leading-[0.92] mb-7"
+              style={{
+                fontSize: "clamp(44px, 8.2vw, 112px)",
+                fontWeight: 900,
+                letterSpacing: "-0.038em",
+                color: INK,
+              }}
             >
-              Moments That Matter
+              Made of
+              <br />
+              moments<span style={{ color: BRAND }}>.</span>
             </h1>
-            <p className="text-gray-500 text-lg max-w-2xl mx-auto mb-8 leading-relaxed">
-              Celebrating achievements, fostering connections, and building the Brihaspathi legacy through shared experiences.
+
+            <p className="max-w-xl text-[15px] sm:text-[16px] leading-[1.7]" style={{ color: INK_DIM }}>
+              The people, the milestones, and the quiet in-between days that
+              add up to what we call <span style={{ color: INK, fontWeight: 600 }}>Brihaspathi</span>.
+              An open archive of the year &mdash; arranged, indexed, and free to wander.
             </p>
 
-            {/* Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="inline-flex items-center gap-0 rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm divide-x divide-gray-100"
+            <div
+              className="mt-10 pt-6 flex flex-wrap items-baseline gap-x-8 gap-y-3"
+              style={{ borderTop: `1px solid ${RULE}` }}
             >
-              {[
-                { icon: Calendar, label: "Events", value: events.length },
-                { icon: Users, label: "Moments", value: "500+" },
-                { icon: Award, label: "Awards", value: "50+" },
-              ].map((s, i) => (
-                <div key={i} className="flex items-center gap-2.5 px-5 py-3">
-                  <s.icon className="w-4.5 h-4.5 flex-shrink-0" style={{ color: BRAND }} />
-                  <div className="text-left">
-                    <p className="text-sm font-bold text-gray-900">{s.value}</p>
-                    <p className="text-xs text-gray-400">{s.label}</p>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
+              <div>
+                <span className="tabular-nums" style={{ color: INK, fontSize: "clamp(28px, 3.6vw, 40px)", fontWeight: 800, letterSpacing: "-0.02em" }}>
+                  {loading ? "—" : String(events.length).padStart(2, "0")}
+                </span>
+                <span className="ml-2 text-[10.5px] uppercase tracking-[0.22em]" style={{ color: INK_DIM }}>stories</span>
+              </div>
+              <span style={{ color: RULE }}>/</span>
+              <div>
+                <span className="tabular-nums" style={{ color: INK, fontSize: "clamp(28px, 3.6vw, 40px)", fontWeight: 800, letterSpacing: "-0.02em" }}>
+                  {loading ? "—" : totalPhotos}
+                </span>
+                <span className="ml-2 text-[10.5px] uppercase tracking-[0.22em]" style={{ color: INK_DIM }}>photographs</span>
+              </div>
+              <span style={{ color: RULE }}>/</span>
+              <div>
+                <span className="tabular-nums" style={{ color: INK, fontSize: "clamp(28px, 3.6vw, 40px)", fontWeight: 800, letterSpacing: "-0.02em" }}>
+                  {String(chapterCount).padStart(2, "0")}
+                </span>
+                <span className="ml-2 text-[10.5px] uppercase tracking-[0.22em]" style={{ color: INK_DIM }}>chapters</span>
+              </div>
+            </div>
           </motion.div>
+
+          {/* RIGHT — scattered image stack (responsive) */}
+          <div className="lg:col-span-6">
+            <div className="mx-auto w-full max-w-[520px]">
+              <HeroImageStack events={sortedEvents} onCardClick={openFromStack} />
+              <p className="text-center mt-5 sm:mt-6 text-[10.5px] uppercase tracking-[0.24em]" style={{ color: INK_DIM }}>
+                A handful from the archive
+                <span className="mx-2" style={{ color: RULE }}>·</span>
+                Tap any frame
+              </p>
+            </div>
+          </div>
         </div>
       </header>
 
-      {/* ── STICKY TOOLBAR ── */}
-      <div
-        className={`sticky top-0 z-40 transition-all duration-300 ${
-          scrolled
-            ? "bg-white/95 backdrop-blur-xl shadow-md border-b border-gray-200/80"
-            : "bg-white/80 backdrop-blur-lg border-b border-gray-200/50"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-3 flex items-center gap-3">
-
-            {/* Search */}
-            <div className="relative flex-1 min-w-0">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search events, tags…"
-                className="search-input w-full pl-10 pr-4 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:border-blue-400 text-sm transition-all"
-                style={{ "--tw-ring-color": `${BRAND}33` } as React.CSSProperties}
-                aria-label="Search events"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-gray-300 hover:bg-gray-400 flex items-center justify-center transition-colors"
-                  aria-label="Clear search"
-                >
-                  <X className="w-3 h-3 text-white" />
-                </button>
-              )}
-            </div>
-
-            {/* Sort – desktop only */}
-            <div className="relative hidden sm:flex items-center">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="appearance-none pl-3 pr-8 py-2.5 rounded-xl border border-gray-200 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:border-blue-400 text-sm font-medium text-gray-700 cursor-pointer"
-                aria-label="Sort events"
-              >
-                <option value="date-desc">Newest First</option>
-                <option value="date-asc">Oldest First</option>
-                <option value="title-asc">A → Z</option>
-                <option value="title-desc">Z → A</option>
-              </select>
-              <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
-            </div>
-
-            {/* View Mode */}
-            <div className="flex items-center bg-gray-100 rounded-xl p-1 gap-0.5">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-2 rounded-lg transition-all ${viewMode === "grid" ? "bg-white shadow text-blue-600" : "text-gray-400 hover:text-gray-600"}`}
-                aria-label="Grid view"
-                aria-pressed={viewMode === "grid"}
-              >
-                <Grid className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`p-2 rounded-lg transition-all ${viewMode === "list" ? "bg-white shadow text-blue-600" : "text-gray-400 hover:text-gray-600"}`}
-                aria-label="List view"
-                aria-pressed={viewMode === "list"}
-              >
-                <List className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* Filter Button */}
-            <motion.button
-              whileTap={{ scale: 0.96 }}
-              onClick={() => setFilterOpen(true)}
-              className="relative flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm text-white shadow-md hover:shadow-lg transition-all"
-              style={{ background: BRAND_GRADIENT }}
-              aria-label="Open filters"
+      {/* ╔══════════════════════════════════════════════════════════
+          CONTENT
+          ══════════════════════════════════════════════════════════ */}
+      <main className="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 py-10 sm:py-14">
+        <div
+          className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 pb-6 mb-10"
+          style={{ borderBottom: `1px solid ${RULE}` }}
+        >
+          <div>
+            <Eyebrow className="mb-2">— The Index —</Eyebrow>
+            <h2
+              className="leading-[1.05]"
+              style={{
+                fontSize: "clamp(24px, 3.4vw, 36px)",
+                fontWeight: 800,
+                letterSpacing: "-0.025em",
+                color: INK,
+              }}
             >
-              <SlidersHorizontal className="w-4 h-4" />
-              <span className="hidden sm:inline">Filters</span>
-              {activeFilterCount > 0 && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-orange-500 text-white text-[10px] font-black flex items-center justify-center shadow"
-                >
-                  {activeFilterCount}
-                </motion.span>
-              )}
-            </motion.button>
+              Every story, in order.
+            </h2>
           </div>
-
-          {/* Category Chip Row */}
-          <div className="cat-scroll flex items-center gap-2 overflow-x-auto pb-3">
-            {categoryData.map((cat) => {
-              const style = cat.name !== "All" ? getCategoryStyle(cat.name) : null;
-              const isActive =
-                activeCategories.has(cat.name) ||
-                (cat.name === "All" && activeCategories.size === 0);
-              return (
-                <motion.button
-                  key={cat.name}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  onClick={() => handleCategoryToggle(cat.name)}
-                  className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border-2 transition-all ${
-                    isActive
-                      ? "text-white border-transparent shadow-md"
-                      : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
-                  }`}
-                  style={isActive ? { background: BRAND_GRADIENT } : {}}
-                  aria-pressed={isActive}
-                >
-                  {style && !isActive && (
-                    <span className={`w-2 h-2 rounded-full flex-shrink-0 ${style.dot}`} />
-                  )}
-                  {cat.name}
-                  <span
-                    className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold min-w-[18px] text-center ${
-                      isActive ? "bg-white/25 text-white" : "bg-gray-100 text-gray-500"
-                    }`}
-                  >
-                    {cat.count}
+          <Eyebrow>
+            {loading
+              ? "Loading…"
+              : (
+                <>
+                  <span className="tabular-nums text-[15px]" style={{ color: INK, letterSpacing: 0, fontWeight: 700 }}>
+                    {String(events.length).padStart(2, "0")}
                   </span>
-                </motion.button>
-              );
-            })}
-          </div>
-
-          {/* Active Filter Pills */}
-          <AnimatePresence>
-            {hasActiveFilters && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="overflow-hidden"
-              >
-                <div className="flex items-center flex-wrap gap-2 pb-3">
-                  <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Active:</span>
-
-                  <AnimatePresence>
-                    {debouncedSearch.trim() && (
-                      <ActivePill
-                        key="search"
-                        label={`"${debouncedSearch.trim()}"`}
-                        onRemove={() => setSearchQuery("")}
-                      />
-                    )}
-                    {Array.from(activeCategories)
-                      .filter((c) => c !== "All")
-                      .map((cat) => (
-                        <ActivePill
-                          key={cat}
-                          label={cat}
-                          onRemove={() => handleCategoryToggle(cat)}
-                        />
-                      ))}
-                    {Array.from(activeTags).map((tag) => (
-                      <ActivePill
-                        key={tag}
-                        label={`#${tag}`}
-                        onRemove={() => handleTagToggle(tag)}
-                      />
-                    ))}
-                    {sortBy !== "date-desc" && (
-                      <ActivePill
-                        key="sort"
-                        label={`Sort: ${sortBy}`}
-                        onRemove={() => setSortBy("date-desc")}
-                      />
-                    )}
-                  </AnimatePresence>
-
-                  <button
-                    onClick={clearAll}
-                    className="ml-1 text-xs font-semibold text-red-500 hover:text-red-600 underline underline-offset-2"
-                  >
-                    Clear all
-                  </button>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <span className="ml-1">entries</span>
+                </>
+              )}
+          </Eyebrow>
         </div>
-      </div>
 
-      {/* ── MAIN CONTENT ── */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {filteredEvents.length === 0 ? (
+        {loading ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+            {Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)}
+          </div>
+        ) : sortedEvents.length === 0 ? (
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="text-center py-24"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center py-24 max-w-md mx-auto"
           >
-            <div className="w-20 h-20 mx-auto mb-5 rounded-2xl bg-gray-100 flex items-center justify-center">
-              <Search className="w-10 h-10 text-gray-300" />
-            </div>
-            <h3 className="text-xl font-bold text-gray-800 mb-2">No events found</h3>
-            <p className="text-gray-500 text-sm mb-6 max-w-sm mx-auto">
-              Try adjusting your filters or search terms.
-            </p>
-            <button
-              onClick={clearAll}
-              className="px-6 py-3 rounded-xl font-semibold text-white shadow hover:shadow-lg transition-all"
-              style={{ background: BRAND_GRADIENT }}
+            <div
+              className="w-14 h-14 mx-auto mb-6 flex items-center justify-center"
+              style={{ border: `1px solid ${RULE}`, borderRadius: 4 }}
             >
-              Reset Filters
-            </button>
+              <Search className="w-5 h-5" style={{ color: INK_DIM }} />
+            </div>
+            <h3 className="text-3xl mb-3" style={{ color: INK, fontWeight: 800, letterSpacing: "-0.025em" }}>
+              An empty folio.
+            </h3>
+            <p className="text-sm leading-relaxed" style={{ color: INK_DIM }}>
+              No stories have been added yet. Check back soon.
+            </p>
           </motion.div>
         ) : (
-          <>
-            {/* Result count */}
-            <div className="flex items-center justify-between mb-6">
-              <p className="text-sm text-gray-500">
-                Showing{" "}
-                <span className="font-bold text-gray-900">{filteredEvents.length}</span> of{" "}
-                {EVENTS.length} events
-                {hasActiveFilters && (
-                  <span className="ml-2 text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
-                    Filtered
-                  </span>
-                )}
-              </p>
-            </div>
-
-            {/* Cards */}
-            <AnimatePresence mode="wait">
-              {viewMode === "grid" ? (
-                <motion.div
-                  key="grid"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
-                >
-                  {filteredEvents.map((event, i) => (
-                    <GridCard
-                      key={event.id}
-                      event={event}
-                      index={i}
-                      onOpen={openLightbox}
-                      onTagClick={handleTagToggle}
-                    />
-                  ))}
-                </motion.div>
-              ) : (
-                <motion.div
-                  key="list"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="space-y-4"
-                >
-                  {filteredEvents.map((event, i) => (
-                    <ListCard
-                      key={event.id}
-                      event={event}
-                      index={i}
-                      onOpen={openLightbox}
-                      onTagClick={handleTagToggle}
-                    />
-                  ))}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
+            {sortedEvents.map((event, i) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                index={i}
+                onOpen={openLightbox}
+                eager={i < 6}
+              />
+            ))}
+          </div>
         )}
       </main>
 
-      {/* ── FOOTER ── */}
-      <footer className="mt-8 py-14 px-4 text-center">
-        <div className="max-w-2xl mx-auto">
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Want to relive a moment?</h3>
-          <p className="text-gray-500 mb-7 text-sm leading-relaxed">
-            Browse our complete archive or reach out to the culture team for high-resolution assets and event details.
+      {/* ╔══════════════════════════════════════════════════════════
+          COLOPHON
+          ══════════════════════════════════════════════════════════ */}
+      <footer className="mt-10 py-16 px-5 sm:px-8" style={{ borderTop: `1px solid ${RULE}` }}>
+        <div className="max-w-3xl mx-auto text-center">
+          <Eyebrow className="mb-5">— Colophon —</Eyebrow>
+          <h3
+            className="mb-5 leading-[1.06]"
+            style={{ fontSize: "clamp(28px, 4.5vw, 48px)", color: INK, letterSpacing: "-0.028em", fontWeight: 800 }}
+          >
+            Looking for a moment we may have missed?
+          </h3>
+          <p className="mb-8 leading-relaxed text-[15px]" style={{ color: INK_DIM }}>
+            Reach the culture team for high-resolution prints, named credits, or to submit
+            a frame for a future folio.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <button
-              className="px-7 py-3.5 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
-              style={{ background: BRAND_GRADIENT }}
+              className="px-7 py-3.5 text-sm font-medium transition-all hover:opacity-90"
+              style={{ background: INK, color: PAPER, borderRadius: 999 }}
             >
-              View Full Archive
+              Open the full archive
             </button>
-            <button className="px-7 py-3.5 rounded-xl font-semibold border-2 border-gray-200 text-gray-700 hover:border-blue-300 hover:text-blue-600 transition-colors">
-              Contact Culture Team
+            <button
+              className="px-7 py-3.5 text-sm font-medium transition-colors hover:bg-[#f7f7f7]"
+              style={{ border: `1px solid ${RULE}`, color: INK, borderRadius: 999, background: PAPER }}
+            >
+              Email the culture team
             </button>
           </div>
+          <p className="mt-10 text-[10.5px] uppercase tracking-[0.22em]" style={{ color: INK_DIM }}>
+            Brihaspathi · Folio No. 01 · Compiled {currentYear}
+          </p>
         </div>
       </footer>
 
-      {/* ── FILTER PANEL ── */}
-      <FilterPanel
-        isOpen={filterOpen}
-        onClose={() => setFilterOpen(false)}
-        categoryData={categoryData}
-        activeCategories={activeCategories}
-        onCategoryToggle={handleCategoryToggle}
-        allTags={allTags}
-        activeTags={activeTags}
-        onTagToggle={handleTagToggle}
-        sortBy={sortBy}
-        onSortChange={setSortBy}
-        hasActiveFilters={hasActiveFilters}
-        onClearAll={clearAll}
-        isMobile={isMobile}
-      />
-
-      {/* ── LIGHTBOX ── */}
       <Lightbox
         event={selectedEvent}
         imageIndex={selectedImageIdx}
