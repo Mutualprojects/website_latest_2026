@@ -1,7 +1,7 @@
 "use client";
 
 import Whybrihaspathi from "@/components/WhyChooseBrihaspathi";
-// import Weserve from "@/components/Weserve"; // hidden for now
+import Weserve from "@/components/Weserve";
 import ClientsMarqueeHero from "@/components/ClientsMarqueeHero";
 import CertificationsGrid5 from "@/components/Certificatiions";
 import { HoverSliderDemo } from "@/components/HoverSliderDemo";
@@ -62,8 +62,8 @@ export default function Home() {
 
 
 
-      {/* We Serve - hidden for now */}
-      {/* <Weserve /> */}
+      {/* We Serve */}
+      <Weserve />
 
       {/* Clients */}
       <ClientsMarqueeHero />

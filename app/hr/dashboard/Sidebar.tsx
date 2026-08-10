@@ -139,6 +139,8 @@ export default function Sidebar({
     { icon: <LayoutDashboard />, label: "Overview" },
     { icon: <Users />, label: "Registry" },
     { icon: <Briefcase />, label: "Vacancies", badge: vacanciesCount },
+    { icon: <Users />, label: "Board of Directors" },
+    { icon: <Users />, label: "Advisors" },
     { icon: <Settings />, label: "Systems" },
   ];
 
@@ -209,6 +211,8 @@ export default function Sidebar({
             onClick={() => {
               if (n.label === "Registry") router.push("/hr/team-management");
               else if (n.label === "Vacancies") router.push("/hr/vacancies");
+              else if (n.label === "Board of Directors") router.push("/hr/board-management");
+              else if (n.label === "Advisors") router.push("/hr/advisor-management");
               else {
                 onTabChange(n.label);
                 setMobileOpen(false);

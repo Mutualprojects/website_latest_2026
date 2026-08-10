@@ -24,12 +24,15 @@ import {
   Wifi,
   Settings,
   VideoIcon,
+  ChessKnight,
+   Package,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 
 // Import product data (adjust path as needed)
 import { products } from "@/app/products/data";
+import { FaKickstarter } from "react-icons/fa";
 
 /* ========================= TYPES ========================= */
 type InstallationItem = {
@@ -107,6 +110,7 @@ const ABOUT_MENU: AboutItem[] = [
   { id: 1, name: "About Us", href: "/about" },
   { id: 2, name: "Who We Are", href: "/who-we-are" },
   { id: 5, name: "Board of Directors", href: "/about/Board_of_directors" },
+  { id: 8, name: "Advisory Board", href: "/advisors" },
   { id: 4, name: "Our Team", href: "/our-team" },
   { id: 3, name: "Our Journey", href: "/our-journey" },
   { id: 6, name: "Chairman & Managing Director", href: "/about/our-cmd" },
@@ -191,6 +195,14 @@ const RESOURCES_MENU: ResourceMenuItem[] = [
     description: "Corporate profile and catalog.",
     icon: Download,
   },
+
+ {
+  id: 12,
+  name: "Media Kit",
+  href: "/media-kit",
+  description: "Brand assets, logos, press materials, and media resources.",
+  icon: Package,
+}
 ];
 
 // Convert products object to array
@@ -266,16 +278,15 @@ export function NavigationMenuDemo() {
         style={{ transform: "translateZ(0)" }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="flex items-center justify-between h-14 md:h-16">
+          <div className="flex items-center justify-between h-16 md:h-20">
             {/* LOGO */}
-            <Link href="/" className="flex-shrink-0 relative z-10">
+            <Link href="/" className="flex-shrink-0 relative z-10 py-1.5 flex items-center">
               <Image
                 src={logoSrc}
-                alt="Company Logo"
-                width={140}
-                height={40}
-                className="h-10 md:h-12 w-auto transition-all duration-300"
-                style={{ width: "auto", height: "auto" }}
+                alt="Brihaspathi Technologies Logo"
+                width={240}
+                height={70}
+                className="w-auto h-10 sm:h-12 md:h-14 lg:h-16 object-contain transition-all duration-300 drop-shadow-sm"
                 priority
               />
             </Link>
@@ -728,8 +739,7 @@ export function NavigationMenuDemo() {
                                     alt="BTL Logo"
                                     width={180}
                                     height={50}
-                                    className="object-contain"
-                                    style={{ width: "auto", height: "auto" }}
+                                    className="w-auto h-full max-h-12 object-contain"
                                   />
                                 </motion.div>
 
@@ -867,11 +877,10 @@ export function NavigationMenuDemo() {
                 <div className="flex items-center gap-3">
                   <Image
                     src="/highbtlogo-white-tm.png"
-                    alt="Logo"
-                    width={120}
-                    height={40}
-                    className="h-8 w-auto"
-                    style={{ width: "auto", height: "auto" }}
+                    alt="Brihaspathi Logo"
+                    width={160}
+                    height={50}
+                    className="w-auto h-10 sm:h-11 object-contain"
                   />
                 </div>
                 <button

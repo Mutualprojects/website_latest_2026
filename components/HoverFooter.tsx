@@ -49,7 +49,8 @@ export default function HoverFooter() {
         { label: "FAQ", href: "/faq" },
         { label: "Get in Touch", href: "/contact" },
         {label:"Escalation Matrix" , href:"/escalation-matrix"},
-        {label:"Blogs" , href:"/blogs"}
+        {label:"Blogs" , href:"/blogs"},
+         {label:"media kit" , href:"/media-kit"}
       ],
     },
     {
@@ -165,8 +166,7 @@ export default function HoverFooter() {
               alt="Brihaspathi Logo"
               width={220}
               height={80}
-              className="object-contain"
-              style={{ width: "auto", height: "auto" }}
+              className="w-auto h-12 sm:h-14 lg:h-16 object-contain"
             />
             <p className="text-sm leading-relaxed text-[#07518a] max-w-md">
               Brihaspathi delivers intelligent surveillance, smart mobility,

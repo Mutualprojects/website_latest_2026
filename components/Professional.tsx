@@ -757,7 +757,7 @@ const EventsShowcase: React.FC = () => {
     let active = true;
     async function fetchEvents() {
       try {
-        const res = await fetch("/strapi/api/events?populate=*");
+        const res = await fetch("/strapi/api/events?populate=*&pagination[pageSize]=50");
         if (!res.ok) throw new Error("Failed to fetch events");
         const json = await res.json();
         if (active && json.data) {

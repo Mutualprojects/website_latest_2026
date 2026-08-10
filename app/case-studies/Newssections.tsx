@@ -797,7 +797,7 @@ export default function NewsSections() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-100 mt-[10px]">
       {/* Detail Drawer */}
       {activeItem && (
         <DetailDrawer
@@ -810,7 +810,7 @@ export default function NewsSections() {
 
       {/* Sticky Toolbar */}
       <div className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <div className="flex flex-wrap items-center gap-3">
             {/* Brand */}
             <div className="flex items-center gap-2.5 mr-2">
@@ -910,7 +910,7 @@ export default function NewsSections() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Loading */}
         {loading && (
           <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-4">

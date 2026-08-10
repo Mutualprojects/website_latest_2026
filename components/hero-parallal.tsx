@@ -7,6 +7,7 @@ import {
   useTransform,
   useSpring,
   MotionValue,
+  AnimatePresence,
 } from "framer-motion";
 import newsConceptImg from "./new.png";
 
@@ -235,8 +236,8 @@ export const HeroParallax: React.FC<HeroParallaxProps> = ({ products }) => {
       <section
         ref={ref}
         className="
-          relative h-[400vh] md:h-[550vh]
-          overflow-hidden pt-10 pb-40 md:pt-20 md:pb-60 antialiased
+          relative w-full
+          overflow-hidden pt-10 pb-4 md:pt-20 md:pb-8 antialiased
           [perspective:1000px] [transform-style:preserve-3d]
           bg-gradient-to-br from-slate-50 via-white to-blue-50/20
         "
@@ -256,12 +257,12 @@ export const HeroParallax: React.FC<HeroParallaxProps> = ({ products }) => {
           </motion.div>
         </div>
 
-        <motion.div style={{ rotateX, rotateZ, translateY, opacity }}>
+        <motion.div style={{ opacity }}>
           {rows.map((row, rowIndex) => (
             <motion.div
               key={rowIndex}
               className={`
-                flex mb-20 md:mb-32 gap-12 md:gap-24
+                flex mb-8 md:mb-12 last:mb-0 gap-12 md:gap-24
                 ${rowIndex % 2 === 0 ? "flex-row-reverse" : "flex-row"}
               `}
             >
@@ -286,74 +287,129 @@ export const HeroParallax: React.FC<HeroParallaxProps> = ({ products }) => {
 
 /* ================= HEADER ================= */
 
-export const Header: React.FC = () => (
-  <div className="relative mx-auto max-w-7xl px-6 pt-10 pb-20 md:pt-20 md:pb-32">
-    <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-20">
-      {/* Left Side: Content */}
-      <motion.div
-        initial={{ opacity: 0, x: -30 }}
-        whileInView={{ opacity: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="w-full md:w-1/2"
-      >
-        <div className="flex items-center gap-3 mb-6">
-          <div className="h-[2px] w-12 bg-[#07518a]" />
-          <span className="text-[#07518a] font-bold text-xs uppercase tracking-[0.4em]">
-            Media Intelligence
-          </span>
-        </div>
+export const Header: React.FC = () => {
+  const [isPdfOpen, setIsPdfOpen] = React.useState(false);
 
-        <h1 className="text-4xl md:text-7xl lg:text-8xl font-black text-[#07518a] leading-[0.95] tracking-tighter mb-8">
-          Brihaspathi <br />
-          <span className="text-transparent [--stroke:#07518a]"
-            style={{ WebkitTextStroke: "1.5px #07518a" }}>
-            the News
-          </span>
-        </h1>
-
-        {/* Brand Icon Badge */}
-        {/* <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center justify-center w-14 h-14 bg-neutral-900 rounded-2xl shadow-xl mb-10 rotate-3 hover:rotate-0 transition-transform duration-300"
-        >
-
-        </motion.div> */}
-
-        <div className="space-y-8">
-          <p className="text-lg md:text-xl text-neutral-600 font-medium leading-relaxed">
-            Brihaspathi Technologies has been widely featured across leading national
-            and regional newspapers for its achievements in technology innovation.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-6 pt-4 border-t border-neutral-100">
-            <div className="flex-1">
-              <span className="block text-[10px] text-neutral-400 uppercase font-bold mb-1">Featured in</span>
-              <span className="text-sm font-bold text-neutral-800">200 Media Houses</span>
+  return (
+    <>
+      <div className="relative mx-auto max-w-7xl px-6 pt-10 pb-20 md:pt-20 md:pb-32">
+        <div className="flex flex-col md:flex-row items-center gap-12 lg:gap-16">
+          {/* Left Side: Content */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="w-full md:w-[45%]"
+          >
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-[2px] w-12 bg-[#07518a]" />
+              <span className="text-[#07518a] font-bold text-xs uppercase tracking-[0.4em]">
+                Media Intelligence
+              </span>
             </div>
-            <div className="flex-1 border-l sm:border-l sm:pl-6 border-neutral-100">
-              <span className="block text-[10px] text-neutral-400 uppercase font-bold mb-1">Coverage</span>
-              <span className="text-sm font-bold text-neutral-800">Global & Pan india</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
 
-      {/* Right Side: Illustration */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 0.9, x: 30 }}
-        whileInView={{ opacity: 1, scale: 1, x: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-        className="w-full md:w-1/2"
-      >
-        <img 
-          src={newsConceptImg.src} 
-          alt="Media Intelligence Concept"
-          className="w-full h-auto mix-blend-multiply transition-transform duration-500 hover:scale-105"
-        />
-      </motion.div>
-    </div>
-  </div>
-);
+            <h1 className="text-4xl md:text-7xl lg:text-8xl font-black text-[#07518a] leading-[0.95] tracking-tighter mb-8">
+              Brihaspathi <br />
+              <span className="text-transparent [--stroke:#07518a]"
+                style={{ WebkitTextStroke: "1.5px #07518a" }}>
+                the News
+              </span>
+            </h1>
+
+            <div className="space-y-8">
+              <p className="text-lg md:text-xl text-neutral-600 font-medium leading-relaxed">
+                Brihaspathi Technologies has been widely featured across leading national
+                and regional newspapers for its achievements in technology innovation.
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-6 pt-4 border-t border-neutral-100">
+                <div className="flex-1">
+                  <span className="block text-[10px] text-neutral-400 uppercase font-bold mb-1">Featured in</span>
+                  <span className="text-sm font-bold text-neutral-800">200+ Media Houses</span>
+                </div>
+                <div className="flex-1 border-l sm:border-l sm:pl-6 border-neutral-100">
+                  <span className="block text-[10px] text-neutral-400 uppercase font-bold mb-1">Coverage</span>
+                  <span className="text-sm font-bold text-neutral-800">Global & Pan india</span>
+                </div>
+              </div>
+
+              <div className="pt-4">
+                <button
+                  onClick={() => setIsPdfOpen(true)}
+                  className="px-8 py-3.5 bg-[#07518a] text-white rounded-full font-bold text-sm md:text-base cursor-pointer hover:bg-[#064170] hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 flex items-center gap-2 w-fit"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                  View pdf
+                </button>
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Right Side: Illustration */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9, x: 30 }}
+            whileInView={{ opacity: 1, scale: 1, x: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+            className="w-full md:w-[55%] flex justify-center md:justify-end"
+          >
+            <img
+              src={newsConceptImg.src}
+              alt="Media Intelligence Concept"
+              className="w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl xl:max-w-4xl h-auto mix-blend-multiply transition-transform duration-500 hover:scale-105"
+            />
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Off-canvas PDF Viewer */}
+      <AnimatePresence>
+        {isPdfOpen && (
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsPdfOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed top-0 right-0 h-full w-full max-w-4xl bg-white shadow-2xl z-[101] flex flex-col"
+            >
+              <div className="flex items-center justify-between px-6 py-4 border-b border-neutral-100 bg-neutral-50/50 backdrop-blur-md">
+                <div className="flex items-center gap-3">
+                  <div className="w-2.5 h-2.5 rounded-full bg-[#07518a] shadow-[0_0_10px_#07518a44]" />
+                  <span className="text-[#07518a] font-black uppercase tracking-[0.25em] text-xs">
+                    PR Document
+                  </span>
+                </div>
+                <button
+                  onClick={() => setIsPdfOpen(false)}
+                  className="p-2.5 bg-neutral-100 hover:bg-neutral-200 rounded-full transition-all active:scale-90"
+                >
+                  <svg className="w-5 h-5 text-neutral-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex-1 w-full h-full bg-neutral-100/50 p-4 md:p-8">
+                <iframe
+                  src="https://ik.imagekit.io/ugyhmls22/PR%20PDF._compressed.pdf"
+                  className="w-full h-full border-none rounded-xl shadow-inner bg-white"
+                  title="PR PDF"
+                />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+    </>
+  );
+};

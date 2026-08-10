@@ -59,8 +59,54 @@ export default async function ServiceDetailPage(props: PageProps) {
     notFound();
   }
 
+  // Inject specific Service Schema based on slug
+  let schemaData: any = null;
+  if (slug === "software-products-services") {
+    schemaData = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Software Development",
+      "name": "Custom Software Development",
+      "description": "Bespoke software solutions, ERP systems, web and mobile applications tailored for business process automation and digital transformation.",
+      "provider": {
+        "@type": "Organization",
+        "name": "Brihaspathi Technologies Limited",
+        "url": "https://www.brihaspathi.com"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "url": "https://www.brihaspathi.com/services/software-products-services"
+    };
+  } else if (slug === "command-control-centre-engineering") {
+    schemaData = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "Command & Control Centre Engineering",
+      "name": "Command & Control Centre Engineering",
+      "description": "Brihaspathi Command & Control Centre Engineering provides centralized monitoring, AI-powered analytics, incident management, and integrated operational control solutions for smart cities, transportation, enterprises, and government organizations.",
+      "provider": {
+        "@type": "Organization",
+        "name": "Brihaspathi Technologies Limited",
+        "url": "https://www.brihaspathi.com/"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "url": "https://www.brihaspathi.com/services/command-control-centre-engineering"
+    };
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50">
+      {schemaData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+        />
+      )}
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-[#e8f0f8] via-white to-[#fff5ed]">
         {/* Decorative Gradient Orbs */}

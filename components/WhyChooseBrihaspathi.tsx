@@ -142,12 +142,13 @@ function Panel({
         style={{ y: imgY }}
         className="relative w-full h-[72px] sm:h-[80px] md:h-[88px]"
       >
-        <Image
-          src={item.imageSrc}
-          alt={item.title}
-          fill
-          className="object-contain object-left px-4 md:px-6"
-          priority
+          <Image
+            src={item.imageSrc}
+            alt={item.title}
+            fill
+            sizes="(max-width: 768px) 100vw, 20vw"
+            className="object-contain object-left px-4 md:px-6"
+            priority
         />
       </motion.div>
 

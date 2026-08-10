@@ -124,7 +124,7 @@ export default function MDLeadershipCard() {
               .map((p, i) => (
                 <p
                   key={i}
-                  className="text-[15px] sm:text-[16px] leading-[1.75]"
+                  className="text-[15px] sm:text-[16px] leading-[1.75] text-justify"
                 >
                   {p}
                 </p>
@@ -147,7 +147,7 @@ export default function MDLeadershipCard() {
               .map((p, i) => (
                 <p
                   key={i}
-                  className="text-[15px] sm:text-[16px] leading-[1.75]"
+                  className="text-[15px] sm:text-[16px] leading-[1.75] text-justify"
                 >
                   {p}
                 </p>

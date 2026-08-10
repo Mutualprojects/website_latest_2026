@@ -6,6 +6,8 @@ import { ChevronLeft, ChevronRight, X, Linkedin, Loader2, User } from "lucide-re
 import axios from "axios";
 import { io } from "socket.io-client";
 
+import CodropsSlideshow from "./CodropsSlideshow";
+
 // Constants
 const BASE_URL = "/strapi";
 const API_URL = `${BASE_URL}/api/members`;
@@ -126,10 +128,16 @@ export default function TeamGrid() {
   }
 
   return (
-    <section className="mx-auto max-w-7xl px-4 sm:px-6 py-12 sm:py-20 overflow-x-hidden">
-      {/* Header */}
-      <div className="mb-12 md:mb-16">
-         <motion.div
+    <div>
+      <div className="w-full overflow-hidden">
+        {/* Codrops Interactive Slideshow */}
+        <CodropsSlideshow people={people} personPhoto={personPhoto} />
+      </div>
+
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 py-6 sm:py-10 overflow-x-hidden">
+        {/* Team Directory Header */}
+        <div id="team-directory" className="mb-12 md:mb-16 pt-4">
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -361,7 +369,8 @@ export default function TeamGrid() {
           background: #cbd5e1;
         }
       `}</style>
-    </section>
+      </section>
+    </div>
   );
 }
 

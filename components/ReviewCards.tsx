@@ -53,6 +53,7 @@ export default function ReviewCards() {
               src={item.logo}
               alt={item.name}
               fill
+              sizes="(max-width: 768px) 100vw, 10vw"
               className="object-contain"
             />
           </div>

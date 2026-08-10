@@ -697,6 +697,76 @@ const ContactFormBrand: React.FC = () => {
                     </div>
                   </motion.div>
 
+
+
+
+
+<div className="w-full max-w-2xl mx-auto">
+  {/* Checkbox Agreement Row */}
+  <label className="flex items-start gap-3 cursor-pointer group selection:bg-orange-500/30">
+    <input
+      type="checkbox"
+      required
+      className="mt-1 h-5 w-5 rounded border-orange-500 bg-transparent text-orange-500 accent-orange-500 focus:ring-2 focus:ring-orange-500/50 focus:ring-offset-0 cursor-pointer transition-all"
+    />
+
+    <span className="text-white text-sm md:text-base leading-relaxed select-none">
+      I explicitly agree to the{" "}
+      <a 
+        href="https://www.brihaspathi.com/terms-and-conditions" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="text-orange-500 font-medium underline underline-offset-4 hover:text-orange-400 transition-colors duration-200"
+      >
+        Terms & Conditions
+      </a>{" "}
+      and{" "}
+      <a 
+        href="https://www.brihaspathi.com/privacy-policy" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="text-orange-500 font-medium underline underline-offset-4 hover:text-orange-400 transition-colors duration-200"
+      >
+        Privacy Policy
+      </a>
+      <span className="text-orange-500 font-semibold"> *</span>
+    </span>
+  </label>
+
+  {/* Disclosure & Consent Card */}
+  <div className="mt-4 rounded-xl border border-orange-500/20 bg-gradient-to-b from-orange-500/[0.08] to-orange-500/[0.03] p-4.5 backdrop-blur-md shadow-sm transition-all duration-300 hover:border-orange-500/40">
+    <p className="text-sm leading-6 text-white/80">
+      By submitting this form, I authorize{" "}
+      <strong className="text-orange-500 font-semibold tracking-wide">
+        Brihaspathi Technologies Limited
+      </strong>{" "}
+      to contact me via phone, email, SMS, RCS, or WhatsApp regarding its{" "}
+      <span className="text-orange-400 font-medium bg-orange-500/10 px-1.5 py-0.5 rounded border border-orange-500/20">
+        products, solutions, and services
+      </span>
+      , as well as relevant project updates and promotional communications.
+    </p>
+
+    <div className="mt-3.5 pt-3.5 border-t border-white/5 flex items-center gap-2">
+      <div className="h-1.5 w-1.5 rounded-full bg-orange-500 animate-pulse" />
+      <p className="text-xs md:text-sm text-white/60 leading-none">
+        Your data is strictly secured and processed in full compliance with our{" "}
+        <a 
+          href="https://www.brihaspathi.com/privacy-policy" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-orange-500 underline underline-offset-2 hover:text-orange-400 transition-colors font-medium"
+        >
+          Privacy Policy
+        </a>.
+      </p>
+    </div>
+  </div>
+</div>
+
+
+
+
                   {/* Submit Button */}
                   <Form.Item>
                     <motion.div

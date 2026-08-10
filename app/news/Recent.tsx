@@ -17,7 +17,8 @@ import apn from './nesbanners/Screenshot 2026-02-27 102429.png';
 import bombay from './nesbanners/Screenshot 2026-02-27 102404.png';
 import csxo from './nesbanners/Screenshot 2026-02-27 102133.png';
 import main_image from './Screenshot 2026-05-12 183649.png';
-
+import women_2026 from './press/Times Power Woman Post Event june 2026.jpg.jpeg'
+import Et_some from './press/WhatsApp Image 2026-06-22 at 10.07.32 AM (1).jpeg'
 // =============================
 // PRESS LOGOS
 // =============================
@@ -82,7 +83,10 @@ export const articlesData: ArticleData[] = [
     pressIcon: Et,
     category: 'Leadership',
   },
+
   {
+
+
     id: 3,
     title: 'Advancing Border Security Through Intelligent Surveillance Systems',
     description: 'Highlights AI intrusion detection, thermal imaging, anti-drone systems and 75,000+ camera integrations.',
@@ -91,7 +95,9 @@ export const articlesData: ArticleData[] = [
     pressName: 'Security & Defence',
     pressIcon: Et,
     category: 'Security',
+
   },
+
   {
     id: 4,
     title: 'Budget 2026 Quotes: Rajasekhar Papolu, Chairman & Managing Director',
@@ -122,6 +128,30 @@ export const articlesData: ArticleData[] = [
     pressIcon: mediaBriefLogo,
     category: 'Opinion',
   },
+
+  {
+    id: 17,
+    title: 'Advancing Border Security Through Intelligent Surveillance Systems',
+    description: 'Highlights AI intrusion detection, thermal imaging, anti-drone systems and 75,000+ camera integrations.',
+    image: women_2026,
+    link: '#',
+    pressName: 'Security & Defence',
+    pressIcon: Et,
+    category: 'Security',
+  },
+
+  {
+    id: 21,
+    title: 'BUILT FOR BHARAT, ENGINEERED TO SCALE: BRIHASPATHI TECHNOLOGIES POWERS INDIA’S INTELLIGENT INFRASTRUCTURE',
+    description: 'An ET Newsmakers feature highlighting Brihaspathi Technologies Limited and its Chairman and Managing Director, Rajasekhar Papolu. The article details the company’s evolution into a major player in AI-led surveillance, security technology, and smart mobility solutions. It emphasizes their commitment to the "Make in India" initiative, delivering robust infrastructure across critical sectors (like transport and defense), and expanding their footprint internationally and into home automation.',
+    image: Et_some,
+    link: '#',
+    pressName: 'Security & Defence',
+    pressIcon: Et,
+    category: 'Security',
+  },
+
+
   {
     id: 16,
     title: 'Advancing Border Security Through Intelligent Surveillance Systems',
@@ -713,7 +743,7 @@ export default function Recent() {
   return (
     <>
       <section
-        className="w-full py-20 md:py-28 font-sans relative overflow-hidden"
+        className="w-full pt-[10px] pb-20 md:pb-28 font-sans relative overflow-hidden"
         style={{ background: BRAND.paper }}
       >
         {/* Subtle background ornaments — entrepreneurial editorial feel */}
@@ -732,7 +762,7 @@ export default function Recent() {
           style={{ background: BRAND.accent, filter: 'blur(80px)' }}
         />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="w-full mx-auto px-4 sm:px-6 lg:px-8 relative mt-[10px]">
 
           {/* ===== Header ===== */}
           <div className="mb-16 text-center max-w-3xl mx-auto">
@@ -777,16 +807,16 @@ export default function Recent() {
                   style={
                     active
                       ? {
-                          background: BRAND.primaryDark,
-                          color: '#fff',
-                          border: `1px solid ${BRAND.primaryDark}`,
-                          boxShadow: `0 6px 20px -6px ${BRAND.primary}80`,
-                        }
+                        background: BRAND.primaryDark,
+                        color: '#fff',
+                        border: `1px solid ${BRAND.primaryDark}`,
+                        boxShadow: `0 6px 20px -6px ${BRAND.primary}80`,
+                      }
                       : {
-                          background: 'transparent',
-                          color: BRAND.primaryDark,
-                          border: `1px solid ${BRAND.primary}25`,
-                        }
+                        background: 'transparent',
+                        color: BRAND.primaryDark,
+                        border: `1px solid ${BRAND.primary}25`,
+                      }
                   }
                 >
                   {cat}

@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import { motion } from "framer-motion";
 import { TimelineDemo } from "../about/components/TimelineDemo";
+import CircularDialJourney from "./CircularDialJourney";
 
 const BRAND = "#07518a";
 const banner_image = "/355737.jpg";
@@ -74,11 +75,14 @@ export default function Page() {
         </div>
       </section>
 
-      {/* ========= Main content (same layout as About sub-pages) ========= */}
+      {/* ========= Circular Dial Radar Component ========= */}
+      <CircularDialJourney />
+
+      {/* ========= Main content ========= */}
       <main className="relative pt-12 sm:pt-16 pb-16">
         <FloatingShapes />
 
-        {/* Page header with transitions (Board of Directors style) */}
+        {/* Page header with transitions */}
         <section className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.header
             ref={headerRef}
@@ -139,7 +143,7 @@ export default function Page() {
           </motion.header>
         </section>
 
-        {/* Timeline (existing TimelineDemo) */}
+        {/* Timeline (TimelineDemo) */}
         <div className="relative">
           <TimelineDemo />
         </div>

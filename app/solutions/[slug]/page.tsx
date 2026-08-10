@@ -404,8 +404,36 @@ export default function SolutionDetailsPage({
   const { scrollYProgress } = useScroll();
   const opacity = useTransform(scrollYProgress, [0, 0.3], [1, 0.7]);
 
+  // Inject specific Service Schema for AI VMS solutions page
+  let schemaData: any = null;
+  if (slug === "ai-vms-video-management-system") {
+    schemaData = {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "serviceType": "AI Solutions",
+      "name": "AI VMS (Video Management System)",
+      "description": "AI VMS (Video Management System) by Brihaspathi Technologies is an intelligent surveillance platform that combines centralized video monitoring with AI-powered analytics, facial recognition, ANPR, intrusion detection, and real-time alerts to enhance security, operational efficiency, and situational awareness.",
+      "provider": {
+        "@type": "Organization",
+        "name": "Brihaspathi Technologies Limited",
+        "url": "https://www.brihaspathi.com/"
+      },
+      "areaServed": {
+        "@type": "Country",
+        "name": "India"
+      },
+      "url": "https://www.brihaspathi.com/solutions/ai-vms-video-management-system"
+    };
+  }
+
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
+      {schemaData && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaData) }}
+        />
+      )}
       {/* HERO BANNER - 80vh Full Width */}
       <motion.div
         style={{ opacity }}

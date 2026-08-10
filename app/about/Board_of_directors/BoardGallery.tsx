@@ -51,65 +51,6 @@ interface Config {
 // CONSTANTS & DATA
 // ============================================================================
 
-const BOARD: BoardMember[] = [
-    {
-        id: 1,
-        name: 'Rajasekhar Papolu',
-        designation: 'Chairman & Managing Director',
-        bio: 'With a Computer Science Engineering background, Chairman & Managing Director Rajasekhar Papolu drives vision and growth. He integrates AI, advances software development, and strengthens presence in India. His sales-and-services approach expands opportunities in software and security systems. Skilled in sales, business development, and project management, he champions innovation and excellence.',
-        linkedin: 'https://www.linkedin.com/in/rajas2121/',
-        photo: '/teams/cmd.png',
-    },
-    {
-        id: 2,
-        name: 'Hymavathi Papolu',
-        designation: 'Director – Administration',
-        bio: 'Hymavathi Papolu, Director of Administration, is a seasoned leader in organizational management. She blends expertise in accounting, finance, and operations to streamline processes and boost efficiency. By applying strategic financial practices and disciplined resource management, she ensures smooth Finance and Accounts performance, driving operational excellence, accountability, and sustainable, ongoing growth.',
-        linkedin: 'https://www.linkedin.com/in/hymavathi-papolu-464b65145/',
-        photo: '/teams/HYMAVATHI.jpg',
-    },
-    // {
-    //     id: 3,
-    //     name: 'K. Venkatesham',
-    //     designation: 'Director – Operations',
-    //     bio: 'Dr. K. Venkatesham is a distinguished former IPS officer (Maharashtra Cadre, 1988 batch) with over three decades of leadership in public service, strategic operations, and technology-driven governance. He has held key positions including Commissioner of Police (Pune & Nagpur) and Additional Director General – Special Operations, driving major initiatives in law enforcement, cybercrime, and citizen-centric services.In his current role at Brihaspathi Technologies Limited, he leads operational strategy and execution, leveraging his expertise in large-scale program management and technology integration. He has been closely associated with multi-state initiatives such as the 108 Ambulance Network and other government programs, consistently delivering efficiency, scalability, and measurable impact.A recipient of the President’s Police Medal for Distinguished Service, Dr. Venkatesham is widely respected for his leadership, integrity, and commitment to excellence.',
-    //     linkedin: 'https://www.linkedin.com/in/k-venkatesham-dr-6b5530232?utm_source=share_via&utm_content=profile&utm_medium=member_android',
-    //     photo: '/teams/K.Venkatesham.jpeg',
-    // },
-    {
-        id: 4,
-        name: 'Murali Krishna Arasala',
-        designation: 'Executive Director',
-        bio: 'Since 2009, Murali Krishna has leveraged his MCA to excel as Chief Administration Officer, orchestrating daily operations and cross-department coordination. He oversees facilities, resources, and compliance, and leads tendering, documentation, and bid management across e-procurement platforms. Meticulous with Tender/RFP/EOI norms and tools like Tender Tiger, he drives reliable, efficient execution.',
-        linkedin: 'https://www.linkedin.com/in/murali-krishna-8603a3395/',
-        photo: '/teams/Murali.jpg',
-    },
-    {
-        id: 5,
-        name: 'Mantha Pratima',
-        designation: 'Director & Secretary – Aarushi Education Society',
-        bio: 'A seasoned professional with 18+ years of experience in administration and education management. She has led institutional operations and governance across multiple organizations. Currently holding leadership roles in real estate, technology, and education sectors, she focuses on operational excellence, strategic planning, and sustainable organizational growth.',
-        linkedin: '',
-        photo: '/mantha-prtima.jpg',
-    },
-    {
-        id: 6,
-        name: 'Shailendra Tummalapalli',
-        designation: 'Board of Directors | Enterprise Strategy & Transformation',
-        bio: 'A visionary executive specializing in enterprise transformation and large-scale integrations. With an MBA from the University of West Florida, he has led high-value technology initiatives and contributed to a $26 billion merger. He focuses on aligning innovation with business strategy to drive scalable growth and long-term organizational success.',
-        linkedin: '',
-        photo: '/shailendra.jpg',
-    },
-    {
-        id: 7,
-        name: 'Priya Rao',
-        designation: 'Vice President – Portfolio Operations, NSEW Properties',
-        bio: 'An accomplished executive with 21+ years of experience in operations, governance, and property management. She leads strategic portfolio optimization and serves as an Independent Director across multiple organizations. Certified by IICA and holding a PGDM from NMIMS, she excels in driving operational efficiency, leadership excellence, and sustainable business growth.',
-        linkedin: 'https://www.linkedin.com/in/priyarao-53360266',
-        photo: '/priya-rao.jpg',
-    },
-];
-
 const CONFIG: Config = {
     SCROLL_SPEED: 0.75,
     LERP_FACTOR: 0.08,
@@ -119,7 +60,7 @@ const CONFIG: Config = {
 };
 
 const BG_IMAGE =
-    '/white-panoramic-meeting-room-interior-with-concrete-floor-round-table-with-black-chairs-3d-rendering-mock-up.jpg';
+    '/13312327_v748-toon-94.jpg';
 
 // ============================================================================
 // UTILITY FUNCTIONS
@@ -127,16 +68,6 @@ const BG_IMAGE =
 
 const lerp = (start: number, end: number, factor: number): number =>
     start + (end - start) * factor;
-
-const getMemberData = (index: number): BoardMember => {
-    const normalizedIndex = ((index % BOARD.length) + BOARD.length) % BOARD.length;
-    return BOARD[normalizedIndex];
-};
-
-const getMemberNumber = (index: number): string => {
-    const normalizedIndex = ((index % BOARD.length) + BOARD.length) % BOARD.length;
-    return (normalizedIndex + 1).toString().padStart(2, '0');
-};
 
 // ============================================================================
 // LINKEDIN ICON SVG
@@ -384,7 +315,7 @@ const MobileCard: React.FC<MobileCardProps> = ({ member, memberNumber, index, on
                     }}
                 >
                     <img
-                        src={member.photo}
+                        src={member.photo || undefined}
                         alt={member.name}
                         className="w-full h-full object-cover"
                         loading="lazy"
@@ -443,9 +374,14 @@ export const BoardGallery: React.FC = () => {
     // STATE
     // ========================================================================
 
+    const [members, setMembers] = React.useState<BoardMember[]>([]);
+    const [loading, setLoading] = React.useState<boolean>(true);
+    const [error, setError] = React.useState<string | null>(null);
+    const [baseUrl, setBaseUrl] = React.useState<string>("");
+
     const [visibleRange, setVisibleRange] = React.useState<VisibleRange>({
         min: 0,
-        max: Math.min(CONFIG.BUFFER_SIZE, BOARD.length - 1),
+        max: 0,
     });
 
     const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
@@ -453,10 +389,23 @@ export const BoardGallery: React.FC = () => {
 
     // Mobile modal state
     const [selectedMemberIndex, setSelectedMemberIndex] = React.useState<number | null>(null);
+    const [activeIndex, setActiveIndex] = React.useState<number>(0);
 
     // ========================================================================
     // REFS
     // ========================================================================
+
+    const membersRef = React.useRef<BoardMember[]>([]);
+    const activeIndexRef = React.useRef<number>(0);
+    const activeItemRef = React.useRef<HTMLDivElement | null>(null);
+
+    React.useEffect(() => {
+        if (activeItemRef.current) {
+            activeItemRef.current.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }, [activeIndex]);
+
+    const containerRef = React.useRef<HTMLDivElement | null>(null);
 
     const state = React.useRef<ScrollState>({
         currentY: 0,
@@ -466,16 +415,36 @@ export const BoardGallery: React.FC = () => {
         snapStart: { time: 0, y: 0, target: 0 },
         lastScrollTime: Date.now(),
         dragStart: { y: 0, scrollY: 0 },
-        projectHeight: typeof window !== 'undefined' ? window.innerHeight : 0,
+        projectHeight:
+            typeof window !== 'undefined'
+                ? window.innerHeight - (window.innerWidth >= 768 ? 64 : 56)
+                : 0,
     });
 
     const projectsRef = React.useRef<Map<number, HTMLLIElement>>(new Map());
-    const minimapRef = React.useRef<Map<number, HTMLDivElement>>(new Map());
     const requestRef = React.useRef<number | undefined>(undefined);
     const renderedRange = React.useRef<VisibleRange>({
         min: 0,
-        max: Math.min(CONFIG.BUFFER_SIZE, BOARD.length - 1),
+        max: 0,
     });
+
+    // ========================================================================
+    // DYNAMIC DATA HELPERS
+    // ========================================================================
+
+    const getMemberData = (index: number): BoardMember => {
+        const list = membersRef.current;
+        if (list.length === 0) return { id: 0, name: '', designation: '', bio: '', linkedin: '', photo: '' };
+        const normalizedIndex = ((index % list.length) + list.length) % list.length;
+        return list[normalizedIndex];
+    };
+
+    const getMemberNumber = (index: number): string => {
+        const list = membersRef.current;
+        if (list.length === 0) return '01';
+        const normalizedIndex = ((index % list.length) + list.length) % list.length;
+        return (normalizedIndex + 1).toString().padStart(2, '0');
+    };
 
     // ========================================================================
     // ANIMATION FUNCTIONS
@@ -516,7 +485,9 @@ export const BoardGallery: React.FC = () => {
 
     const snapToProject = (): void => {
         const s = state.current;
-        const maxIndex = BOARD.length - 1;
+        const list = membersRef.current;
+        if (list.length === 0) return;
+        const maxIndex = list.length - 1;
         const rawIndex = Math.round(-s.targetY / s.projectHeight);
         // Clamp index between 0 and maxIndex (no infinite scroll)
         const currentIndex = Math.max(0, Math.min(rawIndex, maxIndex));
@@ -535,6 +506,8 @@ export const BoardGallery: React.FC = () => {
 
     const updatePositions = (): void => {
         const s = state.current;
+        const list = membersRef.current;
+        if (list.length === 0) return;
 
         projectsRef.current.forEach((el, index) => {
             const y: number = index * s.projectHeight + s.currentY;
@@ -544,18 +517,14 @@ export const BoardGallery: React.FC = () => {
             ) as HTMLImageElement | null;
             updateParallax(img, s.currentY, index, s.projectHeight);
         });
-
-        minimapRef.current.forEach((el, index) => {
-            const y: number =
-                (index * 96 + s.currentY * 0.3) % (BOARD.length * 96);
-            el.style.transform = `translateY(${y}px)`;
-        });
     };
 
     const animate = (): void => {
         const s = state.current;
         const now: number = Date.now();
-        const maxIndex = BOARD.length - 1;
+        const list = membersRef.current;
+        if (list.length === 0) return;
+        const maxIndex = list.length - 1;
 
         // Auto-snap to nearest project when not interacting
         if (!s.isSnapping && !s.isDragging && now - s.lastScrollTime > 100) {
@@ -578,9 +547,21 @@ export const BoardGallery: React.FC = () => {
         animate();
 
         const s = state.current;
-        const maxIndex = BOARD.length - 1;
+        const list = membersRef.current;
+        if (list.length === 0) {
+            requestRef.current = requestAnimationFrame(animationLoop);
+            return;
+        }
+        const maxIndex = list.length - 1;
         const rawIndex = Math.round(-s.targetY / s.projectHeight);
         const currentIndex = Math.max(0, Math.min(rawIndex, maxIndex));
+
+        const rawActiveIndex = Math.round(-s.currentY / s.projectHeight);
+        const computedActiveIndex = Math.max(0, Math.min(rawActiveIndex, maxIndex));
+        if (computedActiveIndex !== activeIndexRef.current) {
+            activeIndexRef.current = computedActiveIndex;
+            setActiveIndex(computedActiveIndex);
+        }
 
         const min: number = Math.max(0, currentIndex - CONFIG.BUFFER_SIZE);
         const max: number = Math.min(maxIndex, currentIndex + CONFIG.BUFFER_SIZE);
@@ -603,7 +584,9 @@ export const BoardGallery: React.FC = () => {
     const handleWheel = React.useCallback((e: WheelEvent): void => {
         e.preventDefault();
         const s = state.current;
-        const maxIndex = BOARD.length - 1;
+        const list = membersRef.current;
+        if (list.length === 0) return;
+        const maxIndex = list.length - 1;
 
         s.isSnapping = false;
         s.lastScrollTime = Date.now();
@@ -631,7 +614,9 @@ export const BoardGallery: React.FC = () => {
 
     const handleTouchMove = React.useCallback((e: TouchEvent): void => {
         const s = state.current;
-        const maxIndex = BOARD.length - 1;
+        const list = membersRef.current;
+        if (list.length === 0) return;
+        const maxIndex = list.length - 1;
 
         if (!s.isDragging) return;
 
@@ -652,9 +637,11 @@ export const BoardGallery: React.FC = () => {
 
     const handleResize = React.useCallback((): void => {
         const s = state.current;
-        const maxIndex = BOARD.length - 1;
+        const list = membersRef.current;
+        if (list.length === 0) return;
+        const maxIndex = list.length - 1;
         const oldHeight = s.projectHeight;
-        const newHeight = window.innerHeight;
+        const newHeight = window.innerHeight - (window.innerWidth >= 768 ? 64 : 56);
 
         // Calculate current index based on old height
         const rawIndex = Math.round(-s.targetY / oldHeight);
@@ -675,27 +662,130 @@ export const BoardGallery: React.FC = () => {
     // ========================================================================
 
     React.useEffect(() => {
-        setIsMounted(true);
-        state.current.projectHeight = window.innerHeight;
+        const loadMembers = async () => {
+            try {
+                setLoading(true);
+                setError(null);
 
-        window.addEventListener('wheel', handleWheel, { passive: false });
-        window.addEventListener('touchstart', handleTouchStart);
-        window.addEventListener('touchmove', handleTouchMove);
-        window.addEventListener('touchend', handleTouchEnd);
+                const endpoints = [
+                    { url: "/strapi/api/leadership-members?populate=*", base: "/strapi" },
+                    { url: "http://183.82.117.36:2334/api/leadership-members?populate=*", base: "http://183.82.117.36:2334" },
+                    { url: "http://172.30.0.200:1334/api/leadership-members?populate=*", base: "http://172.30.0.200:1334" },
+                ];
+
+                let data = null;
+                let fetchedBaseUrl = "";
+
+                for (const ep of endpoints) {
+                    try {
+                        const res = await fetch(ep.url);
+                        if (res.ok) {
+                            data = await res.json();
+                            if (data && data.data && data.data.length > 0) {
+                                fetchedBaseUrl = ep.base;
+                                break;
+                            }
+                        }
+                    } catch (e) {
+                        console.error(`Failed to fetch from ${ep.url}:`, e);
+                    }
+                }
+
+                if (!data || !data.data || data.data.length === 0) {
+                    throw new Error("No leadership members data found.");
+                }
+
+                setBaseUrl(fetchedBaseUrl);
+
+                const rawMembers = data.data.map((item: any) => {
+                    const attrs = item.attributes || item;
+
+                    const photoData = attrs.photo;
+                    const firstPhoto = Array.isArray(photoData) ? photoData[0] : photoData;
+                    let photoUrl = "";
+                    if (firstPhoto) {
+                        const url = firstPhoto.url || (firstPhoto.attributes && firstPhoto.attributes.url) || "";
+                        if (url.startsWith("http")) {
+                            photoUrl = url;
+                        } else {
+                            photoUrl = `${fetchedBaseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+                        }
+                    }
+
+                    const name = (attrs.name || "").trim();
+                    const designation = (attrs.designation || "").trim();
+                    const bio = (attrs.bio || "").trim();
+                    let linkedin = (attrs.linkedin || "").trim();
+
+                    if (linkedin.toLowerCase() === "gg" || !linkedin.startsWith("http")) {
+                        if (linkedin.toLowerCase() === "gg" || linkedin === "") {
+                            linkedin = "";
+                        } else {
+                            linkedin = `https://www.linkedin.com/in/${linkedin}`;
+                        }
+                    }
+
+                    return {
+                        id: item.id || attrs.id,
+                        name,
+                        designation,
+                        bio,
+                        linkedin,
+                        photo: photoUrl,
+                        order: typeof attrs.order === 'number' ? attrs.order : 99,
+                    };
+                });
+
+                rawMembers.sort((a: any, b: any) => a.order - b.order);
+
+                setMembers(rawMembers);
+                membersRef.current = rawMembers;
+
+                setVisibleRange({
+                    min: 0,
+                    max: Math.min(CONFIG.BUFFER_SIZE, rawMembers.length - 1),
+                });
+
+            } catch (err: any) {
+                setError(err.message || "Failed to load board directory.");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadMembers();
+    }, []);
+
+    React.useEffect(() => {
+        setIsMounted(true);
+    }, []);
+
+    React.useEffect(() => {
+        if (!isMounted || loading || error || members.length === 0) return;
+        const container = containerRef.current;
+        if (!container) return;
+
+        const offset = window.innerWidth >= 768 ? 64 : 56;
+        state.current.projectHeight = window.innerHeight - offset;
+
+        container.addEventListener('wheel', handleWheel, { passive: false });
+        container.addEventListener('touchstart', handleTouchStart);
+        container.addEventListener('touchmove', handleTouchMove);
+        container.addEventListener('touchend', handleTouchEnd);
         window.addEventListener('resize', handleResize);
 
         handleResize();
         requestRef.current = requestAnimationFrame(animationLoop);
 
         return () => {
-            window.removeEventListener('wheel', handleWheel);
-            window.removeEventListener('touchstart', handleTouchStart);
-            window.removeEventListener('touchmove', handleTouchMove);
-            window.removeEventListener('touchend', handleTouchEnd);
+            container.removeEventListener('wheel', handleWheel);
+            container.removeEventListener('touchstart', handleTouchStart);
+            container.removeEventListener('touchmove', handleTouchMove);
+            container.removeEventListener('touchend', handleTouchEnd);
             window.removeEventListener('resize', handleResize);
             if (requestRef.current) cancelAnimationFrame(requestRef.current);
         };
-    }, [handleWheel, handleTouchStart, handleTouchMove, handleTouchEnd, handleResize]);
+    }, [isMounted, loading, error, members.length, handleWheel, handleTouchStart, handleTouchMove, handleTouchEnd, handleResize]);
 
     // ========================================================================
     // DERIVED VALUES
@@ -706,7 +796,7 @@ export const BoardGallery: React.FC = () => {
         indices.push(i);
     }
 
-    const maxIndex = BOARD.length - 1;
+    const maxIndex = members.length > 0 ? members.length - 1 : 0;
     const rawCurrentIndex = Math.round(
         -state.current.targetY / state.current.projectHeight
     );
@@ -714,12 +804,13 @@ export const BoardGallery: React.FC = () => {
 
     const activeMemberIndex: number = currentIndex;
     const progressPercentage: number =
-        ((activeMemberIndex + 1) / BOARD.length) * 100;
+        members.length > 0 ? ((activeMemberIndex + 1) / members.length) * 100 : 0;
 
     const navigateTo = (targetIndex: number): void => {
         const s = state.current;
+        if (members.length === 0) return;
         // Clamp target index
-        const clampedIndex = Math.max(0, Math.min(targetIndex, BOARD.length - 1));
+        const clampedIndex = Math.max(0, Math.min(targetIndex, members.length - 1));
 
         s.isSnapping = true;
         s.snapStart = {
@@ -735,12 +826,13 @@ export const BoardGallery: React.FC = () => {
     };
 
     const navigateNext = (): void => {
-        if (currentIndex < BOARD.length - 1) navigateTo(currentIndex + 1);
+        if (members.length > 0 && currentIndex < members.length - 1) navigateTo(currentIndex + 1);
     };
 
     // Modal navigation handlers
     const openMemberModal = (index: number) => {
-        const clampedIndex = Math.max(0, Math.min(index, BOARD.length - 1));
+        if (members.length === 0) return;
+        const clampedIndex = Math.max(0, Math.min(index, members.length - 1));
         setSelectedMemberIndex(clampedIndex);
     };
 
@@ -749,25 +841,87 @@ export const BoardGallery: React.FC = () => {
     };
 
     const navigateModal = (direction: 'prev' | 'next') => {
-        if (selectedMemberIndex === null) return;
+        if (selectedMemberIndex === null || members.length === 0) return;
 
         if (direction === 'prev' && selectedMemberIndex > 0) {
             setSelectedMemberIndex(selectedMemberIndex - 1);
-        } else if (direction === 'next' && selectedMemberIndex < BOARD.length - 1) {
+        } else if (direction === 'next' && selectedMemberIndex < members.length - 1) {
             setSelectedMemberIndex(selectedMemberIndex + 1);
         }
     };
 
-    if (!isMounted) return null;
+    if (loading) {
+        return (
+            <div
+                className="w-full h-screen flex flex-col items-center justify-center relative overflow-hidden"
+                style={{
+                    backgroundImage: `url(${BG_IMAGE})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    fontFamily: "'Segoe UI', system-ui, sans-serif"
+                }}
+            >
+                {/* Background overlay */}
+                <div className="absolute inset-0 bg-white/88 backdrop-blur-[3px] z-0" />
+
+                <div className="relative z-10 flex flex-col items-center gap-4">
+                    {/* Pulsing ring spinner */}
+                    <div className="w-16 h-16 rounded-full border-4 border-[#07518a]/10 border-t-[#07518a] animate-spin" />
+                    <h3 className="text-lg font-semibold tracking-tight animate-pulse" style={{ color: '#07518a' }}>
+                        Loading Board Directory...
+                    </h3>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div
+                className="w-full h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden text-center"
+                style={{
+                    backgroundImage: `url(${BG_IMAGE})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    fontFamily: "'Segoe UI', system-ui, sans-serif"
+                }}
+            >
+                {/* Background overlay */}
+                <div className="absolute inset-0 bg-white/88 backdrop-blur-[3px] z-0" />
+
+                <div className="relative z-10 max-w-md p-8 rounded-2xl bg-white/80 backdrop-blur border border-red-200/50 shadow-xl flex flex-col items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center text-red-500">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <h3 className="text-xl font-bold" style={{ color: '#07518a' }}>
+                        Failed to Load Directory
+                    </h3>
+                    <p className="text-sm text-red-700/80 leading-relaxed">
+                        {error}
+                    </p>
+                    <button
+                        onClick={() => window.location.reload()}
+                        className="mt-2 px-6 py-2.5 rounded-full text-white font-semibold text-sm transition-all hover:scale-105"
+                        style={{ backgroundColor: '#07518a' }}
+                    >
+                        Retry
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    if (!isMounted || members.length === 0) return null;
 
     return (
         <div
-            className="w-full h-screen flex bg-cover bg-center bg-no-repeat overflow-hidden relative"
-            style={{ backgroundImage: `url(${BG_IMAGE})`, fontFamily: "'Segoe UI', system-ui, sans-serif" }}
+            ref={containerRef}
+            className="w-full h-[calc(100vh-56px)] md:h-[calc(100vh-64px)] flex overflow-hidden relative"
+            style={{ backgroundColor: '#ffffff', fontFamily: "'Segoe UI', system-ui, sans-serif" }}
         >
 
-            {/* Background overlay */}
-            <div className="absolute inset-0 bg-white/88 backdrop-blur-[3px] z-0" />
             {/* ── MINIMAP SIDEBAR (desktop only) ───────────────────────────────── */}
             <aside
                 className="hidden lg:flex w-80 xl:w-96 flex-col overflow-hidden z-20"
@@ -800,18 +954,33 @@ export const BoardGallery: React.FC = () => {
                 </div>
 
                 {/* Scrollable member list */}
-                <div className="flex-1 overflow-hidden relative">
-                    <div className="relative h-full">
-                        {indices.map((i) => {
-                            const data = getMemberData(i);
-                            const num = getMemberNumber(i);
-                            const isActive = i === currentIndex;
+                <div className="flex-1 overflow-y-auto custom-scrollbar relative">
+                    <style dangerouslySetInnerHTML={{
+                        __html: `
+                        .custom-scrollbar::-webkit-scrollbar {
+                            width: 5px;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-track {
+                            background: transparent;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-thumb {
+                            background: rgba(7,81,138,0.15);
+                            border-radius: 10px;
+                        }
+                        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                            background: rgba(7,81,138,0.3);
+                        }
+                    `}} />
+                    <div className="flex flex-col">
+                        {members.map((member, i) => {
+                            const isActive = i === activeIndex;
                             const isHovered = hoveredIndex === i;
 
                             return (
                                 <div
-                                    key={i}
-                                    className="absolute w-full h-24 flex gap-3 items-center cursor-pointer will-change-transform transition-colors duration-200"
+                                    key={member.id}
+                                    ref={isActive ? activeItemRef : null}
+                                    className="w-full h-24 flex gap-3 items-center cursor-pointer transition-colors duration-200"
                                     style={{
                                         padding: '0 20px',
                                         borderBottom: '1px solid rgba(7,81,138,0.07)',
@@ -822,10 +991,6 @@ export const BoardGallery: React.FC = () => {
                                                 ? 'rgba(7,81,138,0.03)'
                                                 : 'transparent',
                                         paddingRight: isActive ? '17px' : '20px',
-                                    }}
-                                    ref={(el) => {
-                                        if (el) minimapRef.current.set(i, el);
-                                        else minimapRef.current.delete(i);
                                     }}
                                     onMouseEnter={() => setHoveredIndex(i)}
                                     onMouseLeave={() => setHoveredIndex(null)}
@@ -844,8 +1009,8 @@ export const BoardGallery: React.FC = () => {
                                         }}
                                     >
                                         <img
-                                            src={data.photo}
-                                            alt={data.name}
+                                            src={member.photo || undefined}
+                                            alt={member.name}
                                             className="w-full h-full object-cover"
                                             loading="lazy"
                                             onError={(e) => {
@@ -861,19 +1026,19 @@ export const BoardGallery: React.FC = () => {
                                             className="text-[11px] font-bold leading-none"
                                             style={{ color: 'rgba(7,81,138,0.4)' }}
                                         >
-                                            {num}
+                                            {(i + 1).toString().padStart(2, '0')}
                                         </span>
                                         <span
                                             className="text-[12px] font-semibold leading-tight truncate"
                                             style={{ color: '#07518a' }}
                                         >
-                                            {data.name}
+                                            {member.name}
                                         </span>
                                         <span
                                             className="text-[9px] uppercase tracking-wide font-medium truncate"
                                             style={{ color: 'rgba(7,81,138,0.5)' }}
                                         >
-                                            {data.designation}
+                                            {member.designation}
                                         </span>
                                     </div>
 
@@ -912,7 +1077,7 @@ export const BoardGallery: React.FC = () => {
                             style={{ color: '#07518a' }}
                         >
                             {activeMemberIndex + 1}
-                            <span style={{ color: 'rgba(7,81,138,0.4)' }}> / {BOARD.length}</span>
+                            <span style={{ color: 'rgba(7,81,138,0.4)' }}> / {members.length}</span>
                         </span>
                     </div>
                     <div
@@ -933,14 +1098,19 @@ export const BoardGallery: React.FC = () => {
                         className="text-[10px] font-medium mt-2 truncate"
                         style={{ color: 'rgba(7,81,138,0.55)' }}
                     >
-                        {BOARD[activeMemberIndex].name}
+                        {members[activeMemberIndex]?.name}
                     </p>
                 </div>
             </aside>
 
             {/* ── DESKTOP VIEW (lg and up) ─────────────────────────────────── */}
-            <div className="hidden lg:flex flex-1 h-screen overflow-hidden relative z-10">
-                <ul className="relative h-full w-full">
+            <div 
+                className="hidden lg:flex flex-1 h-full overflow-hidden relative z-10 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url(${BG_IMAGE})` }}
+            >
+                {/* Background overlay for right side only */}
+                <div className="absolute inset-0 bg-white/88 backdrop-blur-[2px] z-0" />
+                <ul className="relative h-full w-full z-10">
                     {indices.map((i) => {
                         const data = getMemberData(i);
                         const num = getMemberNumber(i);
@@ -955,15 +1125,15 @@ export const BoardGallery: React.FC = () => {
                                     else projectsRef.current.delete(i);
                                 }}
                             >
-                                <div className="relative w-full max-w-7xl mx-auto px-6 sm:px-10 lg:px-16 h-full flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16">
+                                <div className="relative w-full max-w-[1550px] mx-auto px-8 sm:px-12 lg:px-20 h-full flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-20">
 
                                     {/* ── TEXT CONTENT ──────────────────────────────────── */}
-                                    <div className="flex-1 z-10 max-w-4xl text-center lg:text-left">
+                                    <div className="flex-1 z-10 max-w-3xl lg:max-w-4xl text-center lg:text-left">
 
                                         {/* Member number */}
                                         <div className="flex items-center gap-3 justify-center lg:justify-start mb-2">
                                             <span
-                                                className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tighter leading-none select-none"
+                                                className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tighter leading-none select-none"
                                                 style={{ color: '#07518a', opacity: 0.15 }}
                                             >
                                                 {num}
@@ -976,14 +1146,14 @@ export const BoardGallery: React.FC = () => {
 
                                         {/* Name */}
                                         <h2
-                                            className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-bold tracking-tight leading-tight mb-1"
+                                            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mb-2"
                                             style={{ color: '#07518a' }}
                                         >
                                             {data.name}
                                         </h2>
 
                                         {/* Designation pill */}
-                                        <div className="flex justify-center lg:justify-start mb-3">
+                                        <div className="flex justify-center lg:justify-start mb-4">
                                             <span
                                                 className="inline-flex items-center gap-2 text-[11px] md:text-xs uppercase tracking-widest font-semibold px-3 py-1.5 rounded-full border"
                                                 style={{
@@ -1001,13 +1171,13 @@ export const BoardGallery: React.FC = () => {
 
                                         {/* Divider */}
                                         <div
-                                            className="w-12 h-[2px] rounded-full mx-auto lg:mx-0 mb-3"
+                                            className="w-12 h-[2px] rounded-full mx-auto lg:mx-0 mb-4"
                                             style={{ backgroundColor: '#07518a', opacity: 0.35 }}
                                         />
 
                                         {/* Bio */}
                                         <p
-                                            className="text-[12px] md:text-[13px] leading-relaxed max-w-2xl mx-auto lg:mx-0 mb-5"
+                                            className="text-sm sm:text-base lg:text-[15px] xl:text-[16px] leading-relaxed max-w-3xl mx-auto lg:mx-0 mb-6"
                                             style={{ color: 'rgba(7,81,138,0.82)' }}
                                         >
                                             {data.bio}
@@ -1066,14 +1236,14 @@ export const BoardGallery: React.FC = () => {
                                             }}
                                         />
                                         <div
-                                            className="relative w-44 h-52 sm:w-56 sm:h-64 md:w-64 md:h-80 lg:w-72 lg:h-[22rem] rounded-2xl overflow-hidden shadow-2xl"
+                                            className="relative w-44 h-52 sm:w-56 sm:h-64 md:w-64 md:h-80 lg:w-80 lg:h-[24rem] xl:w-96 xl:h-[28rem] rounded-3xl overflow-hidden shadow-2xl"
                                             style={{
                                                 boxShadow:
                                                     '0 25px 60px rgba(7,81,138,0.2), 0 10px 25px rgba(0,0,0,0.1)',
                                             }}
                                         >
                                             <img
-                                                src={data.photo}
+                                                src={data.photo || undefined}
                                                 alt={data.name}
                                                 className="parallax-image w-full h-full object-cover will-change-transform"
                                                 loading="lazy"
@@ -1136,7 +1306,7 @@ export const BoardGallery: React.FC = () => {
                     </button>
                     <button
                         onClick={navigateNext}
-                        disabled={currentIndex === BOARD.length - 1}
+                        disabled={currentIndex === members.length - 1}
                         className="w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
                         style={{
                             backgroundColor: 'rgba(7,81,138,0.08)',
@@ -1159,7 +1329,7 @@ export const BoardGallery: React.FC = () => {
 
                 {/* ── DOT INDICATORS (desktop bottom-right) ───────────────── */}
                 <div className="hidden lg:flex absolute bottom-6 right-6 gap-2 z-30">
-                    {BOARD.map((_, idx) => (
+                    {members.map((_, idx) => (
                         <button
                             key={idx}
                             onClick={() => navigateTo(idx)}
@@ -1172,7 +1342,7 @@ export const BoardGallery: React.FC = () => {
                                         ? '#07518a'
                                         : 'rgba(7,81,138,0.25)',
                             }}
-                            aria-label={`Go to ${BOARD[idx].name}`}
+                            aria-label={`Go to ${members[idx]?.name}`}
                         />
                     ))}
                 </div>
@@ -1180,46 +1350,54 @@ export const BoardGallery: React.FC = () => {
 
 
             {/* ── MOBILE/TABLET VIEW (below lg) ────────────────────────────────── */}
-            <div className="lg:hidden flex-1 h-screen overflow-y-auto relative z-10 p-4">
-                {/* Header */}
-                <div className="mb-6 text-center">
-                    <h2
-                        className="text-xl font-bold tracking-tight mb-1"
-                        style={{ color: '#07518a' }}
-                    >
-                        Board of Directors
-                    </h2>
-                    <p className="text-xs" style={{ color: 'rgba(7,81,138,0.6)' }}>
-                        Tap a card to view details
-                    </p>
-                </div>
+            <div
+                className="lg:hidden flex-1 h-full overflow-y-auto relative z-10 p-4 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: `url(${BG_IMAGE})` }}
+            >
+                {/* Background overlay for mobile view */}
+                <div className="absolute inset-0 bg-white/92 backdrop-blur-[2px] z-0" />
 
-                {/* Cards Grid */}
-                <div className="grid gap-4 pb-24">
-                    {BOARD.map((member, index) => (
-                        <MobileCard
-                            key={member.id}
-                            member={member}
-                            memberNumber={(index + 1).toString().padStart(2, '0')}
-                            index={index}
-                            onClick={() => openMemberModal(index)}
-                        />
-                    ))}
-                </div>
+                <div className="relative z-10 w-full">
+                    {/* Header */}
+                    <div className="mb-6 text-center">
+                        <h2
+                            className="text-xl font-bold tracking-tight mb-1"
+                            style={{ color: '#07518a' }}
+                        >
+                            Board of Directors
+                        </h2>
+                        <p className="text-xs" style={{ color: 'rgba(7,81,138,0.6)' }}>
+                            Tap a card to view details
+                        </p>
+                    </div>
 
-                {/* Progress indicator */}
-                <div className="fixed bottom-20 inset-x-4 z-10">
-                    <div
-                        className="h-1.5 rounded-full overflow-hidden"
-                        style={{ backgroundColor: 'rgba(7,81,138,0.12)' }}
-                    >
+                    {/* Cards Grid */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-24">
+                        {members.map((member, index) => (
+                            <MobileCard
+                                key={member.id}
+                                member={member}
+                                memberNumber={(index + 1).toString().padStart(2, '0')}
+                                index={index}
+                                onClick={() => openMemberModal(index)}
+                            />
+                        ))}
+                    </div>
+
+                    {/* Progress indicator */}
+                    <div className="fixed bottom-20 inset-x-4 z-10">
                         <div
-                            className="h-full rounded-full transition-all duration-500"
-                            style={{
-                                width: `${progressPercentage}%`,
-                                backgroundColor: '#07518a',
-                            }}
-                        />
+                            className="h-1.5 rounded-full overflow-hidden"
+                            style={{ backgroundColor: 'rgba(7,81,138,0.12)' }}
+                        >
+                            <div
+                                className="h-full rounded-full transition-all duration-500"
+                                style={{
+                                    width: `${progressPercentage}%`,
+                                    backgroundColor: '#07518a',
+                                }}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1268,14 +1446,14 @@ export const BoardGallery: React.FC = () => {
                             className="text-[10px] font-semibold tabular-nums"
                             style={{ color: 'rgba(7,81,138,0.6)' }}
                         >
-                            {activeMemberIndex + 1} / {BOARD.length}
+                            {activeMemberIndex + 1} / {members.length}
                         </span>
                     </div>
 
                     {/* Next button */}
                     <button
                         onClick={navigateNext}
-                        disabled={currentIndex === BOARD.length - 1}
+                        disabled={currentIndex === members.length - 1}
                         className="w-9 h-9 rounded-full flex items-center justify-center disabled:opacity-40"
                         style={{
                             backgroundColor: '#07518a',
@@ -1293,12 +1471,12 @@ export const BoardGallery: React.FC = () => {
             {/* ── MEMBER MODAL (mobile/tablet) ───────────────────────────────── */}
             {selectedMemberIndex !== null && (
                 <MemberModal
-                    member={BOARD[selectedMemberIndex]}
-                    memberNumber={(selectedMemberIndex + 1).toString().padStart(2, '0')}
+                    member={members[selectedMemberIndex as number]}
+                    memberNumber={((selectedMemberIndex as number) + 1).toString().padStart(2, '0')}
                     onClose={closeMemberModal}
                     onNavigate={navigateModal}
-                    currentIndex={selectedMemberIndex}
-                    totalMembers={BOARD.length}
+                    currentIndex={selectedMemberIndex as number}
+                    totalMembers={members.length}
                 />
             )}
         </div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { MapPin, ExternalLink, Loader2, AlertCircle, Building2 } from "lucide-react";
 
-const API_URL = "https://sheetdb.io/api/v1/p32um9yf4optc";
+const API_URL = "/api/branches";
 const BRAND = "#07518a";
 
 interface Location {

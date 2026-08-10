@@ -151,7 +151,7 @@ export default function CaseStudiesPage({
   const [error, setError] = useState<string | null>(null);
   const [selectedSector, setSelectedSector] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-  const debouncedSearchQuery = useDebouncedValue(searchQuery, 50);
+  const debouncedSearchQuery = useDebouncedValue(searchQuery);
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -461,7 +461,7 @@ export default function CaseStudiesPage({
           {/* Desktop sidebar */}
           <aside className="hidden lg:block">
             <div className="cs-scroll sticky top-24 max-h-[calc(100vh-7.5rem)] overflow-y-auto rounded-2xl border border-[var(--line)] bg-[var(--paper-2)] p-4">
-              <SidebarContent />
+              {SidebarContent()}
             </div>
           </aside>
 
@@ -611,7 +611,7 @@ export default function CaseStudiesPage({
               </button>
             </div>
             <div className="flex-1 overflow-hidden p-4">
-              <SidebarContent />
+              {SidebarContent()}
             </div>
           </div>
         </>

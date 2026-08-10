@@ -66,16 +66,17 @@ export const TextHoverEffect = ({
           </linearGradient>
 
           {/* Moving radial mask */}
-          <motion.radialGradient
+          <radialGradient
             id="revealMask"
             gradientUnits="userSpaceOnUse"
             r="25%"
-            animate={maskPosition}
-            transition={{ duration, ease: "easeOut" }}
+            cx={maskPosition.cx}
+            cy={maskPosition.cy}
+            style={{ transition: `cx ${duration}s ease-out, cy ${duration}s ease-out` }}
           >
             <stop offset="0%" stopColor="white" />
             <stop offset="100%" stopColor="black" />
-          </motion.radialGradient>
+          </radialGradient>
 
           <mask id="textMask">
             <rect width="100%" height="100%" fill="url(#revealMask)" />

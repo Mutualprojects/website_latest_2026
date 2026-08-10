@@ -3,6 +3,7 @@
 
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform, MotionValue } from "framer-motion";
+import JourneyTimeline from "./JourneyTimeline";
 
 /* =========
    TYPES
@@ -286,8 +287,11 @@ const OurJourney = () => {
         }
       `}</style>
 
+      {/* Dynamic SheetDB Interactive Dial Timeline */}
+      <JourneyTimeline />
+
       {/* Header */}
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 pt-12 sm:pt-16">
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 pt-16 sm:pt-20">
         <div className="text-center">
           <span
             className="inline-flex items-center rounded-full border px-3 py-1 text-xs font-semibold tracking-wider"
@@ -297,10 +301,10 @@ const OurJourney = () => {
               background: "#ffffff",
             }}
           >
-            Our Journey
+            Detailed Log
           </span>
           <h2 className="mt-4 text-3xl sm:text-4xl lg:text-5xl font-bold text-neutral-900">
-            A Roadmap of Milestones
+            Historical Roadmap
           </h2>
           <p className="mt-3 text-neutral-600">
             Start from <strong>{JOURNEY[0].year}</strong> and travel back to{" "}
@@ -310,7 +314,7 @@ const OurJourney = () => {
       </div>
 
       {/* Timeline */}
-      <div className="relative mx-auto max-w-6xl px-4 sm:px-6">
+      <div className="relative mx-auto max-w-6xl px-4 sm:px-6 py-12">
         <div
           className="pointer-events-none absolute left-1/2 top-0 h-full w-px -translate-x-1/2"
           style={{ backgroundColor: `${BRAND}33` }}

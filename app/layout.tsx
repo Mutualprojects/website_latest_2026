@@ -21,6 +21,43 @@ export const metadata: Metadata = {
   },
 };
 
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Brihaspathi Technologies Limited",
+  "alternateName": "Brihaspathi Tech",
+  "url": "https://www.brihaspathi.com/",
+  "logo": "https://www.brihaspathi.com/images/logo.png",
+  "description": "Brihaspathi Technologies develops and delivers AI, security, surveillance, software, and smart infrastructure solutions to help organizations improve safety, automation, and digital operations.",
+  "foundingLocation": {
+    "@type": "Place",
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Hyderabad",
+      "addressRegion": "Telangana",
+      "addressCountry": "IN"
+    }
+  },
+  "contactPoint": [
+    {
+      "@type": "ContactPoint",
+      "telephone": "+91-98858-88835",
+      "email": "info@brihaspathi.com",
+      "contactType": "customer service",
+      "areaServed": "IN",
+      "availableLanguage": ["English", "Telugu", "Hindi"]
+    }
+  ],
+  "sameAs": [
+    "https://x.com/Brihaspathitec",
+    "https://in.pinterest.com/brihaspathitechnologieslimited/",
+    "https://www.instagram.com/brihaspathi_tech_official/",
+    "https://www.facebook.com/BrihaspathiTechnology",
+    "https://www.youtube.com/@brihaspathi",
+    "https://www.linkedin.com/company/brihaspathi-technologies/"
+  ]
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -31,6 +68,12 @@ export default function RootLayout({
       lang="en"
       className={`${dmSans.variable} scroll-smooth antialiased`}
     >
+      <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
+      </head>
       <body className="font-sans text-gray-900 bg-white selection:bg-[#FCC012]/30 selection:text-[#0a6ab8] transition-colors duration-300">
         {/* Google Tag Manager */}
         <Script id="gtm-script" strategy="afterInteractive">
