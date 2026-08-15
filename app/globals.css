@@ -358,3 +358,38 @@ body {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #07518a40;
 }
+
+@property --a {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --h {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+.custom-conic-loader {
+  padding: 1.5rem 3rem;
+  font-family: monospace;
+  font-weight: bold;
+  color: #07518a;
+  border-style: solid;
+  border-width: 0.5vmin;
+  font-size: 1.25rem;
+  border-image: conic-gradient(hsl(var(--h, 204), 85%, 30%) var(--a), transparent calc(var(--a) + 0.5deg)) 30;
+  animation: conic-load-anim 2s infinite ease-in-out;
+}
+
+@keyframes conic-load-anim {
+  0%, 10% {
+    --a: 0deg;
+    --h: 204;
+  }
+  100% {
+    --a: 360deg;
+    --h: 224;
+  }
+}
