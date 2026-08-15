@@ -49,6 +49,11 @@ const nextConfig = {
         hostname: "ik.imagekit.io",
         pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "website-latest-2026.vercel.app",
+        pathname: "/**",
+      },
     ],
   },
 
