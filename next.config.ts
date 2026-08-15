@@ -8,6 +8,14 @@ const nextConfig = {
         source: "/strapi/:path*",
         destination: "http://183.82.117.36:2334/:path*",
       },
+      {
+        source: "/cms-api/:path*",
+        destination: "http://183.82.117.36:2334/:path*",
+      },
+      {
+        source: "/backend-api/:path*",
+        destination: "http://183.82.117.36:1337/:path*",
+      },
     ];
   },
 
