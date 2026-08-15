@@ -25,7 +25,7 @@ import {
  * Data is fetched live from Strapi.
  */
 
-const STRAPI_ORIGIN = "http://183.82.117.36:2334";
+const STRAPI_ORIGIN = typeof window !== "undefined" ? "/strapi" : "http://183.82.117.36:2334";
 const PRODUCTS_ENDPOINT = `${STRAPI_ORIGIN}/api/products`;
 
 const BRAND = "#07518a";

@@ -15,7 +15,7 @@ gsap.registerPlugin(ScrollTrigger);
  * Requires: npm i gsap
  */
 
-const API_BASE = "http://183.82.117.36:2334";
+const API_BASE = typeof window !== "undefined" ? "/strapi" : "http://183.82.117.36:2334";
 const API_URL = "/strapi/api/md-components?populate=*";
 const BRAND = "#07518a";
 const SCROLL_COUNT = 3; // how many panels scroll horizontally

@@ -3,7 +3,7 @@
 import axios from "axios";
 
 // Base URL for Strapi API (adjust if proxy changes)
-const BASE_URL = "http://183.82.117.36:2334/api/members";
+const BASE_URL = typeof window !== "undefined" ? "/strapi/api/members" : "http://183.82.117.36:2334/api/members";
 
 /**
  * Create a new team member.

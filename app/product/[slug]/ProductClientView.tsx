@@ -13,7 +13,7 @@ import {
 const BRAND = "#07518a";
 const BRAND_DARK = "#053d6a";
 const BRAND_TINT = "#eaf2f8";
-const STRAPI_ORIGIN = "http://183.82.117.36:2334";
+const STRAPI_ORIGIN = typeof window !== "undefined" ? "/strapi" : "http://183.82.117.36:2334";
 
 export interface RichTextChild {
   type: string;
