@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import Link from "next/link";
+import { AnimatedMarqueeHero } from "@/components/ui/hero-3";
 import {
   ArrowRight,
   Layers,
@@ -63,6 +64,7 @@ interface Product {
   image: StrapiImage[];
   category: Category | null;
   seo: Seo | null;
+  berief_product?: any[];
 }
 
 /* ─────────────────────────── Feature Icon Helper ─────────────────────────── */
@@ -143,11 +145,41 @@ function EmptyState({ onClear }: { onClear: () => void }) {
 
 /* ─────────────────────────── Product card ─────────────────────────── */
 
+const SOLAR_SPECTRA_PRODUCT: Product = {
+  id: 9999,
+  title: "Portable Solar CCTV & Flood Light System",
+  description: "AI-powered, 100% solar operated mobile surveillance tower with high-intensity LED flood lights and lithium battery backup.",
+  slug: "solar-spectra",
+  image: [
+    {
+      url: "/mmr/solar-spectra-hero.png",
+    },
+  ],
+  category: {
+    title: "Surveillance & Solar",
+  },
+  seo: {
+    schema: {
+      "@graph": [
+        {
+          "@type": "SoftwareApplication",
+          featureList: ["Solar Powered", "2-in-1 CCTV & Light", "Lithium Battery", "Cloud VMS", "Off-Grid Ready"],
+        },
+      ],
+    },
+  },
+  berief_product: [],
+};
+
 function ProductCard({ item }: { item: Product }) {
-  const imgUrl =
+  const rawImgUrl =
     item.image?.[0]?.formats?.medium?.url ??
     item.image?.[0]?.formats?.small?.url ??
     item.image?.[0]?.url;
+
+  const imgUrl = rawImgUrl
+    ? (rawImgUrl.startsWith("http") || rawImgUrl.startsWith("/mmr") ? rawImgUrl : `${STRAPI_ORIGIN}${rawImgUrl}`)
+    : null;
 
   const featureList: string[] =
     item.seo?.schema?.["@graph"]?.find(
@@ -156,9 +188,18 @@ function ProductCard({ item }: { item: Product }) {
 
   const categoryLabel = item.category?.title ?? "Product";
 
+  const cardHref =
+    item.slug === "solar-spectra"
+      ? "/solar-spectra"
+      : item.slug === "visitor-management-system" ||
+        item.slug === "hrms-software" ||
+        item.slug === "task-management-system"
+      ? `/products/${item.slug}`
+      : `/product/${item.slug}`;
+
   return (
     <Link
-      href={`/product/${item.slug}`}
+      href={cardHref}
       className="group relative flex h-[420px] w-full overflow-hidden rounded-[36px] shadow-xl transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl sm:h-[440px]"
     >
       {/* LEFT: Full brand blue tile with all white content */}
@@ -226,7 +267,7 @@ function ProductCard({ item }: { item: Product }) {
         {imgUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={`${STRAPI_ORIGIN}${imgUrl}`}
+            src={imgUrl}
             alt={item.title}
             className="relative z-10 max-h-[82%] max-w-[82%] rounded-2xl object-contain drop-shadow-[0_16px_40px_rgba(7,81,138,0.22)] transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-[0_24px_50px_rgba(7,81,138,0.35)]"
           />
@@ -277,21 +318,58 @@ export default function ProductsPage() {
     };
   }, []);
 
+  const allItems = useMemo(() => {
+    const hasSpectra = items.some((i) => i.slug === "solar-spectra");
+    return hasSpectra ? items : [SOLAR_SPECTRA_PRODUCT, ...items];
+  }, [items]);
+
+  const heroProducts = useMemo(() => {
+    return allItems.map((item) => {
+      const rawImgUrl =
+        item.image?.[0]?.formats?.medium?.url ??
+        item.image?.[0]?.formats?.small?.url ??
+        item.image?.[0]?.url;
+
+      const imgUrl = rawImgUrl
+        ? (rawImgUrl.startsWith("http") || rawImgUrl.startsWith("/mmr")
+            ? rawImgUrl
+            : `${STRAPI_ORIGIN}${rawImgUrl}`)
+        : "/mmr/solar-spectra-hero.png";
+
+      const href =
+        item.slug === "solar-spectra"
+          ? "/solar-spectra"
+          : item.slug === "visitor-management-system" ||
+            item.slug === "hrms-software" ||
+            item.slug === "task-management-system"
+          ? `/products/${item.slug}`
+          : `/product/${item.slug}`;
+
+      return {
+        id: item.id,
+        title: item.title,
+        category: item.category?.title ?? "Enterprise Solution",
+        image: imgUrl,
+        href,
+      };
+    });
+  }, [allItems]);
+
   const categories = useMemo(
     () =>
       Array.from(
         new Set(
-          items
+          allItems
             .map((item) => item.category?.title)
             .filter((title): title is string => Boolean(title))
         )
       ),
-    [items]
+    [allItems]
   );
 
   const filteredItems = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
-    return items.filter((item) => {
+    return allItems.filter((item) => {
       const matchesCategory =
         activeCategory === "all" || item.category?.title === activeCategory;
       const matchesSearch =
@@ -301,7 +379,7 @@ export default function ProductsPage() {
         item.category?.title?.toLowerCase().includes(query);
       return matchesCategory && matchesSearch;
     });
-  }, [items, activeCategory, searchQuery]);
+  }, [allItems, activeCategory, searchQuery]);
 
   const clearFilters = () => {
     setActiveCategory("all");
@@ -312,43 +390,21 @@ export default function ProductsPage() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Header */}
-      <div className="px-4 py-12 text-white sm:px-6 lg:px-8" style={{ backgroundColor: BRAND }}>
-        <div className="mx-auto max-w-6xl space-y-6 text-center">
-          <p className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-medium">
-            Enterprise AI Solutions
-          </p>
-          <h1 className="text-4xl font-extrabold tracking-tight md:text-6xl">
-            Security &amp; software products
-          </h1>
-          <p className="mx-auto max-w-3xl text-lg font-light leading-relaxed text-white/85 md:text-xl">
-            AI-driven facial recognition, visitor tracking, smart site
-            security, and digital workspace platforms built for enterprise
-            control.
-          </p>
-
-          <div className="mx-auto max-w-xl pt-4">
-            <div className="relative flex items-center">
-              <Search className="absolute left-4 h-5 w-5 text-slate-400" aria-hidden />
-              <input
-                type="text"
-                placeholder="Search by title, feature, or keyword…"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-full py-3.5 pl-12 pr-4 text-sm text-slate-800 placeholder-slate-400 shadow-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-white/40 md:text-base"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery("")}
-                  className="absolute right-4 rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-500 hover:text-slate-700"
-                >
-                  Clear
-                </button>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Animated Marquee Hero Section */}
+      <AnimatedMarqueeHero
+        tagline="Enterprise AI & Software Solutions"
+        title={
+          <>
+            Security &amp; Software
+            <br />
+            Products
+          </>
+        }
+        description="AI-driven facial recognition, visitor tracking, smart site security, and digital workspace platforms built for enterprise control."
+        products={heroProducts}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
 
       {/* Body */}
       <div className="mx-auto max-w-7xl space-y-8 px-2 py-8 sm:px-4 lg:px-6">
@@ -363,10 +419,10 @@ export default function ProductsPage() {
                   : { border: "1px solid #e2e8f0", color: "#475569" }
               }
             >
-              All products ({items.length})
+              All products ({allItems.length})
             </button>
             {categories.map((cat) => {
-              const count = items.filter((i) => i.category?.title === cat).length;
+              const count = allItems.filter((i) => i.category?.title === cat).length;
               const active = activeCategory === cat;
               return (
                 <button

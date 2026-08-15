@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import axios from "axios";
 import {
   Menu,
   X,
@@ -25,7 +26,11 @@ import {
   Settings,
   VideoIcon,
   ChessKnight,
-   Package,
+  Package,
+  Sun,
+  UserCheck,
+  CheckSquare,
+  ShieldCheck,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
@@ -33,6 +38,9 @@ import { usePathname } from "next/navigation";
 // Import product data (adjust path as needed)
 import { products } from "@/app/products/data";
 import { FaKickstarter } from "react-icons/fa";
+
+const STRAPI_ORIGIN = typeof window !== "undefined" ? "/strapi" : "http://183.82.117.36:2334";
+const PRODUCTS_ENDPOINT = `${STRAPI_ORIGIN}/api/products`;
 
 /* ========================= TYPES ========================= */
 type InstallationItem = {
@@ -208,6 +216,50 @@ const RESOURCES_MENU: ResourceMenuItem[] = [
 // Convert products object to array
 const PRODUCTS_LIST: ProductItem[] = Object.values(products);
 
+function ProductIconOrImage({ bannerImage, name, slug, size = "large" }: { bannerImage?: any; name: string; slug: string; size?: "large" | "small" }) {
+  const isLarge = size === "large";
+  const iconSizeClass = isLarge ? "h-6 w-6" : "h-4 w-4";
+
+  const getLucideIcon = () => {
+    const lowerName = name.toLowerCase();
+    const lowerSlug = slug.toLowerCase();
+    if (lowerSlug.includes("solar") || lowerName.includes("solar")) return <Sun className={iconSizeClass} />;
+    if (lowerSlug.includes("visitor") || lowerName.includes("visitor")) return <UserCheck className={iconSizeClass} />;
+    if (lowerSlug.includes("hrms") || lowerName.includes("hr")) return <Briefcase className={iconSizeClass} />;
+    if (lowerSlug.includes("task") || lowerName.includes("task")) return <CheckSquare className={iconSizeClass} />;
+    if (lowerSlug.includes("security") || lowerName.includes("cctv")) return <ShieldCheck className={iconSizeClass} />;
+    return <Package className={iconSizeClass} />;
+  };
+
+  if (bannerImage) {
+    if (typeof bannerImage === "string") {
+      return (
+        <div className={`relative ${isLarge ? "h-12 w-12 rounded-xl" : "h-8 w-8 rounded-lg"} flex-shrink-0 overflow-hidden border border-gray-200 bg-gray-50 flex items-center justify-center`}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={bannerImage} alt={name} className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-300" />
+        </div>
+      );
+    }
+    return (
+      <div className={`relative ${isLarge ? "h-12 w-12 rounded-xl" : "h-8 w-8 rounded-lg"} flex-shrink-0 overflow-hidden border border-gray-200 bg-gray-50`}>
+        <Image
+          src={bannerImage}
+          alt={name}
+          fill
+          sizes={isLarge ? "48px" : "32px"}
+          className="object-cover group-hover:scale-105 transition-transform duration-300"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={`relative ${isLarge ? "h-12 w-12 rounded-xl" : "h-8 w-8 rounded-lg"} flex-shrink-0 overflow-hidden border border-[#07518a]/20 bg-[#07518a]/10 flex items-center justify-center text-[#07518a]`}>
+      {getLucideIcon()}
+    </div>
+  );
+}
+
 /* ========================= COMPONENT ========================= */
 export function NavigationMenuDemo() {
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -223,6 +275,98 @@ export function NavigationMenuDemo() {
   const [mobileProductsOpen, setMobileProductsOpen] = React.useState(false);
 
   const pathname = usePathname();
+
+  // Dynamic products from Strapi
+  const [strapiProducts, setStrapiProducts] = React.useState<ProductItem[]>([]);
+
+  React.useEffect(() => {
+    let cancelled = false;
+    axios
+      .get(PRODUCTS_ENDPOINT, {
+        params: {
+          "populate[image]": true,
+          "populate[category]": true,
+        },
+      })
+      .then((res) => {
+        if (cancelled) return;
+        const data = res.data?.data;
+        if (Array.isArray(data) && data.length > 0) {
+          const fetchedList: ProductItem[] = data.map((item: any) => {
+            const rawImgUrl =
+              item.image?.[0]?.formats?.small?.url ??
+              item.image?.[0]?.formats?.medium?.url ??
+              item.image?.[0]?.url;
+            const imgUrl = rawImgUrl
+              ? (rawImgUrl.startsWith("http") || rawImgUrl.startsWith("/mmr")
+                  ? rawImgUrl
+                  : `${STRAPI_ORIGIN}${rawImgUrl}`)
+              : undefined;
+
+            return {
+              slug: item.slug,
+              name: item.title ?? item.name ?? "Product",
+              tagline: item.description ?? item.tagline ?? "",
+              bannerImage: imgUrl,
+            };
+          });
+          setStrapiProducts(fetchedList);
+        }
+      })
+      .catch((err) => {
+        console.error("Error fetching mega menu products:", err);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const finalProductsList = React.useMemo(() => {
+    const staticList = Object.values(products).map((p) => ({
+      slug: p.slug,
+      name: p.name,
+      tagline: p.tagline,
+      bannerImage: p.bannerImage,
+    }));
+
+    if (strapiProducts.length === 0) {
+      return staticList;
+    }
+
+    const hasSpectra = strapiProducts.some((p) => p.slug === "solar-spectra");
+    const merged = hasSpectra
+      ? strapiProducts
+      : [
+          {
+            slug: "solar-spectra",
+            name: "Solar Spectra",
+            tagline: "Portable Solar CCTV & Flood Light System (2-in-1)",
+            bannerImage: "/mmr/solar-spectra-hero.png",
+          },
+          ...strapiProducts,
+        ];
+
+    staticList.forEach((sp) => {
+      if (!merged.some((mp) => mp.slug === sp.slug)) {
+        merged.push(sp);
+      }
+    });
+
+    return merged;
+  }, [strapiProducts]);
+
+  const getProductHref = (slug: string) => {
+    if (slug === "solar-spectra") return "/solar-spectra";
+    if (
+      slug === "visitor-management-system" ||
+      slug === "hrms-software" ||
+      slug === "task-management-system"
+    ) {
+      return `/products/${slug}`;
+    }
+    return `/product/${slug}`;
+  };
 
   /* === Lock body scroll and reset menus on mobile open/close === */
   React.useEffect(() => {
@@ -371,7 +515,7 @@ export function NavigationMenuDemo() {
                 <button
                   type="button"
                   className={`flex items-center gap-1 px-3 py-2 text-sm lg:text-base font-medium transition-all duration-200 rounded-md ${
-                    pathname.startsWith("/products")
+                    pathname.startsWith("/product") || pathname.startsWith("/products")
                       ? "text-[#07518a]"
                       : "text-[#07518a]/70 hover:text-[#07518a] hover:bg-[#07518a]/5"
                   }`}
@@ -391,12 +535,12 @@ export function NavigationMenuDemo() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-screen max-w-5xl z-[1100]"
+                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-[92vw] max-w-6xl z-[1100] whitespace-normal"
                     >
                       <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex">
-                        <div className="flex-1 p-6">
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                            {PRODUCTS_LIST.map((product) => (
+                        <div className="flex-1 p-6 flex flex-col justify-between max-h-[70vh] overflow-y-auto">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3.5 content-start">
+                            {finalProductsList.map((product) => (
                               <motion.div
                                 key={product.slug}
                                 initial={{ opacity: 0, y: 10 }}
@@ -404,32 +548,39 @@ export function NavigationMenuDemo() {
                                 transition={{ duration: 0.3 }}
                               >
                                 <Link
-                                  href={`/products/${product.slug}`}
+                                  href={getProductHref(product.slug)}
                                   onClick={() => setShowProductsMenu(false)}
-                                  className="group flex gap-3 p-3 rounded-xl hover:bg-[#07518a]/5 transition-all duration-200"
+                                  className="group flex items-start gap-3.5 p-3.5 rounded-xl hover:bg-[#07518a]/5 transition-all duration-200 border border-transparent hover:border-[#07518a]/10 h-full"
                                 >
-                                  {/* Product Image */}
-                                  <div className="relative h-12 w-12 flex-shrink-0 rounded-lg overflow-hidden border border-gray-200 bg-gray-50">
-                                    <Image
-                                      src={product.bannerImage}
-                                      alt={product.name}
-                                      fill
-                                      sizes="48px"
-                                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                    />
-                                  </div>
+                                  {/* Product Image or Lucide Icon */}
+                                  <ProductIconOrImage bannerImage={product.bannerImage} name={product.name} slug={product.slug} size="large" />
                                   {/* Product Text */}
                                   <div className="flex-1 min-w-0">
-                                    <h4 className="font-semibold text-gray-900 group-hover:text-[#07518a] transition-colors text-[13px] mb-0.5">
+                                    <h4 className="font-semibold text-gray-900 group-hover:text-[#07518a] transition-colors text-xs sm:text-sm mb-1 leading-snug whitespace-normal break-words">
                                       {product.name}
                                     </h4>
-                                    <p className="text-[10px] text-gray-500 line-clamp-1 group-hover:text-gray-600 leading-relaxed">
+                                    <p className="text-[11px] text-gray-500 line-clamp-2 group-hover:text-gray-600 leading-relaxed whitespace-normal break-words">
                                       {product.tagline}
                                     </p>
                                   </div>
                                 </Link>
                               </motion.div>
                             ))}
+                          </div>
+
+                          {/* Footer Link for All Products */}
+                          <div className="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between shrink-0">
+                            <span className="text-[11px] font-medium text-gray-500">
+                              Explore all solutions &amp; products
+                            </span>
+                            <Link
+                              href="/product"
+                              onClick={() => setShowProductsMenu(false)}
+                              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#07518a] hover:text-[#04335a] transition-colors group"
+                            >
+                              <span>View All Products</span>
+                              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+                            </Link>
                           </div>
                         </div>
 
@@ -438,7 +589,7 @@ export function NavigationMenuDemo() {
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: 0.2 }}
-                          className="w-[300px] relative overflow-hidden flex flex-col border-l border-gray-100 bg-gradient-to-b from-gray-50/50 to-white"
+                          className="w-[280px] shrink-0 relative overflow-hidden flex flex-col border-l border-gray-100 bg-gradient-to-b from-gray-50/50 to-white"
                         >
                           <div className="relative z-10 flex flex-col h-full p-6">
                             {/* Top Section with Rectangular Image */}
@@ -524,7 +675,7 @@ export function NavigationMenuDemo() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-screen max-w-5xl z-[1100]"
+                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-[92vw] max-w-5xl z-[1100] whitespace-normal"
                     >
                       <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex">
                         <div className="flex-1 p-6">
@@ -667,7 +818,7 @@ export function NavigationMenuDemo() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-screen max-w-7xl z-[1100]"
+                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-[92vw] max-w-7xl z-[1100] whitespace-normal"
                     >
                       <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex">
                         <div className="flex-1 p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2 content-start">
@@ -1011,7 +1162,7 @@ export function NavigationMenuDemo() {
                   <button
                     onClick={() => setMobileProductsOpen(!mobileProductsOpen)}
                     className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-base font-semibold transition-all ${
-                      pathname.startsWith("/products")
+                      pathname.startsWith("/product") || pathname.startsWith("/products")
                         ? "bg-[#07518a]/10 text-[#07518a]"
                         : "text-gray-700 hover:bg-[#07518a]/5 active:bg-[#07518a]/10"
                     }`}
@@ -1033,22 +1184,14 @@ export function NavigationMenuDemo() {
                         className="overflow-hidden"
                       >
                         <div className="pl-2 pt-2 space-y-1">
-                          {PRODUCTS_LIST.map((product) => (
+                          {finalProductsList.map((product) => (
                             <Link
                               key={product.slug}
-                              href={`/products/${product.slug}`}
+                              href={getProductHref(product.slug)}
                               onClick={() => setMobileOpen(false)}
                               className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-600 hover:text-[#07518a] hover:bg-[#07518a]/5 rounded-lg transition-all active:bg-[#07518a]/10"
                             >
-                              <div className="relative h-8 w-8 flex-shrink-0 rounded-md overflow-hidden border border-gray-200">
-                                <Image
-                                  src={product.bannerImage}
-                                  alt={product.name}
-                                  fill
-                                  sizes="32px"
-                                  className="object-cover"
-                                />
-                              </div>
+                              <ProductIconOrImage bannerImage={product.bannerImage} name={product.name} slug={product.slug} size="small" />
                               <span>{product.name}</span>
                             </Link>
                           ))}

@@ -294,6 +294,33 @@ export const taskManagementSystem: Product = {
 };
 
 /* =====================================================
+   SOLAR SPECTRA
+===================================================== */
+
+export const solarSpectra: Product = {
+   name: "Solar Spectra",
+   slug: "solar-spectra",
+   bannerImage: "/mmr/solar-spectra-hero.png",
+   tagline: "Portable Solar CCTV & Flood Light System (2-in-1)",
+   description:
+      "Smart surveillance and high-intensity illumination for off-grid and remote sites.",
+   targetIndustries: [
+      { text: "Construction Sites", icon: corporate },
+      { text: "Industrial Facilities", icon: manufacturing },
+      { text: "Remote & Off-Grid", icon: government },
+   ],
+   keyBenefits: [
+      { text: "100% Solar Powered", icon: improvedSecurity },
+      { text: "CCTV + Flood Light (2-in-1)", icon: fastCheckin },
+   ],
+   whyChooseUs: [
+      { text: "Rapid Plug & Play Setup", icon: quick },
+   ],
+   deploymentOptions: ["Cloud"],
+   coreModules: [],
+};
+
+/* =====================================================
    FINAL EXPORT
 ===================================================== */
 
@@ -301,6 +328,7 @@ export const products = {
    visitorManagement: visitorManagementSystem,
    hrms: hrmsSoftware,
    taskManagement: taskManagementSystem,
+   solarSpectra: solarSpectra,
 } as const;
 
 export type ProductKey = keyof typeof products;
