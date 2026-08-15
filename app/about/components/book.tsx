@@ -1,284 +1,116 @@
 "use client";
 
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import React, { useEffect, useRef } from "react";
 
 /* ══════════════════════════════════════════════════════════════════════════
-   SCROLL ARCHITECTURE  — 280 vh total, white background
+   INNER-SCROLL 3D BOOK (STYLISH INNER SCROLLBAR & EXPANDED 450VH TRAVEL)
    
-   wrapper  = 380vh  (280vh pinned scroll travel + 100vh panel)
-   sticky   = 100vh  (locked to viewport — what you actually see)
-   
-   Zone 0   0  → 35vh   book scales in  0.60 → 1.00
-   Zone 1   35 → 105vh  page[0] flips   front cover → img-2 visible (70vh travel)
-   Zone 2   105→ 175vh  page[1] flips   inner page  → img-3 visible (70vh travel)
-   Zone 3   175→ 255vh  book CLOSES     page[1] folds shut, then page[0] (cover) — 3D book folds closed
-   Zone 4   255→ 280vh  ENDING FRAME    closed book tilts back, soft glow + caption fade in
-
-   Image mapping
-   ─ book-img-1.jpeg  → FRONT COVER  (full-bleed photo)
-   ─ book-img-2.jpeg  → INNER PAGE   (matted / editorial frame)
-   ─ book-img-3.jpeg  → BACK COVER   (full-bleed photo)
+   - Fixed 100vh component with dedicated inner scroll (overflow-y: auto)
+   - Custom styled inner scrollbar for intuitive user feedback
+   - Expanded 450vh inner scroll runway so the full book flip is unhurried
+   - Clean matched frames:
+       Cover (Img 1) -> 40 Under 40 (Img 2) -> Article Spread (Img 3)
+   - Reverses smoothly when scrolling back up
  ══════════════════════════════════════════════════════════════════════════ */
 
 export default function ScrollBook() {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const stickRef = useRef<HTMLDivElement>(null);
+  const innerScrollRef = useRef<HTMLDivElement>(null);
   const bookRef = useRef<HTMLDivElement>(null);
   const page0Ref = useRef<HTMLDivElement>(null);
   const page1Ref = useRef<HTMLDivElement>(null);
   const sideRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
-  const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    gsap.registerPlugin(ScrollTrigger);
 
-    const wrap = wrapRef.current;
     const book = bookRef.current;
     const pg0 = page0Ref.current;
     const pg1 = page1Ref.current;
     const side = sideRef.current;
     const glow = glowRef.current;
-    const card = cardRef.current;
-    if (!wrap || !book || !pg0 || !pg1) return;
+    const scrollEl = innerScrollRef.current;
+    if (!scrollEl || !book || !pg0 || !pg1) return;
 
-    const vh = () => window.visualViewport?.height ?? window.innerHeight;
+    const clamp = (v: number, lo: number, hi: number) =>
+      Math.max(lo, Math.min(hi, v));
+    const norm = (v: number, lo: number, hi: number) =>
+      clamp((v - lo) / (hi - lo), 0, 1);
 
-    const ctx = gsap.context(() => {
+    const caps = scrollEl.querySelectorAll<HTMLElement>(".sb-cap");
+    const dots = scrollEl.querySelectorAll<HTMLElement>(".sb-dot");
 
-      /* ── Side Content Reveal (reveals as book opens) ───────────── */
-      if (side) {
-        gsap.fromTo(side,
-          { opacity: 0, x: 50, scale: 0.94 },
-          {
-            opacity: 1, x: 0, scale: 1, ease: "none",
-            scrollTrigger: {
-              trigger: wrap,
-              scrub: 1.2,
-              start: () => `top+=${vh() * 0.35}`,
-              end: () => `top+=${vh() * 0.85}`,
-            },
-          }
-        );
-      }
+    const updateStage = (p: number) => {
+      let idx = 0;
+      if (p >= 0.70) idx = 2;       // Milestones & Media (Article Spread)
+      else if (p >= 0.30) idx = 1;  // Cover Moment (Fortune 40 Under 40)
+      else idx = 0;                    // Opening the Chapter
 
-      /* ── Zone 0 · Scale in 0.60 → 1.00 ─────────────────────────── */
-      gsap.fromTo(book,
-        { scale: 0.60, opacity: 0 },
-        {
-          scale: 1, opacity: 1, ease: "none",
-          scrollTrigger: {
-            trigger: wrap,
-            scrub: 1.6,
-            start: "top top",
-            end: () => `+=${vh() * 0.35}`,
-          },
-        }
-      );
+      caps.forEach((c, i) => c.classList.toggle("sb-cap--on", i === idx));
+      dots.forEach((d, i) => d.classList.toggle("sb-dot--on", i === idx));
 
-      /* ── Zone 1 · page[0] flips  0° → -180° ────────────────────── */
-      gsap.set(pg0, { z: 4 });
+      const fill = scrollEl.querySelector<HTMLElement>("#sb-prog-fill");
+      if (fill) fill.style.width = `${p * 100}%`;
+    };
 
-      // rotation
-      gsap.to(pg0, {
-        rotateY: -180, ease: "none",
-        scrollTrigger: {
-          trigger: wrap,
-          scrub: 1.6,
-          start: () => `top+=${vh() * 0.35}`,
-          end: () => `top+=${vh() * 1.05}`,
-        },
-      });
-      // z-arc (page lifts mid-flip for realism)
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: wrap,
-          scrub: 1.6,
-          start: () => `top+=${vh() * 0.35}`,
-          end: () => `top+=${vh() * 1.05}`,
-        },
-      })
-        .to(pg0, { z: 50, ease: "sine.in", duration: 0.5 })
-        .to(pg0, { z: -4, ease: "sine.out", duration: 0.5 });
+    const onScroll = () => {
+      const max = scrollEl.scrollHeight - scrollEl.clientHeight;
+      if (max <= 0) return;
+      const p = scrollEl.scrollTop / max;
 
-      /* ── Zone 2 · page[1] flips  0° → -180° ────────────────────── */
-      gsap.set(pg1, { z: 2 });
+      updateStage(p);
 
-      gsap.to(pg1, {
-        rotateY: -180, ease: "none",
-        scrollTrigger: {
-          trigger: wrap,
-          scrub: 1.6,
-          start: () => `top+=${vh() * 1.05}`,
-          end: () => `top+=${vh() * 1.75}`,
-        },
-      });
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: wrap,
-          scrub: 1.6,
-          start: () => `top+=${vh() * 1.05}`,
-          end: () => `top+=${vh() * 1.75}`,
-        },
-      })
-        .to(pg1, { z: 50, ease: "sine.in", duration: 0.5 })
-        .to(pg1, { z: -2, ease: "sine.out", duration: 0.5 });
+      // Phase 1: Cover (Page 0) flips open (p: 0.10 -> 0.45)
+      const z0 = norm(p, 0.10, 0.45);
+      const r0 = -180 * z0;
+      const z0arc = z0 < 0.5 ? 4 + 46 * (z0 / 0.5) : 50 - 46 * ((z0 - 0.5) / 0.5);
+      gsap.set(pg0, { rotateY: r0, z: z0arc });
 
-      /* ── Zone 3 · BOOK CLOSES (folds shut like a real book) ────── */
-      /* page[1] folds back first (top sheet), then page[0] (cover)   */
+      // Phase 2: Page 1 flips open (p: 0.45 -> 0.80)
+      const z1 = norm(p, 0.45, 0.80);
+      const r1 = -180 * z1;
+      const z1arc = z1 < 0.5 ? 2 + 48 * (z1 / 0.5) : 50 - 48 * ((z1 - 0.5) / 0.5);
+      gsap.set(pg1, { rotateY: r1, z: z1arc });
 
-      // 3a · page[1] closes  -180° → 0°  (inner page sweeps back right-half)
-      gsap.to(pg1, {
-        rotateY: 0, ease: "power2.inOut",
-        scrollTrigger: {
-          trigger: wrap,
-          scrub: 1.6,
-          start: () => `top+=${vh() * 1.75}`,
-          end: () => `top+=${vh() * 2.15}`,
-        },
-      });
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: wrap,
-          scrub: 1.6,
-          start: () => `top+=${vh() * 1.75}`,
-          end: () => `top+=${vh() * 2.15}`,
-        },
-      })
-        .fromTo(pg1, { z: -2 }, { z: 55, ease: "sine.in", duration: 0.5 })
-        .to(pg1, { z: 5, ease: "sine.out", duration: 0.5 });
+      // Phase 3: Resting open spread with ambient glow (p: 0.80 -> 1.00)
+      const zEnd = norm(p, 0.80, 1.00);
+      gsap.set(book, { scale: 1 + 0.02 * zEnd, rotateY: -3 * zEnd });
+      if (glow) gsap.set(glow, { opacity: 0.85 * zEnd });
+    };
 
-      // 3b · page[0] closes  -180° → 0°  (cover folds over everything)
-      gsap.to(pg0, {
-        rotateY: 0, ease: "power2.inOut",
-        scrollTrigger: {
-          trigger: wrap,
-          scrub: 1.6,
-          start: () => `top+=${vh() * 2.15}`,
-          end: () => `top+=${vh() * 2.55}`,
-        },
-      });
-      gsap.timeline({
-        scrollTrigger: {
-          trigger: wrap,
-          scrub: 1.6,
-          start: () => `top+=${vh() * 2.15}`,
-          end: () => `top+=${vh() * 2.55}`,
-        },
-      })
-        .fromTo(pg0, { z: -4 }, { z: 60, ease: "sine.in", duration: 0.5 })
-        .to(pg0, { z: 6, ease: "sine.out", duration: 0.5 });
+    // Set initial fully-visible state
+    gsap.set(book, { scale: 1, opacity: 1, rotateY: 0 });
+    gsap.set(pg0, { rotateY: 0, z: 4 });
+    gsap.set(pg1, { rotateY: 0, z: 2 });
+    if (side) gsap.set(side, { opacity: 1, x: 0 });
+    if (glow) gsap.set(glow, { opacity: 0 });
+    updateStage(0);
 
-      /* ── Zone 4 · ENDING FRAME (book folds shut, #07518a card rises) ── */
-      gsap.to(book, {
-        scale: 0.55, y: 36, rotateY: 8, opacity: 0.4, ease: "power2.inOut",
-        scrollTrigger: {
-          trigger: wrap,
-          scrub: 1.6,
-          start: () => `top+=${vh() * 2.55}`,
-          end: () => `top+=${vh() * 2.80}`,
-        },
-      });
+    scrollEl.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
 
-      if (card) {
-        gsap.fromTo(card,
-          { opacity: 0, scale: 0.82, y: 34 },
-          {
-            opacity: 1, scale: 1, y: 0, ease: "power2.out",
-            scrollTrigger: {
-              trigger: wrap,
-              scrub: 1.6,
-              start: () => `top+=${vh() * 2.52}`,
-              end: () => `top+=${vh() * 2.80}`,
-            },
-          }
-        );
-      }
-
-      if (glow) {
-        gsap.fromTo(glow,
-          { opacity: 0 },
-          {
-            opacity: 1, ease: "none",
-            scrollTrigger: {
-              trigger: wrap,
-              scrub: 1.2,
-              start: () => `top+=${vh() * 2.5}`,
-              end: () => `top+=${vh() * 2.8}`,
-            },
-          }
-        );
-      }
-
-      /* ── Stage captions + dots (crossfade per zone) ──────────── */
-      const caps = gsap.utils.toArray<HTMLElement>(".sb-cap");
-      const dots = gsap.utils.toArray<HTMLElement>(".sb-dot");
-      const zoneEnds = [0.125, 0.375, 0.625, 0.91, 1.01];
-
-      const setStage = (progress: number) => {
-        let i = 0;
-        while (i < zoneEnds.length && progress >= zoneEnds[i]) i++;
-        const idx = Math.min(4, i);
-        caps.forEach((c, k) => c.classList.toggle("sb-cap--on", k === idx));
-        dots.forEach((d, k) => d.classList.toggle("sb-dot--on", k === idx));
-      };
-
-      ScrollTrigger.create({
-        trigger: wrap,
-        start: "top top",
-        end: () => `top+=${vh() * 2.8}`,
-        onUpdate: (self) => setStage(self.progress),
-        onRefresh: (self) => setStage(self.progress),
-      });
-      setStage(0);
-
-      /* ── Progress bar fill (tracks full 280vh scroll travel) ────── */
-      ScrollTrigger.create({
-        trigger: wrap,
-        start: "top top",
-        end: () => `top+=${vh() * 2.8}`,
-        scrub: true,
-        onUpdate: (self) => {
-          const fill = document.getElementById("sb-prog-fill");
-          if (fill) fill.style.width = `${self.progress * 100}%`;
-        },
-      });
-
-      /* ── Refresh on viewport resize ──────────────────────────────── */
-      const refresh = () => ScrollTrigger.refresh();
-      window.visualViewport?.addEventListener("resize", refresh);
-      window.addEventListener("orientationchange", refresh);
-
-      return () => {
-        window.visualViewport?.removeEventListener("resize", refresh);
-        window.removeEventListener("orientationchange", refresh);
-      };
-    }, wrap);
-
-    return () => ctx.revert();
+    return () => {
+      scrollEl.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   return (
     <>
-      {/* ══════════════════ SCROLL WRAPPER (380vh) ═════════════════ */}
-      <div ref={wrapRef} className="sb-wrap">
+      {/* ══ OUTER: fixed 100vh with inner scroll container ══ */}
+      <div ref={innerScrollRef} className="sb-outer">
 
-        {/* ─── STICKY PANEL (100vh — what user sees) ─────────────── */}
-        <div ref={stickRef} className="sb-sticky">
+        {/* Expanded phantom height (450vh) for long, comfortable scroll travel */}
+        <div className="sb-phantom" aria-hidden />
 
-          {/* Subtle background texture */}
+        {/* Sticky UI Panel — stays fixed while inner scrolling */}
+        <div className="sb-sticky">
           <div className="sb-bg-texture" aria-hidden />
 
-          {/* ── Split layout: text (70%) + book (30%) ───────────── */}
           <div className="sb-layout">
-
-            {/* ── TEXT COLUMN (70%) ─────────────────────────────── */}
-            <div className="sb-text-col">
-
-              {/* Section header — left aligned */}
+            {/* TEXT COLUMN */}
+            <div ref={sideRef} className="sb-text-col">
               <header className="sb-header">
                 <span className="sb-eyebrow">Our Journey</span>
                 <h2 className="sb-title">
@@ -287,239 +119,186 @@ export default function ScrollBook() {
                 <div className="sb-title-rule" aria-hidden />
               </header>
 
-              {/* Stage captions (crossfade per scroll zone) */}
               <div className="sb-caps">
                 <div className="sb-cap sb-cap--on">
                   <span className="sb-capno">01</span>
-                  <h3 className="sb-cap-title">Opening the Chapter</h3>
+                  <h3 className="sb-cap-title">Fortune India Feature</h3>
                   <p className="sb-cap-body">
-                    The Brihaspathi story of 2026 begins — a year of milestones,
-                    coverage and records. Turn the page to walk through it.
+                    Brihaspathi Technologies takes center stage in Fortune India&apos;s
+                    August 2026 edition, highlighting groundbreaking technology
+                    milestones, industry leadership, and nation-building innovation across India.
                   </p>
                 </div>
                 <div className="sb-cap">
                   <span className="sb-capno">02</span>
-                  <h3 className="sb-cap-title">A Cover Moment</h3>
+                  <h3 className="sb-cap-title">40 Under 40 Honors</h3>
                   <p className="sb-cap-body">
-                    Featured on Fortune India, August 2026 — a defining page in
-                    the company&apos;s journey to the front.
+                    Recognized among India&apos;s brightest young business leaders,
+                    celebrating visionary tech entrepreneurship, enterprise security solutions,
+                    and transformative engineering leadership shaping the country&apos;s digital future.
                   </p>
                 </div>
                 <div className="sb-cap">
                   <span className="sb-capno">03</span>
-                  <h3 className="sb-cap-title">Milestones &amp; Media</h3>
+                  <h3 className="sb-cap-title">Critical Infrastructure Leader</h3>
                   <p className="sb-cap-body">
-                    From features to records, every frame adds another line to
-                    the story we keep writing every year.
-                  </p>
-                </div>
-                <div className="sb-cap">
-                  <span className="sb-capno">04</span>
-                  <h3 className="sb-cap-title">Turning the Page</h3>
-                  <p className="sb-cap-body">
-                    Every chapter closes to make room for the next one — watch
-                    the book fold shut, just like the year did.
-                  </p>
-                </div>
-                <div className="sb-cap">
-                  <span className="sb-capno">05</span>
-                  <h3 className="sb-cap-title">The Story Continues</h3>
-                  <p className="sb-cap-body">
-                    The next chapter is already being written. Stay with us as
-                    Brihaspathi keeps turning the pages.
+                    Engineering the backbone of India&apos;s infrastructure with 90+ major
+                    government projects across 15 states, 15,000+ clients, and 55,000+
+                    surveillance deployments nationwide under Rajasekhar Papolu&apos;s leadership.
                   </p>
                 </div>
               </div>
 
-              {/* Stage dots */}
               <div className="sb-dots" aria-hidden>
                 <span className="sb-dot sb-dot--on" />
                 <span className="sb-dot" />
                 <span className="sb-dot" />
-                <span className="sb-dot" />
-                <span className="sb-dot" />
               </div>
 
-              {/* Meta line */}
               <div className="sb-meta">
                 <span className="sb-meta-line" aria-hidden />
-                <span>2026 · Milestones &amp; Media</span>
-              </div>
-
-            </div>{/* /sb-text-col */}
-
-            {/* ── BOOK COLUMN (30%) ──────────────────────────────── */}
-            <div className="sb-stage">
-
-              {/* Soft ending glow (fades in as book closes) */}
-              <div className="sb-glow" ref={glowRef} aria-hidden />
-
-            <div ref={bookRef} className="sb-book">
-
-              {/* Spine */}
-              <div className="sb-spine" aria-hidden>
-                <span className="sb-spine-txt">BRIHASPATHI · 2026</span>
-              </div>
-
-              {/* Ambient drop shadow */}
-              <div className="sb-shadow" aria-hidden />
-
-              {/* Back board (permanently behind all pages) */}
-              <div className="sb-backboard" aria-hidden />
-
-              {/* ══ PAGE 0 · FRONT COVER / CREAM INSERT ════════════ */}
-              <div ref={page0Ref} className="sb-page" style={{ zIndex: 4 }}>
-
-                {/* FRONT ─ img-1 (cover photo, full-bleed) */}
-                <div className="sb-half sb-half--f">
-                  <div className="sb-cover-shell">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/book-img-1.jpeg"
-                      alt="Brihaspathi – Cover Feature"
-                      className="sb-cover-img"
-                      draggable={false}
-                    />
-                    {/* gradient veil for text readability */}
-                    <div className="sb-cover-veil" aria-hidden />
-                    {/* text overlay */}
-                    <div className="sb-cover-text">
-                      <span className="sb-cover-year-badge">2026</span>
-                      <svg viewBox="0 0 230 60" className="sb-wordmark">
-                        <defs>
-                          <linearGradient id="cwg" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" stopColor="rgba(255,255,255,0.97)" />
-                            <stop offset="100%" stopColor="rgba(200,225,255,0.90)" />
-                          </linearGradient>
-                        </defs>
-                        <text x="50%" y="50%" dominantBaseline="middle"
-                          textAnchor="middle" fontFamily="Georgia,serif"
-                          fontWeight="700" fontSize="21" fill="url(#cwg)"
-                          letterSpacing="3.6">BRIHASPATHI</text>
-                        <line x1="22" y1="45" x2="208" y2="45"
-                          stroke="rgba(190,218,255,0.52)" strokeWidth="0.7" />
-                        <text x="50%" y="83%" textAnchor="middle"
-                          fontFamily="Georgia,serif" fontSize="8.5"
-                          fill="rgba(205,228,255,0.80)" letterSpacing="5.8">
-                          TECHNOLOGIES
-                        </text>
-                      </svg>
-                      <p className="sb-cover-sub">Milestones &amp; Media</p>
-                    </div>
-                    {/* subtle diagonal shine */}
-                    <div className="sb-shine" aria-hidden />
-                  </div>
-                </div>
-
-                {/* BACK ─ cream endpaper (inside of cover) */}
-                <div className="sb-half sb-half--b">
-                  <div className="sb-endpaper">
-                    <svg viewBox="0 0 90 90" width="70" height="70" className="sb-ep-svg">
-                      <circle cx="45" cy="45" r="40" fill="none"
-                        stroke="hsl(220,16%,72%)" strokeWidth="0.8" opacity=".5" />
-                      <circle cx="45" cy="45" r="30" fill="none"
-                        stroke="hsl(220,16%,72%)" strokeWidth="0.5" opacity=".4" />
-                      <line x1="45" y1="5" x2="45" y2="85"
-                        stroke="hsl(220,16%,72%)" strokeWidth="0.5" opacity=".4" />
-                      <line x1="5" y1="45" x2="85" y2="45"
-                        stroke="hsl(220,16%,72%)" strokeWidth="0.5" opacity=".4" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              {/* ══ PAGE 1 · INNER (img-2) / BACK COVER (img-3) ════ */}
-              <div ref={page1Ref} className="sb-page" style={{ zIndex: 2 }}>
-
-                {/* FRONT ─ img-2 inner editorial page */}
-                <div className="sb-half sb-half--f sb-half--paper">
-                  <div className="sb-mat">
-                    <div className="sb-mat-frame">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/book-img-2.jpeg"
-                        alt="Fortune India Aug 2026"
-                        className="sb-inner-img"
-                        draggable={false}
-                      />
-                      <p className="sb-inner-cap">Fortune India &bull; Aug 2026</p>
-                    </div>
-                  </div>
-                  <span className="sb-pnum sb-pnum--r">1</span>
-                </div>
-
-                {/* BACK ─ img-3 back cover (full-bleed) */}
-                <div className="sb-half sb-half--b">
-                  <div className="sb-back-shell">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="/book-img-3.jpeg"
-                      alt="Brihaspathi – Back Cover"
-                      className="sb-back-img"
-                      draggable={false}
-                    />
-                    <div className="sb-back-veil" aria-hidden />
-                    <div className="sb-back-text">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/btl-logo-color.png"
-                        alt="BTL"
-                        className="sb-back-logo"
-                      />
-                      <p className="sb-back-url">www.brihaspathi.com</p>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>{/* /sb-book */}
-
-            {/* ── Ending: #07518a closing card ───────────────────── */}
-            <div className="sb-close-card" ref={cardRef}>
-              <div className="sb-close-card-inner">
-                <span className="sb-close-tag">2026 · Milestones &amp; Media</span>
-                <div className="sb-close-word">BRIHASPATHI</div>
-                <div className="sb-close-rule" aria-hidden />
-                <h3 className="sb-close-title">The Story Continues</h3>
-                <p className="sb-close-body">
-                  Every milestone is a page turned — the next chapter is
-                  already being written.
-                </p>
-                <span className="sb-close-sub">TECHNOLOGIES</span>
+                <span>Fortune India · August 2026 Edition</span>
               </div>
             </div>
 
-          </div>{/* /sb-stage */}
+            {/* BOOK COLUMN */}
+            <div className="sb-stage">
+              <div className="sb-glow" ref={glowRef} aria-hidden />
 
-          </div>{/* /sb-layout */}
+              <div ref={bookRef} className="sb-book">
+                <div className="sb-spine" aria-hidden>
+                  <span className="sb-spine-txt">BRIHASPATHI · 2026</span>
+                </div>
+                <div className="sb-shadow" aria-hidden />
 
-          {/* ── Scroll progress bar ─────────────────────────────── */}
+                {/* BACKBOARD: Article Spread (Photo 3) */}
+                <div className="sb-backboard">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/book-img-3.jpeg"
+                    alt="Brihaspathi – Infrastructure Feature"
+                    className="sb-backboard-img"
+                    draggable={false}
+                  />
+                </div>
+
+                {/* PAGE 0 (FRONT COVER - Photo 1) */}
+                <div ref={page0Ref} className="sb-page" style={{ zIndex: 4 }}>
+                  <div className="sb-half sb-half--f">
+                    <div className="sb-cover-shell">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="/book-img-1.jpeg"
+                        alt="Brihaspathi – Cover Feature"
+                        className="sb-cover-img"
+                        draggable={false}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="sb-half sb-half--b">
+                    <div className="sb-endpaper">
+                      <div className="sb-ep-inner">
+                        <svg viewBox="0 0 100 100" width="56" height="56" className="sb-ep-svg">
+                          <circle cx="50" cy="50" r="44" fill="none" stroke="#07518a" strokeWidth="0.8" opacity="0.3" />
+                          <circle cx="50" cy="50" r="32" fill="none" stroke="#07518a" strokeWidth="0.5" opacity="0.25" />
+                          <path d="M50 15 L50 85 M15 50 L85 50" stroke="#07518a" strokeWidth="0.5" opacity="0.25" />
+                        </svg>
+                        <span className="sb-ep-brand">BRIHASPATHI</span>
+                        <span className="sb-ep-sub">FORTUNE INDIA · AUG 2026</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* PAGE 1 (INNER PAGE - Photo 2 / Fortune 40 Under 40) */}
+                <div ref={page1Ref} className="sb-page" style={{ zIndex: 2 }}>
+                  <div className="sb-half sb-half--f sb-half--paper">
+                    <div className="sb-mat">
+                      <div className="sb-mat-frame">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src="/book-img-2.jpeg"
+                          alt="Fortune India Aug 2026"
+                          className="sb-inner-img"
+                          draggable={false}
+                        />
+                        <p className="sb-inner-cap">Fortune India &bull; 40 Under 40</p>
+                      </div>
+                    </div>
+                    <span className="sb-pnum sb-pnum--r">1</span>
+                  </div>
+
+                  <div className="sb-half sb-half--b">
+                    <div className="sb-editorial-back">
+                      <div className="sb-ed-inner">
+                        <span className="sb-ed-tag">NATIONAL IMPACT</span>
+                        <div className="sb-ed-rule" />
+                        <p className="sb-ed-quote">
+                          &ldquo;90+ Government &amp; Enterprise Projects Across 15 Indian States&rdquo;
+                        </p>
+                        <span className="sb-ed-url">www.brihaspathi.com</span>
+                      </div>
+                      <span className="sb-pnum sb-pnum--l">2</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div className="sb-progress" aria-hidden>
             <div className="sb-progress-fill" id="sb-prog-fill" />
           </div>
 
-          {/* ── Scroll hint ─────────────────────────────────────── */}
-          <p className="sb-hint">Scroll to turn the pages</p>
+          <p className="sb-hint">Scroll inside to turn pages ↓</p>
+        </div>
+      </div>
 
-        </div>{/* /sb-sticky */}
-      </div>{/* /sb-wrap */}
-
-      {/* ══════════════════════════ STYLES ═══════════════════════════ */}
       <style>{`
-        /* ── Box sizing ────────────────────────────────────────────── */
-        .sb-wrap *, .sb-wrap *::before, .sb-wrap *::after {
+        .sb-outer *, .sb-outer *::before, .sb-outer *::after {
           box-sizing: border-box;
         }
 
-        /* ══ OUTER WRAPPER — 380vh (280vh pinned scroll travel + 100vh panel) ═ */
-        .sb-wrap {
+        /* ══ OUTER CONTAINER — 100vh with inner scroll ═══════════════ */
+        .sb-outer {
           position: relative;
           width: 100%;
-          height: 380vh;
+          height: 100vh;
+          height: 100dvh;
+          min-height: 520px;
+          overflow-y: auto;
+          overflow-x: hidden;
           background: #ffffff;
+          /* Custom styled inner scrollbar */
+          scrollbar-width: thin;
+          scrollbar-color: #07518a rgba(7,81,138,0.08);
+        }
+        .sb-outer::-webkit-scrollbar {
+          width: 8px;
+        }
+        .sb-outer::-webkit-scrollbar-track {
+          background: rgba(7, 81, 138, 0.08);
+          border-radius: 4px;
+        }
+        .sb-outer::-webkit-scrollbar-thumb {
+          background: #07518a;
+          border-radius: 4px;
+        }
+        .sb-outer::-webkit-scrollbar-thumb:hover {
+          background: #053a63;
         }
 
-        /* ══ STICKY PANEL — exactly 100vh visible area ══════════════ */
+        /* Phantom height — 450vh inner scroll space */
+        .sb-phantom {
+          position: absolute;
+          top: 0; left: 0;
+          width: 1px;
+          height: 450vh;
+          pointer-events: none;
+        }
+
+        /* Sticky panel stays fixed while inner scroll runs */
         .sb-sticky {
           position: sticky;
           top: 0;
@@ -536,7 +315,6 @@ export default function ScrollBook() {
           isolation: isolate;
         }
 
-        /* ── Subtle dot-grid texture (light, elegant) ──────────────── */
         .sb-bg-texture {
           position: absolute; inset: 0; pointer-events: none; z-index: 0;
           background-image: radial-gradient(
@@ -546,7 +324,6 @@ export default function ScrollBook() {
           opacity: .38;
         }
 
-        /* ══ SPLIT LAYOUT — text 70% / book 30% ═════════════════════ */
         .sb-layout {
           position: relative; z-index: 2;
           flex: 1;
@@ -559,7 +336,6 @@ export default function ScrollBook() {
           padding: clamp(.4rem, 1.5vh, 1rem) clamp(1rem, 4vw, 4rem);
         }
 
-        /* ── Text column (70%) ──────────────────────────────────────── */
         .sb-text-col {
           position: relative;
           width: 70%;
@@ -570,7 +346,6 @@ export default function ScrollBook() {
           align-items: flex-start;
         }
 
-        /* ── Header (left aligned) ──────────────────────────────────── */
         .sb-header {
           position: relative; z-index: 2;
           text-align: left;
@@ -605,13 +380,11 @@ export default function ScrollBook() {
         .sb-title-rule {
           width: clamp(48px, 7vw, 84px);
           height: 3px;
-          background: linear-gradient(to right,
-            #07518a, #2f9bd8, transparent);
+          background: linear-gradient(to right, #07518a, #2f9bd8, transparent);
           border-radius: 2px;
           margin-top: .15rem;
         }
 
-        /* ── Stage captions (crossfade per zone) ────────────────────── */
         .sb-caps {
           position: relative;
           flex: 1;
@@ -659,7 +432,6 @@ export default function ScrollBook() {
           line-height: 1.7;
         }
 
-        /* ── Stage dots ─────────────────────────────────────────────── */
         .sb-dots {
           display: flex;
           align-items: center;
@@ -678,7 +450,6 @@ export default function ScrollBook() {
           background: #07518a;
         }
 
-        /* ── Meta line ──────────────────────────────────────────────── */
         .sb-meta {
           display: flex;
           align-items: center;
@@ -696,7 +467,6 @@ export default function ScrollBook() {
           opacity: .55;
         }
 
-        /* ── Book column / stage (30%) ──────────────────────────────── */
         .sb-stage {
           position: relative; z-index: 2;
           width: 30%;
@@ -709,7 +479,6 @@ export default function ScrollBook() {
           overflow: visible;
         }
 
-        /* ── Ending glow (behind the closed book) ───────────────────── */
         .sb-glow {
           position: absolute;
           top: 50%; left: 50%;
@@ -727,113 +496,17 @@ export default function ScrollBook() {
           opacity: 0;
         }
 
-        /* ── Ending: #07518a closing card ──────────────────────────── */
-        .sb-close-card {
-          position: absolute;
-          top: 50%; left: 50%;
-          transform: translate(-50%, -50%);
-          z-index: 9;
-          width: min(88%, 320px);
-          aspect-ratio: 3 / 4;
-          border-radius: 14px;
-          opacity: 0;
-          pointer-events: none;
-          background:
-            radial-gradient(120% 90% at 80% -10%,
-              rgba(255,255,255,.14) 0%, transparent 50%),
-            linear-gradient(158deg,
-              #07518a 0%, #053a63 55%, #032b4c 100%);
-          box-shadow:
-            0 30px 70px rgba(3,32,61,.38),
-            0 10px 24px rgba(3,32,61,.25),
-            inset 0 1px 0 rgba(255,255,255,.16);
-          border: 1px solid rgba(150,200,255,.16);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: clamp(1.2rem, 3vmin, 2rem);
-        }
-        .sb-close-card::before {
-          content: "";
-          position: absolute; inset: 10px;
-          border: 1px solid rgba(255,255,255,.10);
-          border-radius: 8px;
-          pointer-events: none;
-        }
-        .sb-close-card-inner {
-          position: relative;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-          gap: .5rem;
-          padding: .5rem;
-          animation: sbfloat 5.5s ease-in-out infinite;
-        }
-        @keyframes sbfloat {
-          0%,100% { transform: translateY(-4px); }
-          50%     { transform: translateY(4px); }
-        }
-        .sb-close-tag {
-          font-family: Georgia, serif;
-          font-size: clamp(.5rem, 1.1vw, .62rem);
-          letter-spacing: .34em;
-          text-transform: uppercase;
-          color: rgba(210,232,255,.75);
-        }
-        .sb-close-word {
-          font-family: Georgia, serif;
-          font-weight: 700;
-          font-size: clamp(1rem, 2.4vw, 1.4rem);
-          letter-spacing: .34em;
-          color: #ffffff;
-        }
-        .sb-close-rule {
-          width: 54px; height: 1px;
-          background: linear-gradient(to right,
-            transparent, #ffd88a, transparent);
-          margin: .1rem 0;
-        }
-        .sb-close-title {
-          margin: 0;
-          font-family: Georgia, serif;
-          font-style: italic;
-          font-size: clamp(1.1rem, 2.6vw, 1.6rem);
-          color: #ffe9b8;
-          line-height: 1.2;
-        }
-        .sb-close-body {
-          margin: 0;
-          max-width: 24ch;
-          font-family: Georgia, serif;
-          font-size: clamp(.68rem, 1.4vw, .82rem);
-          color: rgba(235,244,255,.85);
-          line-height: 1.6;
-        }
-        .sb-close-sub {
-          font-family: Georgia, serif;
-          font-size: clamp(.46rem, 1vw, .56rem);
-          letter-spacing: .42em;
-          text-transform: uppercase;
-          color: rgba(190,220,255,.62);
-          margin-top: .2rem;
-        }
-
-        /* ── Book ────────────────────────────────────────────────────── */
         .sb-book {
           position: relative;
-          /* A4 ratio 1:1.41  — tall book format, sized for 30% column */
           height: min(66vh, 66dvh, 560px);
           width:  min(46vh, 46dvh, 382px);
           min-height: 280px;
           min-width:  200px;
           transform-style: preserve-3d;
           transform-origin: center center;
-          /* entry state — GSAP animates opacity/scale in */
           opacity: 0;
         }
 
-        /* ── Spine ───────────────────────────────────────────────────── */
         .sb-spine {
           position: absolute;
           height: 100%; left: 0; top: 0; width: 18px;
@@ -858,7 +531,6 @@ export default function ScrollBook() {
           white-space: nowrap;
         }
 
-        /* ── Book shadow (on white bg) ───────────────────────────────── */
         .sb-shadow {
           position: absolute;
           bottom: -28px; left: 4%; width: 92%; height: 28px;
@@ -868,21 +540,22 @@ export default function ScrollBook() {
           z-index: -1; pointer-events: none;
         }
 
-        /* ── Back board ──────────────────────────────────────────────── */
         .sb-backboard {
           position: absolute; inset: 0;
           border-radius: 2px 9% 9% 2px;
-          background:
-            linear-gradient(145deg,
-              rgba(12,18,32,.62) 0%, rgba(8,12,22,.88) 100%),
-            url('/book-img-3.jpeg') center / cover no-repeat;
+          overflow: hidden;
+          background: #fafafa;
           z-index: 0;
           box-shadow:
             4px 6px 40px rgba(0,0,0,.18),
-            1px 1px 0   rgba(255,255,255,.04) inset;
+            1px 1px 0 rgba(255,255,255,.04) inset;
+        }
+        .sb-backboard-img {
+          width: 100%; height: 100%;
+          object-fit: cover; display: block;
+          user-select: none; pointer-events: none;
         }
 
-        /* ── Pages ───────────────────────────────────────────────────── */
         .sb-page {
           position: absolute; inset: 0;
           transform-style: preserve-3d;
@@ -891,7 +564,6 @@ export default function ScrollBook() {
           will-change: transform;
         }
 
-        /* ── Page halves ─────────────────────────────────────────────── */
         .sb-half {
           position: absolute; inset: 0;
           backface-visibility: hidden;
@@ -900,7 +572,6 @@ export default function ScrollBook() {
           display: flex; align-items: center; justify-content: center;
         }
 
-        /* Front half — default face */
         .sb-half--f {
           transform: rotateY(0deg);
           border-radius: 2px 9% 9% 2px;
@@ -910,17 +581,15 @@ export default function ScrollBook() {
             inset -1px 0 0 rgba(0,0,0,.06);
         }
 
-        /* Back half — pre-rotated so it shows correctly when page flips */
         .sb-half--b {
           transform: rotateY(180deg);
           border-radius: 9% 2px 2px 9%;
-          background: hsl(220,15%,96%);
+          background: hsl(44,28%,96%);
           box-shadow:
             -2px 0 20px rgba(0,0,0,.09),
             inset 1px 0 0 rgba(0,0,0,.06);
         }
 
-        /* Warm ruled paper for inner page */
         .sb-half--paper {
           background:
             repeating-linear-gradient(
@@ -932,7 +601,6 @@ export default function ScrollBook() {
             hsl(44,30%,98%);
         }
 
-        /* ══ FRONT COVER ─────────────────────────────────────────────── */
         .sb-cover-shell {
           position: absolute; inset: 0;
           overflow: hidden;
@@ -942,10 +610,7 @@ export default function ScrollBook() {
           width: 100%; height: 100%;
           object-fit: cover; display: block;
           user-select: none; pointer-events: none;
-          transform: scale(1.05);
-          transition: transform 10s ease;
         }
-        .sb-cover-shell:hover .sb-cover-img { transform: scale(1.10); }
         .sb-cover-veil {
           position: absolute; inset: 0;
           background:
@@ -996,25 +661,35 @@ export default function ScrollBook() {
           pointer-events: none;
         }
 
-        /* ══ ENDPAPER (inside front cover) — photographic preview ─────── */
         .sb-endpaper {
           position: relative;
           width: 100%; height: 100%;
-          overflow: hidden;
           border-radius: 9% 2px 2px 9%;
-          background: url('/book-img-2.jpeg') center / cover no-repeat;
+          background: hsl(44, 30%, 96%);
           display: flex; align-items: center; justify-content: center;
+          padding: 1.5rem;
         }
-        /* soft cream veil so it reads as an endpaper, not a duplicate page */
-        .sb-endpaper::before {
-          content: "";
-          position: absolute; inset: 0;
-          background: hsl(44,30%,95%);
-          opacity: .82;
+        .sb-ep-inner {
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          gap: .5rem; text-align: center;
         }
-        .sb-ep-svg { position: relative; z-index: 1; display: block; }
+        .sb-ep-svg { display: block; }
+        .sb-ep-brand {
+          font-family: Georgia, serif;
+          font-weight: 700;
+          font-size: clamp(.7rem, 1.4vw, .95rem);
+          letter-spacing: .35em;
+          color: #07518a;
+          margin-top: .3rem;
+        }
+        .sb-ep-sub {
+          font-family: Georgia, serif;
+          font-size: clamp(.45rem, .9vw, .6rem);
+          letter-spacing: .4em;
+          color: hsl(220,16%,55%);
+        }
 
-        /* ══ INNER PAGE (img-2) ──────────────────────────────────────── */
         .sb-mat {
           width: 88%; height: 88%;
           display: flex; align-items: center; justify-content: center;
@@ -1039,9 +714,7 @@ export default function ScrollBook() {
           width: 100%; height: 100%;
           object-fit: cover; display: block;
           user-select: none; pointer-events: none;
-          transition: transform 8s ease;
         }
-        .sb-mat-frame:hover .sb-inner-img { transform: scale(1.04); }
         .sb-inner-cap {
           position: absolute;
           bottom: 0; left: 0; right: 0;
@@ -1054,6 +727,48 @@ export default function ScrollBook() {
           letter-spacing: .04em;
           margin: 0;
         }
+
+        .sb-editorial-back {
+          position: relative;
+          width: 100%; height: 100%;
+          border-radius: 9% 2px 2px 9%;
+          background: hsl(44, 28%, 95%);
+          display: flex; align-items: center; justify-content: center;
+          padding: clamp(1rem, 2.5vmin, 2rem);
+        }
+        .sb-ed-inner {
+          display: flex; flex-direction: column;
+          align-items: center; justify-content: center;
+          text-align: center; gap: .6rem;
+        }
+        .sb-ed-tag {
+          font-family: Georgia, serif;
+          font-size: clamp(.48rem, 1vw, .62rem);
+          letter-spacing: .38em;
+          color: #07518a;
+          font-weight: 700;
+        }
+        .sb-ed-rule {
+          width: 40px; height: 1.5px;
+          background: #07518a; opacity: 0.5;
+        }
+        .sb-ed-quote {
+          margin: 0;
+          font-family: Georgia, serif;
+          font-style: italic;
+          font-size: clamp(.72rem, 1.4vw, .95rem);
+          color: hsl(220, 22%, 24%);
+          line-height: 1.5;
+          max-width: 22ch;
+        }
+        .sb-ed-url {
+          font-family: Georgia, serif;
+          font-size: clamp(.42rem, .85vw, .55rem);
+          letter-spacing: .3em;
+          color: hsl(220, 16%, 50%);
+          text-transform: uppercase;
+        }
+
         .sb-pnum {
           position: absolute; bottom: .65rem;
           font-family: Georgia, serif;
@@ -1062,50 +777,8 @@ export default function ScrollBook() {
           z-index: 5; pointer-events: none;
         }
         .sb-pnum--r { right: .8rem; }
+        .sb-pnum--l { left: .8rem; }
 
-        /* ══ BACK COVER (img-3) ──────────────────────────────────────── */
-        .sb-back-shell {
-          position: absolute; inset: 0;
-          overflow: hidden;
-          border-radius: 9% 2px 2px 9%;
-        }
-        .sb-back-img {
-          width: 100%; height: 100%;
-          object-fit: cover; display: block;
-          user-select: none; pointer-events: none;
-          transform: scale(1.05);
-          transition: transform 10s ease;
-        }
-        .sb-back-shell:hover .sb-back-img { transform: scale(1.10); }
-        .sb-back-veil {
-          position: absolute; inset: 0;
-          background: linear-gradient(to top,
-            rgba(4,8,18,.82) 0%,
-            rgba(4,8,18,.28) 50%,
-            rgba(4,8,18,.08) 100%);
-        }
-        .sb-back-text {
-          position: absolute; inset: 0;
-          display: flex; flex-direction: column;
-          align-items: center; justify-content: flex-end;
-          padding: clamp(.9rem, 3vmin, 2rem);
-          gap: .5rem;
-        }
-        .sb-back-logo {
-          width: min(42%,100px);
-          object-fit: contain; opacity: .92;
-          filter: drop-shadow(0 2px 14px rgba(0,0,0,.55));
-        }
-        .sb-back-url {
-          margin: 0;
-          font-family: Georgia, serif;
-          font-size: clamp(.37rem,.88vmin,.6rem);
-          letter-spacing: .32em;
-          text-transform: uppercase;
-          color: rgba(185,215,255,.62);
-        }
-
-        /* ── Progress bar ────────────────────────────────────────────── */
         .sb-progress {
           position: absolute;
           bottom: 0; left: 0; right: 0;
@@ -1117,13 +790,11 @@ export default function ScrollBook() {
         .sb-progress-fill {
           height: 100%;
           width: 0%;
-          background: linear-gradient(to right,
-            #07518a, #2f9bd8);
+          background: linear-gradient(to right, #07518a, #2f9bd8);
           border-radius: 0 2px 2px 0;
           transition: width .15s linear;
         }
 
-        /* ── Scroll hint ─────────────────────────────────────────────── */
         .sb-hint {
           position: relative; z-index: 3;
           margin: 0;
@@ -1142,7 +813,6 @@ export default function ScrollBook() {
           50%      { opacity: 1;   }
         }
 
-        /* ── Responsive ──────────────────────────────────────────────── */
         @media (max-width: 900px) {
           .sb-layout {
             flex-direction: column;
@@ -1173,18 +843,12 @@ export default function ScrollBook() {
             min-height: 0;
             min-width:  0;
           }
-          .sb-close-card {
-            width: min(60%, 270px);
-          }
         }
         @media (max-width: 480px) {
           .sb-title { font-size: clamp(1.3rem, 6vw, 1.7rem); }
           .sb-book {
             height: min(46vh,46dvh,360px);
             width:  min(33vh,33dvh,255px);
-          }
-          .sb-close-card {
-            width: min(66%, 240px);
           }
         }
         @media (max-height: 560px) and (orientation: landscape) {
@@ -1194,12 +858,8 @@ export default function ScrollBook() {
             height: min(72vh,72dvh,330px);
             width:  min(51vh,51dvh,232px);
           }
-          .sb-close-card {
-            width: min(42vh, 230px);
-          }
         }
 
-        /* dvh override */
         @supports (height: 100dvh) {
           .sb-sticky { height: 100dvh; }
         }
