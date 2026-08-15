@@ -17,6 +17,7 @@ import Achivements from "./components/Achivements";
 import AwardsCarousel from "./components/scroll";
 import image_from from "./components/ET Industry Achievers - Post Event 26-03-2026-12.png";
 import PremiumButton from "./components/button";
+import ScrollBook from "../components/book";
 
 /* =========================================
   Types & Data
@@ -357,7 +358,7 @@ export default function Page() {
         <motion.div {...sectionReveal}>
           {/* <AwardsSection /> */}
         </motion.div>
-
+        <ScrollBook />
       </main>
     </div>
   );

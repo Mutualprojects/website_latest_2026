@@ -30,6 +30,7 @@ import SpaceWebsite from '@/components/SpaceWebsite'
 import IndiaBranchesMap from '@/components/homeabout/Indiabranch'
 import TeamCarousel from '../our-team/TeamCarousel'
 import AboutEnterpriseScroll from '@/components/AboutHeroSection'
+import ScrollBook from './components/book'
 
 const localBusinessSchema = {
   "@context": "https://schema.org",
@@ -203,6 +204,7 @@ function page() {
       {/* <WhatWeDoSection/> */}
       <TeamCarousel />
       <OurJourney />
+      <ScrollBook />
 
       {/* 
 <div className="card card-sm bg-base-200 max-w-60 shadow">
