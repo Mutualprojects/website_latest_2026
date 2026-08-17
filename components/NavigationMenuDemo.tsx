@@ -535,11 +535,11 @@ export function NavigationMenuDemo() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-[92vw] max-w-6xl z-[1100] whitespace-normal"
+                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2.5 w-[96vw] max-w-[85rem] z-[1100] whitespace-normal"
                     >
-                      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex">
-                        <div className="flex-1 p-6 flex flex-col justify-between max-h-[70vh] overflow-y-auto">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-3.5 content-start">
+                      <div className="bg-white/98 backdrop-blur-xl rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] border border-gray-100/90 overflow-hidden flex transition-all">
+                        <div className="flex-1 p-6 lg:p-7 flex flex-col justify-between max-h-[75vh] overflow-y-auto">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3.5 content-start">
                             {finalProductsList.map((product) => (
                               <motion.div
                                 key={product.slug}
@@ -550,13 +550,13 @@ export function NavigationMenuDemo() {
                                 <Link
                                   href={getProductHref(product.slug)}
                                   onClick={() => setShowProductsMenu(false)}
-                                  className="group flex items-start gap-3.5 p-3.5 rounded-xl hover:bg-[#07518a]/5 transition-all duration-200 border border-transparent hover:border-[#07518a]/10 h-full"
+                                  className="group flex items-start gap-3.5 p-3.5 rounded-xl hover:bg-gradient-to-br hover:from-slate-50/80 hover:to-[#07518a]/[0.06] transition-all duration-300 border border-transparent hover:border-[#07518a]/15 hover:shadow-md hover:shadow-[#07518a]/5 hover:-translate-y-0.5 h-full"
                                 >
                                   {/* Product Image or Lucide Icon */}
                                   <ProductIconOrImage bannerImage={product.bannerImage} name={product.name} slug={product.slug} size="large" />
                                   {/* Product Text */}
                                   <div className="flex-1 min-w-0">
-                                    <h4 className="font-semibold text-gray-900 group-hover:text-[#07518a] transition-colors text-xs sm:text-sm mb-1 leading-snug whitespace-normal break-words">
+                                    <h4 className="font-bold text-gray-900 group-hover:text-[#07518a] transition-colors text-xs sm:text-sm mb-1 leading-snug whitespace-normal break-words">
                                       {product.name}
                                     </h4>
                                     <p className="text-[11px] text-gray-500 line-clamp-2 group-hover:text-gray-600 leading-relaxed whitespace-normal break-words">
@@ -569,8 +569,8 @@ export function NavigationMenuDemo() {
                           </div>
 
                           {/* Footer Link for All Products */}
-                          <div className="pt-4 mt-4 border-t border-gray-100 flex items-center justify-between shrink-0">
-                            <span className="text-[11px] font-medium text-gray-500">
+                          <div className="pt-4 mt-4 border-t border-gray-100/80 flex items-center justify-between shrink-0">
+                            <span className="text-[11px] font-semibold text-gray-500">
                               Explore all solutions &amp; products
                             </span>
                             <Link
@@ -589,30 +589,30 @@ export function NavigationMenuDemo() {
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: 0.2 }}
-                          className="w-[280px] shrink-0 relative overflow-hidden flex flex-col border-l border-gray-100 bg-gradient-to-b from-gray-50/50 to-white"
+                          className="w-[320px] lg:w-[340px] shrink-0 relative overflow-hidden flex flex-col border-l border-gray-100/80 bg-gradient-to-b from-slate-50/60 via-white to-slate-50/40"
                         >
-                          <div className="relative z-10 flex flex-col h-full p-6">
+                          <div className="relative z-10 flex flex-col h-full p-6 lg:p-7">
                             {/* Top Section with Rectangular Image */}
                             <div className="space-y-3">
-                              <h4 className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.3em]">
+                              <h4 className="text-[9px] font-extrabold text-[#07518a]/70 uppercase tracking-[0.3em]">
                                 BTL Products
                               </h4>
                               <motion.div
                                 whileHover={{ scale: 1.02 }}
-                                className="relative aspect-[21/9] w-full rounded-lg overflow-hidden border border-gray-100 shadow-md"
+                                className="relative aspect-[21/9] w-full rounded-xl overflow-hidden border border-gray-100 shadow-md"
                               >
                                 <Image
                                   src="/colorful-illustration-computer-with-graphic-all-way-logo.png"
                                   alt="BTL Products"
                                   fill
-                                  sizes="300px"
+                                  sizes="340px"
                                   className="object-cover"
                                 />
                               </motion.div>
                             </div>
 
                             {/* Bottom Aligned Content */}
-                            <div className="mt-auto space-y-4">
+                            <div className="mt-auto space-y-4 pt-4">
                               <div className="space-y-3">
                                 <h5 className="text-[13px] font-bold text-[#07518a] flex items-center gap-2">
                                   Quality & Innovation
@@ -621,7 +621,7 @@ export function NavigationMenuDemo() {
                                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#07518a]"></span>
                                   </span>
                                 </h5>
-                                <p className="text-[9px] text-gray-600 leading-relaxed font-medium">
+                                <p className="text-[10px] text-gray-600 leading-relaxed font-medium">
                                   Engineering high-performance AI intelligence.
                                 </p>
                                 <div className="flex flex-wrap gap-1.5 pt-1">
@@ -629,7 +629,7 @@ export function NavigationMenuDemo() {
                                     (tag) => (
                                       <span
                                         key={tag}
-                                        className="text-[8px] font-bold bg-white text-[#07518a] px-2 py-0.5 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default"
+                                        className="text-[8.5px] font-bold bg-white text-[#07518a] px-2.5 py-0.5 rounded-full border border-[#07518a]/15 shadow-sm transition-all cursor-default hover:scale-105"
                                       >
                                         {tag}
                                       </span>
@@ -675,11 +675,11 @@ export function NavigationMenuDemo() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-[92vw] max-w-5xl z-[1100] whitespace-normal"
+                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2.5 w-[96vw] max-w-[85rem] z-[1100] whitespace-normal"
                     >
-                      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex">
-                        <div className="flex-1 p-6">
-                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-2">
+                      <div className="bg-white/98 backdrop-blur-xl rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] border border-gray-100/90 overflow-hidden flex transition-all">
+                        <div className="flex-1 p-6 lg:p-7 max-h-[75vh] overflow-y-auto">
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
                             {Object.entries(groupedSolutions).map(
                               ([category, items]) => (
                                 <motion.div
@@ -688,10 +688,10 @@ export function NavigationMenuDemo() {
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{ duration: 0.3 }}
                                 >
-                                  <h4 className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-2 px-3">
+                                  <h4 className="text-[10px] font-extrabold text-[#07518a]/80 uppercase tracking-widest mb-2.5 px-3">
                                     {category}
                                   </h4>
-                                  <ul className="space-y-0.5">
+                                  <ul className="space-y-1">
                                     {items.map((item) => {
                                       const Icon = getSolutionIcon(
                                         item.category
@@ -703,18 +703,18 @@ export function NavigationMenuDemo() {
                                             onClick={() =>
                                               setShowSolutionsMenu(false)
                                             }
-                                            className="group block p-2.5 rounded-xl hover:bg-[#07518a]/5 transition-all duration-200"
+                                            className="group block p-3 rounded-xl hover:bg-gradient-to-r hover:from-slate-50/80 hover:to-[#07518a]/[0.06] border border-transparent hover:border-[#07518a]/15 hover:shadow-md hover:shadow-[#07518a]/5 hover:-translate-y-0.5 transition-all duration-300"
                                           >
-                                            <div className="flex items-center gap-3">
-                                              <div className="w-8 h-8 rounded-lg bg-[#07518a]/5 flex items-center justify-center text-[#07518a] group-hover:bg-[#07518a] group-hover:text-white transition-all duration-300">
-                                                <Icon className="w-4 h-4" />
+                                            <div className="flex items-center gap-3.5">
+                                              <div className="w-9 h-9 rounded-xl bg-[#07518a]/5 flex items-center justify-center text-[#07518a] group-hover:bg-[#07518a] group-hover:text-white group-hover:scale-105 transition-all duration-300 shadow-sm">
+                                                <Icon className="w-4.5 h-4.5" />
                                               </div>
                                               <div className="flex-1 min-w-0">
-                                                <div className="font-semibold text-gray-800 group-hover:text-[#07518a] transition-colors text-[13px] truncate">
+                                                <div className="font-bold text-gray-800 group-hover:text-[#07518a] transition-colors text-[13px] truncate">
                                                   {item.name}
                                                 </div>
                                               </div>
-                                              <ArrowRight className="w-3.5 h-3.5 text-[#07518a] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200 flex-shrink-0" />
+                                              <ArrowRight className="w-4 h-4 text-[#07518a] opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 flex-shrink-0" />
                                             </div>
                                           </Link>
                                         </li>
@@ -732,30 +732,30 @@ export function NavigationMenuDemo() {
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: 0.2 }}
-                          className="w-[300px] relative overflow-hidden flex flex-col border-l border-gray-100 bg-gradient-to-b from-gray-50/50 to-white"
+                          className="w-[320px] lg:w-[340px] shrink-0 relative overflow-hidden flex flex-col border-l border-gray-100/80 bg-gradient-to-b from-slate-50/60 via-white to-slate-50/40"
                         >
-                          <div className="relative z-10 flex flex-col h-full p-6">
+                          <div className="relative z-10 flex flex-col h-full p-6 lg:p-7">
                             {/* Top Section with Rectangular Image */}
                             <div className="space-y-3">
-                              <h4 className="text-[9px] font-bold text-gray-400 uppercase tracking-[0.3em]">
+                              <h4 className="text-[9px] font-extrabold text-[#07518a]/70 uppercase tracking-[0.3em]">
                                 BTL Solutions
                               </h4>
                               <motion.div
                                 whileHover={{ scale: 1.02 }}
-                                className="relative aspect-[21/9] w-full rounded-lg overflow-hidden border border-gray-100 shadow-md"
+                                className="relative aspect-[21/9] w-full rounded-xl overflow-hidden border border-gray-100 shadow-md"
                               >
                                 <Image
                                   src="/hand-holding-bright-light-bulb-with-gears-symbolizing-innovation-creative-ideas-vector-illustration.png"
                                   alt="BTL Solutions"
                                   fill
-                                  sizes="300px"
+                                  sizes="340px"
                                   className="object-cover"
                                 />
                               </motion.div>
                             </div>
 
                             {/* Bottom Aligned Content */}
-                            <div className="mt-auto space-y-4">
+                            <div className="mt-auto space-y-4 pt-4">
                               <div className="space-y-2">
                                 <h5 className="text-[13px] font-bold text-[#07518a] flex items-center gap-2">
                                   Integrated Intelligence
@@ -764,7 +764,7 @@ export function NavigationMenuDemo() {
                                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#07518a]"></span>
                                   </span>
                                 </h5>
-                                <p className="text-[9px] text-gray-600 leading-relaxed font-medium">
+                                <p className="text-[10px] text-gray-600 leading-relaxed font-medium">
                                   Smart solutions for enterprise & gov.
                                 </p>
                                 <div className="flex flex-wrap gap-1.5 pt-1">
@@ -772,7 +772,7 @@ export function NavigationMenuDemo() {
                                     (tag) => (
                                       <span
                                         key={tag}
-                                        className="text-[8px] font-bold bg-white text-[#07518a] px-2 py-0.5 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default"
+                                        className="text-[8.5px] font-bold bg-white text-[#07518a] px-2.5 py-0.5 rounded-full border border-[#07518a]/15 shadow-sm transition-all cursor-default hover:scale-105"
                                       >
                                         {tag}
                                       </span>
@@ -818,24 +818,24 @@ export function NavigationMenuDemo() {
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: -10, scale: 0.95 }}
                       transition={{ duration: 0.2, ease: "easeOut" }}
-                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2 w-[92vw] max-w-7xl z-[1100] whitespace-normal"
+                      className="absolute left-1/2 -translate-x-1/2 top-full pt-2.5 w-[96vw] max-w-[85rem] z-[1100] whitespace-normal"
                     >
-                      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden flex">
-                        <div className="flex-1 p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-2 content-start">
+                      <div className="bg-white/98 backdrop-blur-xl rounded-2xl shadow-[0_25px_60px_-15px_rgba(0,0,0,0.15)] border border-gray-100/90 overflow-hidden flex transition-all">
+                        <div className="flex-1 p-6 lg:p-7 max-h-[75vh] overflow-y-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 content-start">
                           {RESOURCES_MENU.map((item, index) => (
                             <motion.div
                               key={item.id}
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: index * 0.03 }}
+                              transition={{ delay: index * 0.025 }}
                             >
                               <Link
                                 href={item.href}
                                 onClick={() => setShowResourcesMenu(false)}
-                                className="group flex items-start gap-4 p-3.5 rounded-xl hover:bg-[#07518a]/5 transition-all duration-300 relative overflow-hidden border border-transparent hover:border-[#07518a]/10"
+                                className="group flex items-start gap-4 p-3.5 rounded-xl hover:bg-gradient-to-br hover:from-slate-50/80 hover:to-[#07518a]/[0.06] transition-all duration-300 relative overflow-hidden border border-transparent hover:border-[#07518a]/15 hover:shadow-md hover:shadow-[#07518a]/5 hover:-translate-y-0.5"
                               >
                                 <div className="absolute left-0 top-0 bottom-0 w-1 bg-[#07518a] -translate-x-full group-hover:translate-x-0 transition-transform duration-300" />
-                                <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-[#07518a]/5 flex items-center justify-center text-[#07518a] group-hover:bg-[#07518a] group-hover:text-white transition-all duration-300 transform group-hover:scale-110">
+                                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-[#07518a]/5 flex items-center justify-center text-[#07518a] group-hover:bg-[#07518a] group-hover:text-white transition-all duration-300 transform group-hover:scale-105 shadow-sm">
                                   <item.icon className="w-5 h-5" />
                                 </div>
                                 <div className="flex-1 min-w-0">
@@ -856,12 +856,12 @@ export function NavigationMenuDemo() {
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
                           transition={{ duration: 0.4, delay: 0.2 }}
-                          className="w-[280px] relative overflow-hidden flex flex-col border-l border-gray-100 bg-gradient-to-b from-gray-50/50 to-white"
+                          className="w-[320px] lg:w-[340px] shrink-0 relative overflow-hidden flex flex-col border-l border-gray-100/80 bg-gradient-to-b from-slate-50/60 via-white to-slate-50/40"
                         >
-                          <div className="relative z-10 flex flex-col h-full p-8">
+                          <div className="relative z-10 flex flex-col h-full p-6 lg:p-7">
                             {/* Top Section with Rectangular Image */}
-                            <div className="space-y-4">
-                              <h4 className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.3em]">
+                            <div className="space-y-3">
+                              <h4 className="text-[9px] font-extrabold text-[#07518a]/70 uppercase tracking-[0.3em]">
                                 About BTL
                               </h4>
                               <motion.div
@@ -872,34 +872,34 @@ export function NavigationMenuDemo() {
                                   src="/3083.jpg"
                                   alt="BTL Technology"
                                   fill
-                                  sizes="280px"
+                                  sizes="340px"
                                   className="object-cover"
                                 />
                               </motion.div>
                             </div>
 
                             {/* Bottom Aligned Content */}
-                            <div className="mt-auto space-y-8">
-                              <div className="space-y-6">
+                            <div className="mt-auto space-y-6 pt-4">
+                              <div className="space-y-4">
                                 <motion.div
-                                  whileHover={{ scale: 1.05 }}
-                                  className="relative h-14 w-full flex items-center justify-start"
+                                  whileHover={{ scale: 1.03 }}
+                                  className="relative h-12 w-full flex items-center justify-start"
                                 >
                                   <Image
                                     src="/highbtlogo-tm-1.png"
                                     alt="BTL Logo"
                                     width={180}
                                     height={50}
-                                    className="w-auto h-full max-h-12 object-contain"
+                                    className="w-auto h-full max-h-11 object-contain"
                                   />
                                 </motion.div>
 
-                                <div className="space-y-4">
-                                  <h5 className="text-[15px] font-bold text-[#07518a] flex items-center gap-3">
+                                <div className="space-y-3">
+                                  <h5 className="text-[14px] font-bold text-[#07518a] flex items-center gap-2.5">
                                     Intelligence in Motion
-                                    <span className="relative flex h-2 w-2">
+                                    <span className="relative flex h-1.5 w-1.5">
                                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#07518a] opacity-75"></span>
-                                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#07518a]"></span>
+                                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#07518a]"></span>
                                     </span>
                                   </h5>
                                   <p className="text-[10px] text-gray-600 leading-relaxed font-medium">
@@ -907,12 +907,12 @@ export function NavigationMenuDemo() {
                                     for a smarter and safer future.
                                   </p>
 
-                                  <div className="flex flex-wrap gap-2 pt-2">
+                                  <div className="flex flex-wrap gap-1.5 pt-1">
                                     {["AI Solutions", "Surveillance", "Innovation"].map(
                                       (tag) => (
                                         <span
                                           key={tag}
-                                          className="text-[9px] font-bold bg-white text-[#07518a] px-3 py-1 rounded-full border border-[#07518a]/10 shadow-sm transition-all cursor-default"
+                                          className="text-[8.5px] font-bold bg-white text-[#07518a] px-2.5 py-0.5 rounded-full border border-[#07518a]/15 shadow-sm transition-all cursor-default hover:scale-105"
                                         >
                                           {tag}
                                         </span>
@@ -926,7 +926,7 @@ export function NavigationMenuDemo() {
                                 <Link
                                   href="/brochure"
                                   onClick={() => setShowResourcesMenu(false)}
-                                  className="w-full py-3.5 px-4 bg-[#07518a] text-white rounded-xl text-sm font-bold shadow-lg shadow-[#07518a]/20 hover:shadow-xl hover:shadow-[#07518a]/30 transition-all flex items-center justify-center gap-2 group overflow-hidden relative"
+                                  className="w-full py-3 px-4 bg-[#07518a] text-white rounded-xl text-xs font-bold shadow-lg shadow-[#07518a]/20 hover:shadow-xl hover:shadow-[#07518a]/30 transition-all flex items-center justify-center gap-2 group overflow-hidden relative"
                                 >
                                   <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-500 skew-x-[-20deg]" />
                                   <span className="relative z-10">

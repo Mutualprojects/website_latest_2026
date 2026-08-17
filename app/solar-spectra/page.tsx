@@ -285,7 +285,7 @@ const GlassPanel = memo(function GlassPanel({
     return (
         <div
             id={id}
-            className={`relative mx-4 sm:mx-8 lg:mx-0 lg:ml-10 xl:ml-20 my-10 sm:my-14 lg:my-24 max-w-2xl rounded-[28px] border border-slate-200 bg-white/90 backdrop-blur-sm shadow-md px-6 sm:px-9 py-9 sm:py-12 text-slate-900 ${className}`}
+            className={`relative mx-4 sm:mx-8 lg:mx-0 lg:ml-10 xl:ml-20 my-10 sm:my-14 lg:my-24 max-w-3xl lg:max-w-[48rem] xl:max-w-[52rem] rounded-[32px] border border-white/60 bg-white/45 backdrop-blur-xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] px-7 sm:px-10 py-8 sm:py-11 text-slate-900 ${className}`}
         >
             {children}
         </div>
@@ -621,8 +621,8 @@ export default function MMRPage() {
             className={`${display.variable} ${body.variable} ${mono.variable} min-h-screen bg-white text-slate-900 selection:bg-[#07518a] selection:text-white`}
             style={{ fontFamily: "var(--font-body)" }}
         >
-            {/* Stack with sticky background */}
-            <div ref={stackRef} className="relative grid grid-cols-1">
+            {/* Full-Width Interactive 3D Showcase with Sticky Background */}
+            <div ref={stackRef} className="relative grid grid-cols-1 h-[300vh]">
                 {/* Live background layer */}
                 <div
                     ref={heroFrameRef}
@@ -640,7 +640,7 @@ export default function MMRPage() {
                         className="object-cover"
                         sizes="100vw"
                         placeholder="blur"
-                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCcAA//2Q=="
+                        blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAtlas-frameSrc.jpg"
                     />
 
                     <canvas
@@ -662,7 +662,7 @@ export default function MMRPage() {
                     />
 
                     <div className="hidden lg:block">
-                        <ViewfinderCorners color="#0b1220" size={26} className="opacity-35 !inset-6" />
+                        <ViewfinderCorners color="#10b981" size={26} className="opacity-40 !inset-6" />
                     </div>
 
                     {/* Reticle with smooth transition */}
@@ -677,7 +677,7 @@ export default function MMRPage() {
                             role="presentation"
                             aria-hidden
                         >
-                            <Crosshair className="w-10 h-10 text-slate-800" strokeWidth={1.5} aria-hidden />
+                            <Crosshair className="w-10 h-10 text-emerald-600" strokeWidth={1.5} aria-hidden />
                         </div>
                     )}
 
@@ -687,38 +687,31 @@ export default function MMRPage() {
                             <motion.div
                                 initial={{ opacity: 1 }}
                                 exit={{ opacity: 0, transition: { duration: 0.6, ease: "easeInOut" } }}
-                                className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center p-6 selection:bg-[#07518a] selection:text-white"
+                                className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center p-6 selection:bg-emerald-600 selection:text-white"
                             >
                                 <div className="relative flex flex-col items-center justify-center text-center space-y-6 max-w-sm w-full">
-                                    {/* Conic Ring & Centered Lucide Icon */}
                                     <div className="relative flex items-center justify-center w-24 h-24 sm:w-28 sm:h-28">
-                                        {/* Outer animated border ring */}
                                         <div
-                                            className="absolute inset-0 rounded-full border-4 border-slate-100 border-t-[#07518a] border-r-[#07518a]/40 animate-spin"
+                                            className="absolute inset-0 rounded-full border-4 border-slate-100 border-t-emerald-600 border-r-emerald-500/40 animate-spin"
                                             style={{ animationDuration: "1.1s" }}
                                         />
-                                        
-                                        {/* Subtly pulsing outer glow */}
                                         <div
-                                            className="absolute -inset-2 rounded-full border border-[#07518a]/30 animate-pulse opacity-40"
+                                            className="absolute -inset-2 rounded-full border border-emerald-500/30 animate-pulse opacity-40"
                                         />
-
-                                        {/* Center Lucide Icon */}
-                                        <div className="relative z-10 p-4 rounded-full bg-[#07518a]/10 text-[#07518a] shadow-inner">
-                                            <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 animate-spin text-[#07518a]" />
+                                        <div className="relative z-10 p-4 rounded-full bg-emerald-500/10 text-emerald-600 shadow-inner">
+                                            <Loader2 className="w-8 h-8 sm:w-10 sm:h-10 animate-spin text-emerald-600" />
                                         </div>
                                     </div>
 
-                                    {/* Text and Percentage */}
                                     <div className="space-y-2">
                                         <div
-                                            className="text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-[#07518a]"
+                                            className="text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] text-emerald-700"
                                             style={{ fontFamily: "var(--font-mono)" }}
                                         >
                                             Brihaspathi Spectra
                                         </div>
                                         <div
-                                            className="text-3xl sm:text-4xl font-bold text-[#07518a] tracking-tight"
+                                            className="text-3xl sm:text-4xl font-bold text-emerald-600 tracking-tight"
                                             style={{ fontFamily: "var(--font-display)" }}
                                         >
                                             {loadingProgress}%
@@ -731,10 +724,9 @@ export default function MMRPage() {
                                         </p>
                                     </div>
 
-                                    {/* Styled Progress Bar */}
                                     <div className="w-48 sm:w-60 h-1.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200 shadow-inner">
                                         <div
-                                            className="h-full bg-[#07518a] transition-all duration-300 ease-out"
+                                            className="h-full bg-emerald-600 transition-all duration-300 ease-out"
                                             style={{ width: `${loadingProgress}%` }}
                                         />
                                     </div>
@@ -743,191 +735,227 @@ export default function MMRPage() {
                         )}
                     </AnimatePresence>
 
-                    {/* Frame counter with smooth updates */}
+                    {/* Frame counter badge (Bottom-Right) */}
                     {!frameLoadFailed && (
                         <div
-                            className="hidden lg:flex absolute bottom-6 right-6 z-20 items-center gap-1.5 text-xs text-slate-700 bg-white/70 backdrop-blur-sm px-4 py-1.5 rounded-full border border-slate-200 shadow-lg transition-opacity duration-150"
+                            className="hidden lg:flex absolute bottom-6 right-6 z-20 items-center gap-1.5 text-xs text-white bg-slate-900/80 backdrop-blur-xl px-4 py-2 rounded-full border border-slate-700/60 shadow-2xl"
                             style={{ fontFamily: "var(--font-mono)" }}
                             aria-live="polite"
                             aria-atomic="true"
                         >
-                            <span className="font-semibold text-slate-800">{String(frameIdx).padStart(3, "0")}</span>
-                            <span className="text-slate-500">/</span>
+                            <span className="font-extrabold text-emerald-400">{String(frameIdx).padStart(3, "0")}</span>
+                            <span className="text-slate-400">/</span>
                             <span>{FRAME_COUNT}</span>
                         </div>
                     )}
 
-                    {/* Status badge */}
+                    {/* Green Status badge (Top-Left) */}
                     <div
-                        className="absolute top-6 left-6 z-20 flex items-center gap-2 text-[11px] font-semibold text-slate-800 bg-white/70 backdrop-blur-sm px-4 py-1.5 rounded-full border border-slate-200 shadow-lg"
+                        className="absolute top-6 left-6 z-20 flex items-center gap-2.5 text-[11px] font-bold text-white bg-slate-900/80 backdrop-blur-xl px-4 py-2 rounded-full border border-slate-700/60 shadow-2xl"
                         style={{ fontFamily: "var(--font-mono)" }}
                     >
-                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_rgba(52,211,153,0.8)]" aria-hidden />
-                        SPECTRA CHASSIS
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_12px_rgba(52,211,153,0.9)]" aria-hidden />
+                        <span className="tracking-wider">SPECTRA CHASSIS</span>
+                    </div>
+
+                    {/* TOP-RIGHT CORNER: Floating Apple-Style Glass Quick Specs HUD Card */}
+                    <div className="hidden md:flex absolute top-20 right-6 sm:right-10 lg:right-16 z-20 flex-col items-end text-right space-y-3 pointer-events-auto bg-slate-900/75 backdrop-blur-xl border border-slate-700/60 p-5 rounded-2xl shadow-2xl max-w-xs sm:max-w-sm">
+                        <div className="flex items-center justify-end gap-2.5 text-emerald-400 font-extrabold text-sm sm:text-base">
+                            <span>100% Solar Operated</span>
+                            <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                                <Sun className="w-4 h-4" aria-hidden />
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-end gap-2.5 text-white font-bold text-xs sm:text-sm">
+                            <span>CCTV + Flood Light (2-in-1)</span>
+                            <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                                <Camera className="w-4 h-4" aria-hidden />
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-end gap-2.5 text-slate-300 font-semibold text-xs">
+                            <span>Rapid Deployment &amp; Mobility</span>
+                            <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                                <Rocket className="w-4 h-4" aria-hidden />
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Content layer */}
-                <div className="col-start-1 row-start-1 relative z-10">
-                    {/* Hero */}
-                    <div className="relative h-screen flex flex-col justify-end lg:justify-center">
+                {/* Content layer over 3D canvas (Sticky so hero text stays pinned while 3D scene rotates) */}
+                <div className="col-start-1 row-start-1 sticky top-0 h-screen z-10 pointer-events-none">
+                    {/* BOTTOM-LEFT CORNER: Apple/Tesla-Style Glassmorphic Main Hero HUD Card */}
+                    <div className="relative h-screen flex flex-col justify-end">
                         <div
                             ref={heroContentRef}
-                            className="flex flex-col items-start px-4 sm:px-8 lg:px-0 pb-8 sm:pb-10 lg:pb-0 lg:h-[20vh] lg:min-h-[220px] lg:justify-center will-change-transform"
+                            className="flex flex-col items-start px-6 sm:px-12 lg:px-16 pb-10 sm:pb-14 lg:pb-16 will-change-transform pointer-events-auto max-w-2xl"
                         >
-                            <div className="w-full sm:max-w-xl lg:w-[40%] lg:min-w-[420px] lg:ml-10 xl:ml-20 rounded-[28px] border border-slate-200 bg-white/95 backdrop-blur-sm shadow-md px-6 sm:px-9 py-7 sm:py-8 lg:py-6 space-y-4 lg:space-y-3 text-slate-900">
+                            <div className="bg-slate-900/75 backdrop-blur-2xl border border-slate-700/60 p-6 sm:p-8 rounded-3xl shadow-2xl space-y-4">
+                                {/* Green Pill Badge */}
                                 <div
-                                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#07518a]/[0.06] border border-[#07518a]/20 text-[#07518a] text-[11px] font-semibold uppercase tracking-[0.14em]"
+                                    className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 text-xs font-extrabold uppercase tracking-widest"
                                     style={{ fontFamily: "var(--font-mono)" }}
                                 >
-                                    <Crosshair className="w-3 h-3" aria-hidden />
+                                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                                     2-in-1 Mobile Tower · Off-Grid Ready
                                 </div>
 
+                                {/* Pure White Title with Neon Emerald Highlights */}
                                 <h1
-                                    className="text-3xl sm:text-4xl lg:text-4xl xl:text-5xl font-semibold text-slate-900 leading-[1.08] tracking-tight"
+                                    className="text-3xl sm:text-4xl lg:text-5xl xl:text-5xl font-extrabold text-white leading-tight tracking-tight"
                                     style={{ fontFamily: "var(--font-display)" }}
                                 >
                                     Portable Solar CCTV{" "}
-                                    <span className="text-[#7cc0ee]">&amp; Flood Light</span> System
+                                    <span className="text-emerald-400 font-extrabold">&amp; Flood Light</span> System
                                 </h1>
 
-                                <p className="text-base md:text-lg font-medium text-slate-800">
+                                {/* High-Contrast Subtitle */}
+                                <p className="text-base sm:text-lg font-bold text-slate-200">
                                     Smart surveillance. Powerful illumination. Anywhere the grid doesn't reach.
                                 </p>
 
-                                <p className="hidden lg:block text-sm text-slate-600 leading-relaxed">
+                                {/* High-Contrast Description */}
+                                <p className="hidden sm:block text-xs sm:text-sm font-medium text-slate-300 leading-relaxed">
                                     AI-powered, solar-operated mobile surveillance with integrated CCTV, high-intensity LED flood
                                     lights, lithium battery backup, and real-time remote monitoring — deployed in minutes.
                                 </p>
 
-                                <div className="flex flex-wrap items-center gap-4 pt-1">
+                                {/* Neon Emerald CTA Button */}
+                                <div className="flex flex-wrap items-center gap-4 pt-2">
                                     <Link
                                         href="/contact"
-                                        className="group inline-flex items-center gap-2.5 px-6 py-3 lg:px-7 lg:py-3.5 rounded-xl bg-[#07518a] hover:bg-[#0a6bb3] text-white font-semibold text-sm lg:text-base shadow-lg shadow-[#07518a]/30 hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
+                                        className="group inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm lg:text-base shadow-xl shadow-emerald-500/30 hover:shadow-2xl hover:scale-105 transition-all duration-300"
                                     >
                                         <span>Contact Us</span>
                                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" aria-hidden />
                                     </Link>
                                 </div>
-                                </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
 
-                    {/* About */}
-                    <GlassPanel id="about-section" className="space-y-6">
-                        <RevealBlock className="space-y-4">
+            {/* Detailed Product Overview Section (Below 3D Canvas) */}
+            <ContentSection id="about-section" className="bg-slate-50 border-t border-b border-slate-200 py-16 lg:py-24">
+                <div className="space-y-12">
+                    {/* About Product Header */}
+                    <div className="grid lg:grid-cols-12 gap-8 items-start">
+                        <div className="lg:col-span-5 space-y-4">
                             <Eyebrow>About the Product</Eyebrow>
-                            <h2 className="text-3xl sm:text-4xl font-semibold text-slate-900 tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
+                            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight" style={{ fontFamily: "var(--font-display)" }}>
                                 Intelligent Security for Remote &amp; Off-Grid Locations
                             </h2>
-                            <p className="text-lg text-slate-800 leading-relaxed">
-                                The <strong className="font-semibold text-slate-900">Brihaspathi Spectra Series</strong> is a portable
+                        </div>
+                        <div className="lg:col-span-7 space-y-4 text-slate-700 text-base sm:text-lg leading-relaxed pt-1">
+                            <p>
+                                The <strong className="font-bold text-slate-900">Brihaspathi Spectra Series</strong> is a portable
                                 solar-powered CCTV and flood light system built for rapid deployment in temporary and remote locations.
                             </p>
-                            <p className="text-base text-slate-600 leading-relaxed">
+                            <p className="text-slate-600 text-sm sm:text-base">
                                 Combining intelligent surveillance, high-lumen lighting, and renewable energy into a single mobile unit,
                                 it provides uninterrupted security without depending on conventional power sources.
                             </p>
-                        </RevealBlock>
+                        </div>
+                    </div>
 
-                        <div className="grid sm:grid-cols-2 gap-4 pt-2">
-                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-3 hover:border-[#07518a]/40 transition-all duration-300">
-                                <div className="p-2.5 rounded-xl bg-[#07518a] text-white shrink-0"><Sun className="w-5 h-5" aria-hidden /></div>
-                                <div>
-                                    <h4 className="font-semibold text-slate-900 text-sm">100% Solar Operated</h4>
-                                    <p className="text-xs text-slate-500 mt-0.5">Continuous power, zero electricity cost.</p>
-                                </div>
-                            </div>
-                            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-start gap-3 hover:border-[#07518a]/40 transition-all duration-300">
-                                <div className="p-2.5 rounded-xl bg-[#07518a] text-white shrink-0"><Camera className="w-5 h-5" aria-hidden /></div>
-                                <div>
-                                    <h4 className="font-semibold text-slate-900 text-sm">CCTV + Flood Light (2-in-1)</h4>
-                                    <p className="text-xs text-slate-500 mt-0.5">High-lumen lighting with AI smart cameras.</p>
-                                </div>
+                    {/* Quick Specs Grid with Green Accents */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-4 hover:border-emerald-500/50 hover:shadow-md transition-all duration-300">
+                            <div className="p-3.5 rounded-xl bg-emerald-600 text-white shrink-0 shadow-md shadow-emerald-600/20"><Sun className="w-6 h-6" aria-hidden /></div>
+                            <div>
+                                <h3 className="font-bold text-slate-900 text-lg">100% Solar Operated</h3>
+                                <p className="text-sm text-slate-500 mt-1">Continuous power, zero electricity cost.</p>
                             </div>
                         </div>
+                        <div className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex items-start gap-4 hover:border-emerald-500/50 hover:shadow-md transition-all duration-300">
+                            <div className="p-3.5 rounded-xl bg-emerald-600 text-white shrink-0 shadow-md shadow-emerald-600/20"><Camera className="w-6 h-6" aria-hidden /></div>
+                            <div>
+                                <h3 className="font-bold text-slate-900 text-lg">CCTV + Flood Light (2-in-1)</h3>
+                                <p className="text-sm text-slate-500 mt-1">High-lumen lighting with AI smart cameras.</p>
+                            </div>
+                        </div>
+                    </div>
 
-                        <div className="space-y-3 pt-2">
-                            {[
-                                { label: "Rapid Setup", title: "Plug-and-Play Mobility", note: "No civil works, trenching, or grid dependency", icon: Rocket, accent: BRAND },
-                                { label: "Continuous Backup", title: "Lithium Battery Storage", note: "24V 100Ah long-life day & night battery", icon: BatteryCharging, accent: BRAND },
-                                { label: "Cloud VMS Support", title: "Real-Time Remote Access", note: "Mobile, desktop & command centre streams", icon: Monitor, accent: BRAND }
-                            ].map((row, i) => (
-                                <div key={i} className="p-5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between hover:border-[#07518a]/40 hover:shadow-md transition-all duration-300">
-                                    <div>
-                                        <div className="text-[11px] font-semibold uppercase tracking-wider" style={{ color: row.accent, fontFamily: "var(--font-mono)" }}>
-                                            {row.label}
-                                        </div>
-                                        <div className="text-lg font-semibold text-slate-900 mt-1" style={{ fontFamily: "var(--font-display)" }}>
-                                            {row.title}
-                                        </div>
-                                        <div className="text-xs text-slate-500 mt-1">{row.note}</div>
-                                    </div>
-                                    <row.icon className="w-8 h-8 shrink-0" style={{ color: row.accent }} aria-hidden />
+                    {/* Highlights Cards with Green Badges */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {[
+                            { label: "Rapid Setup", title: "Plug-and-Play Mobility", note: "No civil works, trenching, or grid dependency", icon: Rocket },
+                            { label: "Continuous Backup", title: "Lithium Battery Storage", note: "24V 100Ah long-life day & night battery", icon: BatteryCharging },
+                            { label: "Cloud VMS Support", title: "Real-Time Remote Access", note: "Mobile, desktop & command centre streams", icon: Monitor }
+                        ].map((row, i) => (
+                            <div key={i} className="p-6 rounded-2xl bg-white border border-slate-200 shadow-sm flex flex-col justify-between hover:border-emerald-500/50 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 space-y-4">
+                                <div className="flex items-center justify-between">
+                                    <span className="inline-block text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-500/10 border border-emerald-500/20 px-3 py-1 rounded-md" style={{ fontFamily: "var(--font-mono)" }}>
+                                        {row.label}
+                                    </span>
+                                    <row.icon className="w-6 h-6 text-emerald-600" aria-hidden />
                                 </div>
-                            ))}
-                        </div>
-                    </GlassPanel>
-
-                    {/* Features */}
-                    <GlassPanel className="space-y-8">
-                        <RevealBlock className="space-y-4">
-                            <Eyebrow>Engineered Features</Eyebrow>
-                            <h2 className="text-3xl sm:text-4xl font-semibold text-slate-900 tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
-                                Key Features
-                            </h2>
-                            <p className="text-slate-600 text-base">
-                                Renewable solar energy, high-lumen floodlights, and advanced AI CCTV — in one chassis.
-                            </p>
-                        </RevealBlock>
-
-                        <div className="grid sm:grid-cols-2 gap-5">
-                            {memoizedFeatures.map((feat, idx) => {
-                                const IconComp = feat.icon;
-                                return (
-                                    <motion.div
-                                        key={idx}
-                                        initial={{ opacity: 0, y: 20 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
-                                        viewport={{ once: true, margin: "-40px" }}
-                                        transition={{
-                                            duration: 0.5,
-                                            delay: (idx % 4) * 0.08,
-                                            ease: [0.22, 1, 0.36, 1]
-                                        }}
-                                        className="group relative rounded-2xl bg-slate-50 p-5 border border-slate-200 hover:border-[#07518a]/50 transition-all duration-300 flex flex-col justify-between hover:shadow-lg overflow-hidden"
-                                    >
-                                        <ViewfinderCorners color={BRAND} size={16} className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                        <div className="space-y-3">
-                                            <div className="flex items-center justify-between">
-                                                <div className="p-3 rounded-xl bg-[#07518a]/10 text-[#07518a] group-hover:scale-110 transition-transform duration-300">
-                                                    <IconComp className="w-6 h-6" aria-hidden />
-                                                </div>
-                                                <span
-                                                    className="text-[10px] font-semibold text-[#07518a] bg-[#07518a]/10 border border-[#07518a]/20 px-2.5 py-0.5 rounded-full"
-                                                    style={{ fontFamily: "var(--font-mono)" }}
-                                                >
-                                                    {feat.badge}
-                                                </span>
-                                            </div>
-                                            <h3 className="text-lg font-semibold text-slate-900 group-hover:text-[#07518a] transition-colors duration-300" style={{ fontFamily: "var(--font-display)" }}>
-                                                {feat.title}
-                                            </h3>
-                                            <p className="text-sm text-slate-600 leading-relaxed">{feat.desc}</p>
-                                        </div>
-                                        <div className="mt-5 pt-3 border-t border-slate-200 flex items-center text-xs font-semibold text-slate-600">
-                                            <Check className="w-4 h-4 mr-1 text-[#07518a]" aria-hidden /> Standard system component
-                                        </div>
-                                    </motion.div>
-                                );
-                            })}
-                        </div>
-                    </GlassPanel>
-
-                    <div className="h-10 lg:h-20" aria-hidden />
+                                <div className="space-y-1">
+                                    <h4 className="text-xl font-bold text-slate-900">{row.title}</h4>
+                                    <p className="text-xs text-slate-500 font-medium leading-relaxed">{row.note}</p>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            </ContentSection>
+
+            {/* Key Features Section */}
+            <ContentSection className="bg-white py-16 lg:py-24">
+                <div className="space-y-10">
+                    <RevealBlock className="space-y-4 max-w-2xl">
+                        <Eyebrow>Engineered Features</Eyebrow>
+                        <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
+                            Key Features
+                        </h2>
+                        <p className="text-slate-600 text-base font-medium">
+                            Renewable solar energy, high-lumen floodlights, and advanced AI CCTV — in one chassis.
+                        </p>
+                    </RevealBlock>
+
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {memoizedFeatures.map((feat, idx) => {
+                            const IconComp = feat.icon;
+                            return (
+                                <motion.div
+                                    key={idx}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true, margin: "-40px" }}
+                                    transition={{
+                                        duration: 0.5,
+                                        delay: (idx % 3) * 0.08,
+                                        ease: [0.22, 1, 0.36, 1]
+                                    }}
+                                    className="group relative rounded-2xl bg-slate-50 p-6 border border-slate-200 hover:border-emerald-500/50 transition-all duration-300 flex flex-col justify-between hover:shadow-lg overflow-hidden"
+                                >
+                                    <ViewfinderCorners color="#10b981" size={16} className="opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                    <div className="space-y-4">
+                                        <div className="flex items-center justify-between">
+                                            <div className="p-3 rounded-xl bg-emerald-500/10 text-emerald-600 group-hover:scale-110 transition-transform duration-300 border border-emerald-500/20">
+                                                <IconComp className="w-6 h-6" aria-hidden />
+                                            </div>
+                                            <span
+                                                className="text-[10px] font-bold text-emerald-700 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full"
+                                                style={{ fontFamily: "var(--font-mono)" }}
+                                            >
+                                                {feat.badge}
+                                            </span>
+                                        </div>
+                                        <h3 className="text-xl font-bold text-slate-900 group-hover:text-emerald-700 transition-colors duration-300" style={{ fontFamily: "var(--font-display)" }}>
+                                            {feat.title}
+                                        </h3>
+                                        <p className="text-sm text-slate-600 font-medium leading-relaxed">{feat.desc}</p>
+                                    </div>
+                                    <div className="mt-6 pt-4 border-t border-slate-200 flex items-center text-xs font-bold text-slate-600">
+                                        <Check className="w-4 h-4 mr-1 text-emerald-600" aria-hidden /> Standard system component
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </ContentSection>
 
             {/* Interactive Diagram */}
             <section className="relative z-10 py-16 lg:py-24 bg-slate-50 border-t border-slate-200">
