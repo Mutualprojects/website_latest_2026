@@ -15,6 +15,7 @@ export default function Achivements() {
   return (
     <section
       ref={sectionRef}
+      className="achievements-section"
       style={{
         position: "relative",
         minHeight: "130vh",
@@ -28,6 +29,7 @@ export default function Achivements() {
       }}
     >
       <div
+        className="achievements-container"
         style={{
           display: "flex",
           flexDirection: "row",
@@ -40,6 +42,7 @@ export default function Achivements() {
              LEFT — 30% brand colour panel with text + image
             ══════════════════════════════════════════════════ */}
         <div
+          className="achievements-left-panel"
           style={{
             flex: "0 0 30%",
             maxWidth: "30%",
@@ -237,6 +240,7 @@ export default function Achivements() {
              RIGHT — 70% full newspaper image
             ══════════════════════════════════════════════════ */}
         <motion.div
+          className="achievements-right-panel"
           initial={{ opacity: 0, scale: 1.04 }}
           animate={
             isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.04 }
@@ -253,6 +257,7 @@ export default function Achivements() {
             src={newspaperImage}
             alt="ET Industry Achievers – Honouring Visionary Leaders, Telangana & AP 2025-26"
             fill
+            className="achievements-newspaper-img"
             style={{
               objectFit: "cover",
               objectPosition: "top center",
@@ -262,6 +267,7 @@ export default function Achivements() {
           />
           {/* left-edge blend into brand colour */}
           <div
+            className="achievements-gradient-overlay"
             style={{
               position: "absolute",
               inset: 0,
@@ -276,28 +282,41 @@ export default function Achivements() {
       {/* ── RESPONSIVE ── */}
       <style>{`
         @media (max-width: 1024px) {
-          section > div > div:first-child {
+          .achievements-section {
+            min-height: 100vh !important;
+          }
+          .achievements-left-panel {
             flex: 0 0 38% !important;
             max-width: 38% !important;
           }
-          section > div > div:last-child {
+          .achievements-right-panel {
             flex: 1 1 62% !important;
           }
         }
         @media (max-width: 768px) {
-          section > div {
-            flex-direction: column !important;
+          .achievements-section {
+            min-height: auto !important;
+            padding: 0 !important;
           }
-          section > div > div:first-child {
-            flex: 0 0 auto !important;
+          .achievements-container {
+            flex-direction: column !important;
+            min-height: auto !important;
+          }
+          .achievements-left-panel {
+            display: none !important;
+          }
+          .achievements-right-panel {
+            flex: 1 1 100% !important;
             max-width: 100% !important;
             width: 100% !important;
             min-height: auto !important;
-            padding: 40px 24px !important;
+            aspect-ratio: 3977 / 4487 !important;
           }
-          section > div > div:last-child {
-            flex: 1 1 auto !important;
-            min-height: 60vh !important;
+          .achievements-newspaper-img {
+            object-fit: contain !important;
+          }
+          .achievements-gradient-overlay {
+            display: none !important;
           }
         }
       `}</style>
