@@ -17,8 +17,10 @@ import apn from './nesbanners/Screenshot 2026-02-27 102429.png';
 import bombay from './nesbanners/Screenshot 2026-02-27 102404.png';
 import csxo from './nesbanners/Screenshot 2026-02-27 102133.png';
 import main_image from './Screenshot 2026-05-12 183649.png';
-import women_2026 from './press/Times Power Woman Post Event june 2026.jpg.jpeg'
-import Et_some from './press/WhatsApp Image 2026-06-22 at 10.07.32 AM (1).jpeg'
+import women_2026 from './press/Times Power Woman Post Event june 2026.jpg.jpeg';
+import Et_some from './press/WhatsApp Image 2026-06-22 at 10.07.32 AM (1).jpeg';
+import imgEtExcellence2026 from './Screenshot from 2026-08-15 19-52-29.png';
+import imgSecurityBackbone2026 from './Screenshot from 2026-08-15 19-54-33.png';
 // =============================
 // PRESS LOGOS
 // =============================
@@ -65,6 +67,26 @@ export interface ArticleData {
 export const articlesData: ArticleData[] = [
   {
     id: 1,
+    title: 'Celebrating Progress and Inspiring Entrepreneurial Spirit',
+    description: 'Brihaspathi Technologies Ltd presented the 6th ET Excellence Telangana Awards 2026 in Hyderabad. Graced by Governor Shiv Pratap Shukla and actor Sonu Sood, CMD Rajasekhar Papolu shared how Brihaspathi expanded to 400 employees, emphasizing that business success is measured by job creation, youth empowerment, and nationwide social impact.',
+    image: imgEtExcellence2026,
+    link: '#',
+    pressName: 'Economic Times',
+    pressIcon: Et,
+    category: 'Awards',
+  },
+  {
+    id: 2,
+    title: "One Company, Many Frontlines: Building India's Security Backbone",
+    description: "Brihaspathi Technologies has established itself as India’s security backbone across public infrastructure. Key deployments include statewide bus station CCTV for MSRTC, election webcasting in Bihar and Assam, NEET-UG exam surveillance, Kolkata Metro, RRTS corridors, and IOCL refineries, supported by a new manufacturing facility at Tuniki Bollaram, Telangana.",
+    image: imgSecurityBackbone2026,
+    link: '#',
+    pressName: 'Economic Times',
+    pressIcon: Et,
+    category: 'Security',
+  },
+  {
+    id: 3,
     title: 'Spotlighting Merit and Awarding Entrepreneurial Spirit',
     description: 'Covers the 5th edition of ET Excellence Telangana awards in Hyderabad. Brihaspathi Technologies served as Presenting Sponsor.',
     image: imgSpotlighting,
@@ -74,7 +96,7 @@ export const articlesData: ArticleData[] = [
     category: 'Awards',
   },
   {
-    id: 2,
+    id: 4,
     title: 'Rajasekhar: Driving Converged Technology for a Secure and Sustainable India',
     description: "Profiles Rajasekhar driving India's digital transformation through AI-driven security systems and renewable energy expansion.",
     image: imgRajasekhar,
@@ -85,9 +107,7 @@ export const articlesData: ArticleData[] = [
   },
 
   {
-
-
-    id: 3,
+    id: 5,
     title: 'Advancing Border Security Through Intelligent Surveillance Systems',
     description: 'Highlights AI intrusion detection, thermal imaging, anti-drone systems and 75,000+ camera integrations.',
     image: imgBorderSecurity,
@@ -95,11 +115,10 @@ export const articlesData: ArticleData[] = [
     pressName: 'Security & Defence',
     pressIcon: Et,
     category: 'Security',
-
   },
 
   {
-    id: 4,
+    id: 6,
     title: 'Budget 2026 Quotes: Rajasekhar Papolu, Chairman & Managing Director',
     description: "Union Budget signals India's digital growth entering a mature phase driven by AI and deep-tech innovation.",
     image: csxo,
@@ -109,7 +128,7 @@ export const articlesData: ArticleData[] = [
     category: 'Policy',
   },
   {
-    id: 5,
+    id: 7,
     title: "How Brihaspathi Technologies Is Shaping India's Security, Software and Solar Ecosystem",
     description: 'Founded in 2006, Brihaspathi has grown into a multi-domain solutions provider across government and enterprise sectors.',
     image: telanganatoday,
@@ -119,7 +138,7 @@ export const articlesData: ArticleData[] = [
     category: 'Feature',
   },
   {
-    id: 6,
+    id: 8,
     title: 'Curiosity and Integrity Will Endure Beyond Any Technological Cycle',
     description: 'Authored by Rajasekhar Papolu for Mediabrief highlighting leadership and innovation vision.',
     image: mediaberief,
@@ -130,7 +149,7 @@ export const articlesData: ArticleData[] = [
   },
 
   {
-    id: 17,
+    id: 9,
     title: 'Advancing Border Security Through Intelligent Surveillance Systems',
     description: 'Highlights AI intrusion detection, thermal imaging, anti-drone systems and 75,000+ camera integrations.',
     image: women_2026,
@@ -141,9 +160,9 @@ export const articlesData: ArticleData[] = [
   },
 
   {
-    id: 21,
+    id: 10,
     title: 'BUILT FOR BHARAT, ENGINEERED TO SCALE: BRIHASPATHI TECHNOLOGIES POWERS INDIA’S INTELLIGENT INFRASTRUCTURE',
-    description: 'An ET Newsmakers feature highlighting Brihaspathi Technologies Limited and its Chairman and Managing Director, Rajasekhar Papolu. The article details the company’s evolution into a major player in AI-led surveillance, security technology, and smart mobility solutions. It emphasizes their commitment to the "Make in India" initiative, delivering robust infrastructure across critical sectors (like transport and defense), and expanding their footprint internationally and into home automation.',
+    description: 'An ET Newsmakers feature highlighting Brihaspathi Technologies Limited and its Chairman and Managing Director, Rajasekhar Papolu. The article details the company’s evolution into a major player in AI-led surveillance, security technology, and smart mobility solutions.',
     image: Et_some,
     link: '#',
     pressName: 'Security & Defence',
@@ -151,9 +170,8 @@ export const articlesData: ArticleData[] = [
     category: 'Security',
   },
 
-
   {
-    id: 16,
+    id: 11,
     title: 'Advancing Border Security Through Intelligent Surveillance Systems',
     description: 'Highlights AI intrusion detection, thermal imaging, anti-drone systems and 75,000+ camera integrations.',
     image: main_image,
@@ -163,7 +181,7 @@ export const articlesData: ArticleData[] = [
     category: 'Security',
   },
   {
-    id: 7,
+    id: 12,
     title: 'The Most Promising Leaders To Watch in 2026',
     description: 'Rajasekhar led ICCC deployments consolidating surveillance, traffic management and emergency systems.',
     image: bombay,
@@ -173,7 +191,7 @@ export const articlesData: ArticleData[] = [
     category: 'Leadership',
   },
   {
-    id: 8,
+    id: 13,
     title: 'Brihaspathi Technologies Secures ₹106 Crore MSRTC Surveillance Project',
     description: 'Awarded ₹106 crore project to install 6,300 surveillance cameras across Maharashtra bus stops.',
     image: apn,
@@ -183,7 +201,7 @@ export const articlesData: ArticleData[] = [
     category: 'Contracts',
   },
   {
-    id: 9,
+    id: 14,
     title: 'Brihaspathi Wins ₹106 Crore MSRTC CCTV Contract',
     description: 'Won major smart-city surveillance contract to deploy 6,300 CCTV cameras strengthening public safety infrastructure.',
     image: techobserve,
@@ -193,7 +211,7 @@ export const articlesData: ArticleData[] = [
     category: 'Contracts',
   },
   {
-    id: 10,
+    id: 15,
     title: 'Brihaspathi Technologies Secures $10 Million Funding and Plans IPO by FY27',
     description: 'Hyderabad-based firm raises capital from FIIs to establish a 72,000 sq. ft. CCTV manufacturing facility and eyes public listing.',
     image: imgRajasekhar,
@@ -203,7 +221,7 @@ export const articlesData: ArticleData[] = [
     category: 'Funding',
   },
   {
-    id: 11,
+    id: 16,
     title: 'Brihaspathi Technologies raises $10M, wins MSRTC project',
     description: 'Capital infusion supports expansion into AI-enabled surveillance and public safety infrastructure across Maharashtra.',
     image: csxo,
@@ -213,7 +231,7 @@ export const articlesData: ArticleData[] = [
     category: 'Expansion',
   },
   {
-    id: 12,
+    id: 17,
     title: "Protecting Rhinos and Securing Elections: Brihaspathi Tech's Wide-Ranging Role",
     description: 'An in-depth look at how Rajasekhar Papolu is leading national projects from exam monitoring to wildlife protection.',
     image: imgSpotlighting,
@@ -221,36 +239,6 @@ export const articlesData: ArticleData[] = [
     pressName: 'NewsMeter',
     pressIcon: telanganaTodayLogo,
     category: 'Interview',
-  },
-  {
-    id: 13,
-    title: 'Brihaspathi Strengthens Make in India Vision with New Facility',
-    description: 'Details on the new manufacturing plant in Tuniki Bollaram, Telangana, and the focus on indigenous technology production.',
-    image: imgBorderSecurity,
-    link: 'https://smestreet.in/technology/brihaspathi-strengthens-make-in-india-vision-with-new-facility/',
-    pressName: 'SMEStreet',
-    pressIcon: Et,
-    category: 'Manufacturing',
-  },
-  {
-    id: 14,
-    title: 'Hyd firm secures INR 106 cr surveillance contract',
-    description: 'Awarded major contract by MSRTC to deploy IP-enabled video surveillance across 658 bus stands in Maharashtra.',
-    image: apn,
-    link: 'http://www.uniindia.com/news/south/brihaspathi-technologies-secures-106-cr-contract/3056789.html',
-    pressName: 'United News of India',
-    pressIcon: apnLogo,
-    category: 'Contracts',
-  },
-  {
-    id: 15,
-    title: "Powering India's ICCC Revolution",
-    description: 'Transforming digital security infrastructure through Integrated Command and Control Centres for smart cities.',
-    image: techobserve,
-    link: 'https://www.tribuneindia.com/news/business/brihaspathi-technologies-powering-indias-iccc-revolution-580123',
-    pressName: 'The Tribune',
-    pressIcon: techObserverLogo,
-    category: 'Innovation',
   },
 ];
 
@@ -289,8 +277,8 @@ function ArticleModal({
 
   const currentIndex = articles.findIndex((a) => a.id === article.id);
   const total = articles.length;
-  const hasPrev = currentIndex > 0;
-  const hasNext = currentIndex < total - 1;
+  const hasPrev = total > 1;
+  const hasNext = total > 1;
   const hasLink = article.link && article.link !== '#';
 
   return (
@@ -726,17 +714,17 @@ export default function Recent() {
 
   const handleNext = useCallback(() => {
     setSelectedIndex((prev) => {
-      if (prev === null) return prev;
-      return prev < filtered.length - 1 ? prev + 1 : prev;
+      if (prev === null) return 0;
+      return prev < filtered.length - 1 ? prev + 1 : 0;
     });
   }, [filtered.length]);
 
   const handlePrev = useCallback(() => {
     setSelectedIndex((prev) => {
-      if (prev === null) return prev;
-      return prev > 0 ? prev - 1 : prev;
+      if (prev === null) return filtered.length - 1;
+      return prev > 0 ? prev - 1 : filtered.length - 1;
     });
-  }, []);
+  }, [filtered.length]);
 
   const selectedArticle = selectedIndex !== null ? filtered[selectedIndex] : null;
 
@@ -926,17 +914,14 @@ export default function Recent() {
 
           {/* ===== Grid ===== */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7 xl:gap-8">
-            {(filter === 'All' ? filtered.slice(1) : filtered).map((article, index) => {
-              const realIndex = filter === 'All' ? index + 1 : index;
-              return (
-                <ArticleCard
-                  key={article.id}
-                  article={article}
-                  index={index}
-                  onClick={() => setSelectedIndex(realIndex)}
-                />
-              );
-            })}
+            {filtered.map((article, index) => (
+              <ArticleCard
+                key={article.id}
+                article={article}
+                index={index}
+                onClick={() => setSelectedIndex(index)}
+              />
+            ))}
           </div>
 
         </div>
