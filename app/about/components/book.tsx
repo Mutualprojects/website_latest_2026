@@ -816,39 +816,80 @@ export default function ScrollBook() {
         @media (max-width: 900px) {
           .sb-layout {
             flex-direction: column;
-            gap: .5rem;
-            padding: .5rem 1.25rem;
+            gap: 0.5rem;
+            padding: 0.75rem 1.25rem;
           }
           .sb-text-col {
             width: 100%;
             flex: none;
             text-align: left;
-            padding-top: .25rem;
+            padding-top: 0.25rem;
           }
-          .sb-header { margin-bottom: .35rem; }
-          .sb-caps { flex: none; min-height: 0; }
-          .sb-cap-title { font-size: clamp(1.15rem, 5vw, 1.6rem); }
-          .sb-capno { font-size: clamp(1.6rem, 7vw, 2.4rem); }
-          .sb-cap-body { font-size: clamp(.78rem, 2.6vw, .92rem); }
-          .sb-dots { margin-top: .5rem; }
-          .sb-meta { margin-top: .45rem; }
+          .sb-header {
+            margin-bottom: 0.5rem;
+          }
+          .sb-caps {
+            position: relative !important;
+            width: 100% !important;
+            min-height: 140px !important;
+            flex: none !important;
+            margin-top: 0.25rem !important;
+          }
+          .sb-cap {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            transform: translateY(10px) !important;
+          }
+          .sb-cap--on {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+            pointer-events: auto !important;
+          }
+          .sb-cap:not(.sb-cap--on) {
+            opacity: 0 !important;
+            pointer-events: none !important;
+          }
+          .sb-cap-title {
+            font-size: clamp(1.1rem, 4.5vw, 1.4rem);
+          }
+          .sb-capno {
+            font-size: clamp(1.4rem, 6vw, 2rem);
+          }
+          .sb-cap-body {
+            font-size: clamp(0.78rem, 2.5vw, 0.88rem);
+            line-height: 1.5;
+          }
+          .sb-dots {
+            margin-top: 0.4rem;
+          }
+          .sb-meta {
+            margin-top: 0.35rem;
+          }
           .sb-stage {
             width: 100%;
             min-width: 0;
             flex: 1;
+            margin-top: 0.5rem;
           }
           .sb-book {
-            height: min(44vh,44dvh,340px);
-            width:  min(31vh,31dvh,240px);
-            min-height: 0;
-            min-width:  0;
+            height: min(42vh, 42dvh, 320px);
+            width: min(30vh, 30dvh, 230px);
+            min-height: 200px;
+            min-width: 150px;
           }
         }
         @media (max-width: 480px) {
-          .sb-title { font-size: clamp(1.3rem, 6vw, 1.7rem); }
+          .sb-title {
+            font-size: clamp(1.2rem, 5.5vw, 1.55rem);
+          }
+          .sb-caps {
+            min-height: 160px !important;
+          }
           .sb-book {
-            height: min(46vh,46dvh,360px);
-            width:  min(33vh,33dvh,255px);
+            height: min(42vh, 42dvh, 300px);
+            width: min(30vh, 30dvh, 215px);
           }
         }
         @media (max-height: 560px) and (orientation: landscape) {
