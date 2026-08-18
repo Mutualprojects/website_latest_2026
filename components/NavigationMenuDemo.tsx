@@ -323,6 +323,28 @@ export function NavigationMenuDemo() {
     // Dynamic products from Strapi (excluding solar-spectra to ensure it is placed at the end)
     const dynamicItems = strapiProducts.filter((p) => p.slug !== "solar-spectra");
 
+    // Read custom product position order configured in HR Panel
+    if (typeof window !== "undefined") {
+      const savedOrderRaw = localStorage.getItem("product_positions_order");
+      if (savedOrderRaw) {
+        try {
+          const savedSlugs: string[] = JSON.parse(savedOrderRaw);
+          if (Array.isArray(savedSlugs) && savedSlugs.length > 0) {
+            dynamicItems.sort((a, b) => {
+              const idxA = savedSlugs.indexOf(a.slug);
+              const idxB = savedSlugs.indexOf(b.slug);
+              if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+              if (idxA !== -1) return -1;
+              if (idxB !== -1) return 1;
+              return 0;
+            });
+          }
+        } catch (e) {
+          console.error("Error reading saved product order in mega menu:", e);
+        }
+      }
+    }
+
     // Get solar-spectra from Strapi if present, otherwise use default
     const strapiSpectra = strapiProducts.find((p) => p.slug === "solar-spectra");
     const solarSpectraItem: ProductItem = strapiSpectra || {

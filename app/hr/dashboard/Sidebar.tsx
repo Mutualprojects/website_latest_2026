@@ -4,7 +4,7 @@ import React, { useState, useEffect, ReactElement, cloneElement } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import {
-  LayoutDashboard, Users, Briefcase, Settings,
+  LayoutDashboard, Users, Briefcase, Settings, Package,
   LogOut, ChevronLeft, ChevronRight
 } from "lucide-react";
 
@@ -141,6 +141,7 @@ export default function Sidebar({
     { icon: <Briefcase />, label: "Vacancies", badge: vacanciesCount },
     { icon: <Users />, label: "Board of Directors" },
     { icon: <Users />, label: "Advisors" },
+    { icon: <Package />, label: "Products" },
     { icon: <Settings />, label: "Systems" },
   ];
 
@@ -213,6 +214,7 @@ export default function Sidebar({
               else if (n.label === "Vacancies") router.push("/hr/vacancies");
               else if (n.label === "Board of Directors") router.push("/hr/board-management");
               else if (n.label === "Advisors") router.push("/hr/advisor-management");
+              else if (n.label === "Products") router.push("/hr/products");
               else {
                 onTabChange(n.label);
                 setMobileOpen(false);

@@ -319,8 +319,29 @@ export default function ProductsPage() {
   }, []);
 
   const allItems = useMemo(() => {
-    const hasSpectra = items.some((i) => i.slug === "solar-spectra");
-    return hasSpectra ? items : [SOLAR_SPECTRA_PRODUCT, ...items];
+    const list = [...items];
+    if (typeof window !== "undefined") {
+      const savedOrderRaw = localStorage.getItem("product_positions_order");
+      if (savedOrderRaw) {
+        try {
+          const savedSlugs: string[] = JSON.parse(savedOrderRaw);
+          if (Array.isArray(savedSlugs) && savedSlugs.length > 0) {
+            list.sort((a, b) => {
+              const idxA = savedSlugs.indexOf(a.slug);
+              const idxB = savedSlugs.indexOf(b.slug);
+              if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+              if (idxA !== -1) return -1;
+              if (idxB !== -1) return 1;
+              return 0;
+            });
+          }
+        } catch (e) {
+          console.error("Error reading saved product order on product page:", e);
+        }
+      }
+    }
+    const hasSpectra = list.some((i) => i.slug === "solar-spectra");
+    return hasSpectra ? list : [...list, SOLAR_SPECTRA_PRODUCT];
   }, [items]);
 
   const heroProducts = useMemo(() => {
