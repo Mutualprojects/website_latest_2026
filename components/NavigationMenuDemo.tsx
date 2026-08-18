@@ -35,8 +35,6 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 
-// Import product data (adjust path as needed)
-import { products } from "@/app/products/data";
 import { FaKickstarter } from "react-icons/fa";
 
 const STRAPI_ORIGIN = typeof window !== "undefined" ? "/strapi" : "http://183.82.117.36:2334";
@@ -213,8 +211,7 @@ const RESOURCES_MENU: ResourceMenuItem[] = [
 }
 ];
 
-// Convert products object to array
-const PRODUCTS_LIST: ProductItem[] = Object.values(products);
+
 
 function ProductIconOrImage({ bannerImage, name, slug, size = "large" }: { bannerImage?: any; name: string; slug: string; size?: "large" | "small" }) {
   const isLarge = size === "large";
@@ -323,37 +320,19 @@ export function NavigationMenuDemo() {
   }, []);
 
   const finalProductsList = React.useMemo(() => {
-    const staticList = Object.values(products).map((p) => ({
-      slug: p.slug,
-      name: p.name,
-      tagline: p.tagline,
-      bannerImage: p.bannerImage,
-    }));
+    // Dynamic products from Strapi (excluding solar-spectra to ensure it is placed at the end)
+    const dynamicItems = strapiProducts.filter((p) => p.slug !== "solar-spectra");
 
-    if (strapiProducts.length === 0) {
-      return staticList;
-    }
+    // Get solar-spectra from Strapi if present, otherwise use default
+    const strapiSpectra = strapiProducts.find((p) => p.slug === "solar-spectra");
+    const solarSpectraItem: ProductItem = strapiSpectra || {
+      slug: "solar-spectra",
+      name: "Solar Spectra",
+      tagline: "Portable Solar CCTV & Flood Light System (2-in-1)",
+      bannerImage: "/mmr/solar-spectra-hero.png",
+    };
 
-    const hasSpectra = strapiProducts.some((p) => p.slug === "solar-spectra");
-    const merged = hasSpectra
-      ? strapiProducts
-      : [
-          {
-            slug: "solar-spectra",
-            name: "Solar Spectra",
-            tagline: "Portable Solar CCTV & Flood Light System (2-in-1)",
-            bannerImage: "/mmr/solar-spectra-hero.png",
-          },
-          ...strapiProducts,
-        ];
-
-    staticList.forEach((sp) => {
-      if (!merged.some((mp) => mp.slug === sp.slug)) {
-        merged.push(sp);
-      }
-    });
-
-    return merged;
+    return [...dynamicItems, solarSpectraItem];
   }, [strapiProducts]);
 
   const getProductHref = (slug: string) => {
